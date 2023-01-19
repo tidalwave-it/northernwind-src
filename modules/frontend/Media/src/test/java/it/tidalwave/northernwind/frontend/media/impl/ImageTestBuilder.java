@@ -33,13 +33,13 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.imajine.image.EditableImage;
-import org.imajine.image.metadata.Directory;
-import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.IPTC;
-import org.imajine.image.metadata.TIFF;
-import org.imajine.image.metadata.XMP;
-import org.imajine.image.op.CreateOp;
+import it.tidalwave.image.EditableImage;
+import it.tidalwave.image.metadata.Directory;
+import it.tidalwave.image.metadata.EXIF;
+import it.tidalwave.image.metadata.IPTC;
+import it.tidalwave.image.metadata.TIFF;
+import it.tidalwave.image.metadata.XMP;
+import it.tidalwave.image.op.CreateOp;
 import lombok.With;
 
 /***********************************************************************************************************************

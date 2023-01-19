@@ -32,12 +32,12 @@
         <javax-servlet-api.version>3.1.0</javax-servlet-api.version>
         <jetty.version>6.1.26</jetty.version>
         <jtidy.version>r938</jtidy.version>
-        <mistral.version>1.0-ALPHA-3</mistral.version>
+        <mistral.version>1.0-ALPHA-7</mistral.version>
         <netbeans.version>RELEASE80</netbeans.version>
         <rome.version>1.0.0</rome.version>
         <stringtemplate.version>4.1</stringtemplate.version>
         <thesefoolishthings.version>3.2-ALPHA-13</thesefoolishthings.version>
-        <xmpcore.version>5.1.0</xmpcore.version>
+        <xmpcore.version>6.1.11</xmpcore.version>
 
         <tft.spring.version>5.3.1</tft.spring.version>
     </properties>
@@ -74,9 +74,11 @@
             </dependency>
 
             <dependency>
-                <groupId>org.imajine.image</groupId>
-                <artifactId>org-imajine-image-core</artifactId>
+                <groupId>it.tidalwave.image</groupId>
+                <artifactId>image</artifactId>
                 <version>${mistral.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
@@ -106,11 +108,6 @@
                 <groupId>net.sf.jtidy</groupId>
                 <artifactId>jtidy</artifactId>
                 <version>${jtidy.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.drewnoakes</groupId>
-                <artifactId>xmpcore-patched</artifactId>
-                <version>${xmpcore.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.rome</groupId>

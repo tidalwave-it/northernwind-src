@@ -34,17 +34,19 @@ import java.util.Date;
 import java.util.List;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import org.imajine.image.EditableImage;
-import org.imajine.image.Rational;
-import org.imajine.image.metadata.XMP;
-import org.imajine.image.metadata.Directory;
-import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.IPTC;
-import org.imajine.image.op.ReadOp;
+import it.tidalwave.image.EditableImage;
+import it.tidalwave.image.Rational;
+import it.tidalwave.image.metadata.TIFF;
+import it.tidalwave.image.metadata.XMP;
+import it.tidalwave.image.metadata.Directory;
+import it.tidalwave.image.metadata.EXIF;
+import it.tidalwave.image.metadata.IPTC;
+import it.tidalwave.image.op.ReadOp;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
+import static it.tidalwave.image.metadata.Directory.Tag;
 
 /***********************************************************************************************************************
  *
@@ -68,16 +70,19 @@ public class DefaultMetadataProviderTest
         final EditableImage image = EditableImage.create(new ReadOp(file, ReadOp.Type.METADATA));
         log.info("IMAGE: {}", image);
         // when
-        final IPTC iptc = image.getMetadata(IPTC.class);
-        final EXIF exif = image.getMetadata(EXIF.class);
-        final XMP xmp = image.getMetadata(XMP.class);
+        final TIFF tiff = image.getMetadata(TIFF.class).orElseGet(TIFF::new);
+        final EXIF exif = image.getMetadata(EXIF.class).orElseGet(EXIF::new);
+        final IPTC iptc = image.getMetadata(IPTC.class).orElseGet(IPTC::new);
+        final XMP xmp = image.getMetadata(XMP.class).orElseGet(XMP::new);
         // then
-        log.info("IPTC: {}", iptc);
+        log.info("TIFF: {}", tiff);
         log.info("EXIF: {}", exif);
+        log.info("IPTC: {}", iptc);
         log.info("XMP: {}", xmp);
         final String resourceName = String.format("MetadataDump-%s.txt", "20100102-0001");
         final TestResource tr = helper.testResourceFor(resourceName);
         final List<String> strings = new ArrayList<>();
+        dumpTags(strings, "TIFF", tiff);
         dumpTags(strings, "EXIF", exif);
         dumpTags(strings, "IPTC", iptc);
         dumpTags(strings, "XMP ", xmp);
@@ -94,7 +99,7 @@ public class DefaultMetadataProviderTest
       {
         for (final int tag : directory.getTagCodes())
           {
-            Object value = directory.getObject(tag);
+            Object value = directory.getRaw(tag);
 
             if (value instanceof byte[])
               {
@@ -114,7 +119,9 @@ public class DefaultMetadataProviderTest
                                      .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
               }
 
-            final String s = String.format("%s [%d] %s: %s", directoryName, tag, directory.getTagName(tag), value);
+            final String s = String.format("%s [%d] %s: %s",
+                                           directoryName, tag, directory.getTagInfo(tag).map(Tag::getName).orElse(""),
+                                           value);
             log.info("{}", s);
             strings.add(s);
           }

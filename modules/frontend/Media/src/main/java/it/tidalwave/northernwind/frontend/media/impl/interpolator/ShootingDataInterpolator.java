@@ -26,12 +26,13 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
+import java.text.DecimalFormat;
 import javax.annotation.Nonnull;
 import java.util.Map;
-import java.text.DecimalFormat;
-import org.imajine.image.Rational;
-import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.XMP;
+import java.util.Optional;
+import it.tidalwave.image.metadata.EXIF;
+import it.tidalwave.image.metadata.TIFF;
+import it.tidalwave.image.metadata.XMP;
 
 /***********************************************************************************************************************
  *
@@ -48,36 +49,55 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
     @Override @Nonnull
     public String interpolate (@Nonnull final String template, @Nonnull final Context context)
       {
+        final TIFF tiff = context.getMetadata().getDirectory(TIFF.class);
         final EXIF exif = context.getMetadata().getDirectory(EXIF.class);
-        final Map<String, String> xmpProperties = context.getMetadata().getDirectory(XMP.class).getXmpProperties();
+        final XMP xmp = context.getMetadata().getDirectory(XMP.class);
+        final Map<String, String> xmpProperties = xmp.getXmpProperties();
+        final Map<String, String> modelMap = context.getModelMap();
         final Map<String, String> lensMap = context.getLensMap();
 
         final StringBuilder builder = new StringBuilder();
-        builder.append(formatted(exif.getModel()));
+        String cameraMake = tiff.getMake()
+                                .or(() -> exif.getMake())
+                                .or(() -> Optional.ofNullable(xmpProperties.get("tiff:Make")))
+                                .orElse("");
+        String cameraModel = tiff.getModel()
+                                 .or(() -> exif.getModel())
+                                 .or(() -> Optional.ofNullable(xmpProperties.get("tiff:Model")))
+                                 .orElse("");
+
+        String camera = (cameraMake + ((!cameraModel.isBlank() && !cameraMake.isBlank()) ? " " : "") + cameraModel).trim();
+        camera = modelMap.getOrDefault(camera, camera);
+        builder.append(camera);
         builder.append(" + ");
 
-        String lens = formatted(lensMap.get(xmpProperties.get("aux:LensID")));
+        String lensMake = exif.getLensMake()
+                              .or(() -> Optional.ofNullable(xmpProperties.get("exif:LensMake")))
+                              .orElse("");
+        String lensModel = exif.getLensModel()
+                               .or(() -> Optional.ofNullable(xmpProperties.get("aux:Lens")))
+                               .or(() -> Optional.ofNullable(xmpProperties.get("aux:LensID")))
+                               .orElse("");
 
-        if ("".equals(lens))
-          {
-            lens = formatted(lookup(lensMap, xmpProperties.get("aux:Lens")));
-          }
+        String lens = (lensMake + ((!lensModel.isBlank() && !lensMake.isBlank()) ? " " : "") + lensModel).trim();
+        lens = lensMap.getOrDefault(lens, lens);
 
         builder.append(lens);
         builder.append(" @ ");
-        builder.append(exif.getFocalLength().intValue()).append(" mm, ");
+        exif.getFocalLength().ifPresent(fl -> builder.append(fl.intValue()).append(" mm, "));
         // FIXME: eventually teleconverter
-        builder.append(exif.getExposureTime()).append(" sec @ \u0192/");
-        builder.append(new DecimalFormat("0.#").format(exif.getFNumber().floatValue()));
+        exif.getExposureTime().ifPresent(t -> builder.append(t).append(" sec @ \u0192/"));
+        exif.getFNumber().map(f -> new DecimalFormat("0.#").format(f.floatValue())).ifPresent(builder::append);
 
-        final Rational exposureBiasValue = exif.getExposureBiasValue();
-
-        if (exposureBiasValue.getNumerator() != 0)
+        exif.getExposureBiasValue().ifPresent(exposureBiasValue ->
           {
-            builder.append(String.format(", %+.2f EV", exposureBiasValue.floatValue()));
-          }
+            if (exposureBiasValue.getNumerator() != 0)
+              {
+                builder.append(String.format(", %+.2f EV", exposureBiasValue.floatValue()));
+              }
+          });
 
-        builder.append(", ISO ").append(exif.getISOSpeedRatings().intValue());
+        exif.getISOSpeedRatings().ifPresent(iso -> builder.append(", ISO ").append(iso.intValue()));
 
         return template.replace("$" + macro + "$", builder.toString());
       }

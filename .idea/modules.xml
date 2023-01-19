@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/NorthernWind.iml" filepath="$PROJECT_DIR$/NorthernWind.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/HtmlPatches/it-tidalwave-html-patches.iml" filepath="$PROJECT_DIR$/modules/HtmlPatches/it-tidalwave-html-patches.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/CommonTests/it-tidalwave-northernwind-common-tests.iml" filepath="$PROJECT_DIR$/modules/CommonTests/it-tidalwave-northernwind-common-tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/Core/it-tidalwave-northernwind-core.iml" filepath="$PROJECT_DIR$/modules/Core/it-tidalwave-northernwind-core.iml" />
@@ -25,7 +26,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/webapp/Commons/it-tidalwave-northernwind-frontend-webapp-commons.iml" filepath="$PROJECT_DIR$/modules/webapp/Commons/it-tidalwave-northernwind-frontend-webapp-commons.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/it-tidalwave-northernwind-modules.iml" filepath="$PROJECT_DIR$/modules/it-tidalwave-northernwind-modules.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/webapp/it-tidalwave-northernwind-webapp.iml" filepath="$PROJECT_DIR$/modules/webapp/it-tidalwave-northernwind-webapp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/northernwind.iml" filepath="$PROJECT_DIR$/northernwind.iml" />
     </modules>
   </component>
 </project>

@@ -30,16 +30,16 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import org.imajine.image.Rational;
+import it.tidalwave.image.Rational;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.With;
-import org.imajine.image.EditableImage;
-import org.imajine.image.metadata.EXIF;
-import org.imajine.image.metadata.IPTC;
-import org.imajine.image.metadata.TIFF;
-import org.imajine.image.metadata.XMP;
+import it.tidalwave.image.EditableImage;
+import it.tidalwave.image.metadata.EXIF;
+import it.tidalwave.image.metadata.IPTC;
+import it.tidalwave.image.metadata.TIFF;
+import it.tidalwave.image.metadata.XMP;
 
 /***********************************************************************************************************************
  *
@@ -53,6 +53,9 @@ class MetadataTestBuilder
   {
     @With
     private String xmpDcTitle;
+
+    @With
+    private String exifMake;
 
     @With
     private String exifModel;
@@ -92,7 +95,8 @@ class MetadataTestBuilder
         final Method method = xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
         method.setAccessible(true);
         method.invoke(xmp, xmpProperties);
-        exif.setModel(exifModel);
+        tiff.setMake(exifMake);
+        tiff.setModel(exifModel);
         exif.setFocalLength(exifFocalLength);
         exif.setExposureTime(exifExposureTime);
         exif.setFNumber(exifFNumber);
