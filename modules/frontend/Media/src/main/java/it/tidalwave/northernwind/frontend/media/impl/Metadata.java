@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
+import it.tidalwave.image.metadata.Directory;
 
 /***********************************************************************************************************************
  *
@@ -58,5 +59,5 @@ public interface Metadata
      * 
      ******************************************************************************************************************/
     @Nonnull
-    public <T> T getDirectory (@Nonnull Class<T> directoryClass);
+    public <T extends Directory> T getDirectory (@Nonnull Class<T> directoryClass);
   }
