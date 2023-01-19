@@ -14,7 +14,6 @@ Please see the project website for more information: http://northernwind.tidalwa
 A few examples of websites running on NorthernWind:
 
 * http://stoppingdown.net
-* http://northernwind.tidalwave.it
 * http://tidalwave.it
 
 
