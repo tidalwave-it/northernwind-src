@@ -53,11 +53,11 @@ class MockResourceFinder extends HierarchicFinderSupport<Resource, SiteFinder<Re
     private static final long serialVersionUID = 1692141469939523431L;
 
     @Nonnull
-    private final List<? extends Resource> results;
+    private final List<Resource> results;
 
-    public MockResourceFinder(@Nonnull final List<? extends Resource> results)
+    public MockResourceFinder (@Nonnull final List<? extends Resource> results)
       {
-        this.results = results;
+        this.results = (List<Resource>)results;
       }
 
     @Nonnull
@@ -76,7 +76,7 @@ class MockResourceFinder extends HierarchicFinderSupport<Resource, SiteFinder<Re
 
     @Nonnull
     @Override
-    protected List<? extends Resource> computeResults()
+    protected List<Resource> computeResults()
       {
         return results;
       }

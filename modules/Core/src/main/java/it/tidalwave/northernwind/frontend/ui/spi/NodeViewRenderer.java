@@ -31,12 +31,12 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.BiConsumer;
-import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
+import it.tidalwave.role.Composite;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -49,7 +49,7 @@ import lombok.Getter;
  *
  **********************************************************************************************************************/
 @NotThreadSafe
-public class NodeViewRenderer<T> extends VisitorSupport<Layout, T>
+public class NodeViewRenderer<T> implements Composite.Visitor<Layout, T>
   {
     @Nonnull
     private final ViewAndControllerLayoutBuilder vacLayoutBuilder;

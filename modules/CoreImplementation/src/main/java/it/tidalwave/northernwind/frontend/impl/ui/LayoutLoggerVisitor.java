@@ -28,7 +28,7 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import it.tidalwave.role.Composite.VisitorSupport;
+import it.tidalwave.role.Composite;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import org.slf4j.Logger;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @RequiredArgsConstructor @Slf4j
-public class LayoutLoggerVisitor extends VisitorSupport<Layout, Object>
+public class LayoutLoggerVisitor implements Composite.Visitor<Layout, Object>
   {
     public static enum Level
       {
@@ -90,12 +90,5 @@ public class LayoutLoggerVisitor extends VisitorSupport<Layout, Object>
     public void postVisit (@Nonnull final Layout layout)
       {
         indent--;
-      }
-
-    @Nonnull
-    @Override
-    public Object getValue()
-      {
-        return new Object();
       }
   }
