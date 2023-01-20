@@ -18,9 +18,6 @@
     <description>The parent POM for modules.</description>
 
     <properties>
-        <tft.javac.source>11</tft.javac.source>
-        <tft.javac.target>11</tft.javac.target>
-        <tft.javac.release>11</tft.javac.release>
         <tft.test.maxMemory>1024M</tft.test.maxMemory>
 
         <main.webapp.contextPath>/nw</main.webapp.contextPath>
