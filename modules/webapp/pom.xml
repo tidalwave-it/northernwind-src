@@ -19,6 +19,8 @@
 
     <properties>
         <tft.webapp.contextPath>${main.webapp.contextPath}</tft.webapp.contextPath>
+        <tft.test.skip>true</tft.test.skip> <!-- No tests, this is just a webapp assembler -->
+        <tft.site.skip>true</tft.site.skip>
         <changeSet>null</changeSet> <!-- FIXME -->
     </properties>
 

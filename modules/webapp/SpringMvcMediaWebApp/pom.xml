@@ -17,10 +17,6 @@
     <name>NorthernWind :: Frontend :: Webapp :: Media :: Spring MVC</name>
     <description>A webapp containing the Spring MVC front end implementation with the Media Extensions.</description>
 
-    <properties>
-        <tft.test.skip>true</tft.test.skip> <!-- No tests, this is just a webapp assembler -->
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.northernwind</groupId>
