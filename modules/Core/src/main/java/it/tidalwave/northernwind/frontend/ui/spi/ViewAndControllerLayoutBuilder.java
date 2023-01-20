@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.Composite.VisitorSupport;
+import it.tidalwave.role.Composite;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
@@ -55,7 +55,7 @@ import lombok.RequiredArgsConstructor;
  *
  **********************************************************************************************************************/
 @NotThreadSafe @RequiredArgsConstructor
-public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewAndControllerLayoutBuilder>
+public class ViewAndControllerLayoutBuilder implements Composite.Visitor<Layout, ViewAndControllerLayoutBuilder>
   {
     private static final ViewController VOID_CONTROLLER = new ViewController() {};
 
@@ -92,9 +92,9 @@ public class ViewAndControllerLayoutBuilder extends VisitorSupport<Layout, ViewA
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public ViewAndControllerLayoutBuilder getValue()
+    public Optional<ViewAndControllerLayoutBuilder> getValue()
       {
-        return this;
+        return Optional.of(this);
       }
 
     /*******************************************************************************************************************

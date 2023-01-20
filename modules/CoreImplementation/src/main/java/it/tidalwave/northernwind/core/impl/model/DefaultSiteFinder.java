@@ -181,7 +181,7 @@ public class DefaultSiteFinder<T> extends HierarchicFinderSupport<T, SiteFinder<
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected List<? extends T> computeResults()
+    protected List<T> computeResults()
       {
         final List<T> results = new ArrayList<>();
 

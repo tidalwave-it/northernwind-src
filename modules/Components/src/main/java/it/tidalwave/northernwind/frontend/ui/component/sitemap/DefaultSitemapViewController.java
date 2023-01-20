@@ -129,7 +129,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
 
                 newEntry(node, null).ifPresent(entries::add);
 
-                layout.accept(new VisitorSupport<Layout, Void>()
+                layout.accept(new Visitor<Layout, Void>()
                   {
                     @Override
                     public void visit (@Nonnull final Layout childLayout)
@@ -152,13 +152,6 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
                           {
                             log.warn("Skipped item because of {} - root cause {}", e, rootCause(e).toString());
                           }
-                      }
-
-                    @Nonnull
-                    @Override @SuppressWarnings("findbugs:NP_NONNULL_RETURN_VIOLATION")
-                    public Void getValue()
-                      {
-                        return null;
                       }
                   });
               }

@@ -124,7 +124,7 @@ public class MockSiteNodeSiteFinder extends HierarchicFinderSupport<SiteNode, Si
       }
 
     @Override @Nonnull
-    protected List<? extends SiteNode> computeResults()
+    protected List<SiteNode> computeResults()
       {
         assert relativePath != null : "relativePath is null";
 
