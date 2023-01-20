@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-filesystem</artifactId>
-        <version>1.2-ALPHA-9</version>
+        <version>1.2-ALPHA-10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-core-filesystem-basic</artifactId>
-    <version>1.2-ALPHA-9</version>
+    <version>1.2-ALPHA-10-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>NorthernWind :: Filesystems :: Basic</name>
     <description>The implementation of some basic filesystems.</description>
