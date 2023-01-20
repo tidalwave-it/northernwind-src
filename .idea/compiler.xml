@@ -52,8 +52,8 @@
       <module name="it-tidalwave-northernwind-frontend-webapp-commons" target="11" />
       <module name="it-tidalwave-northernwind-modules" target="11" />
       <module name="it-tidalwave-northernwind-webapp" target="11" />
-      <module name="northernwind" target="1.8" />
-      <module name="northernwind-src" target="1.8" />
+      <module name="northernwind" target="11" />
+      <module name="northernwind-src" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
