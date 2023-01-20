@@ -6,13 +6,13 @@
     <parent>
         <groupId>it.tidalwave.northernwind</groupId>
         <artifactId>it-tidalwave-northernwind-frontend</artifactId>
-        <version>1.2-ALPHA-9-SNAPSHOT</version>
+        <version>1.2-ALPHA-9</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.northernwind</groupId>
     <artifactId>it-tidalwave-northernwind-frontend-media-springmvc</artifactId>
-    <version>1.2-ALPHA-9-SNAPSHOT</version>
+    <version>1.2-ALPHA-9</version>
     <packaging>jar</packaging>
     <name>NorthernWind :: Frontend :: Media :: Spring MVC</name>
     <description>An implementation of the front end based on Spring MVC including Media Extensions.</description>
