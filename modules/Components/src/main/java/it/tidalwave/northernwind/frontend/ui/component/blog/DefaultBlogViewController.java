@@ -203,7 +203,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
           }
 
         @Override @Nonnull
-        protected List<? extends SiteNode> computeResults()
+        protected List<SiteNode> computeResults()
           {
             return controller.findAllPosts(controller.getViewProperties())
                              .stream()

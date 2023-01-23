@@ -108,7 +108,7 @@ public class DefaultLayoutFinder extends HierarchicFinderSupport<Layout, LayoutF
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected List<? extends Layout> computeNeededResults()
+    protected List<Layout> computeNeededResults()
       {
         final ArrayList<Layout> result = new ArrayList<>();
 

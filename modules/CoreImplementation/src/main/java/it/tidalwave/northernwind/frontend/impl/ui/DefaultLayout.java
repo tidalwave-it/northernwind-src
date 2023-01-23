@@ -79,7 +79,7 @@ public class DefaultLayout implements Layout, Cloneable
      *
      *
      ******************************************************************************************************************/
-    static class CloneVisitor extends VisitorSupport<Layout, DefaultLayout>
+    static class CloneVisitor implements Visitor<Layout, DefaultLayout>
       {
         private DefaultLayout rootLayout;
 
@@ -110,9 +110,9 @@ public class DefaultLayout implements Layout, Cloneable
           }
 
         @Override @Nonnull
-        public DefaultLayout getValue()
+        public Optional<DefaultLayout> getValue()
           {
-            return rootLayout;
+            return Optional.of(rootLayout);
           }
       }
 
@@ -218,7 +218,7 @@ public class DefaultLayout implements Layout, Cloneable
      ******************************************************************************************************************/
     @Override @Nonnull
     public ViewAndController createViewAndController (@Nonnull final SiteNode siteNode)
-      throws NotFoundException, HttpStatusException
+            throws NotFoundException, HttpStatusException
       {
         return viewFactory.createViewAndController(typeUri, id, siteNode);
       }
@@ -240,15 +240,7 @@ public class DefaultLayout implements Layout, Cloneable
           }
 
         visitor.postVisit(this);
-
-        try
-          {
-            return Optional.ofNullable(visitor.getValue()); // TODO: visitor.getOptionalValue()
-          }
-        catch (NotFoundException e)
-          {
-            return Optional.empty();
-          }
+        return visitor.getValue();
       }
 
     /*******************************************************************************************************************

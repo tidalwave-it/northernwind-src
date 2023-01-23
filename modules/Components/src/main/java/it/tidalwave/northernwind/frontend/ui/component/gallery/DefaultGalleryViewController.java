@@ -77,7 +77,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
           }
 
         @Override @Nonnull
-        protected List<? extends SiteNode> computeResults()
+        protected List<SiteNode> computeResults()
           {
             final SiteNode siteNode = controller.siteNode;
             final List<SiteNode> result = controller.itemMapById.values().stream()

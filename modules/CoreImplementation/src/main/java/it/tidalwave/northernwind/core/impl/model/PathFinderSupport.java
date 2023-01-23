@@ -112,7 +112,7 @@ public class PathFinderSupport<T extends Resource> extends HierarchicFinderSuppo
      ******************************************************************************************************************/
     @Override
     @Nonnull
-    protected List<? extends T> computeResults()
+    protected List<T> computeResults()
       {
         final Site site = siteProvider.get().getSite();
         return parentFile.findChildren().withRecursion(true).results().stream()

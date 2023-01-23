@@ -39,12 +39,10 @@ import java.time.ZoneId;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite;
-import it.tidalwave.role.Composite.VisitorSupport;
 import it.tidalwave.northernwind.core.model.*;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import static java.util.stream.Collectors.toList;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
@@ -60,9 +58,8 @@ import static org.mockito.Mockito.*;
 @RequiredArgsConstructor
 public class MockNodesForSitemap
   {
-    static class CollectingVisitor<T> extends VisitorSupport<T, List<T>>
+    static class CollectingVisitor<T> implements Composite.Visitor<T, List<T>>
       {
-        @Getter
         private final List<T> value = new ArrayList<>();
 
         @Override
@@ -70,7 +67,13 @@ public class MockNodesForSitemap
           {
             value.add(layout);
           }
-     }
+
+        @Override @Nonnull
+        public Optional<List<T>> getValue ()
+          {
+            return Optional.of(value);
+          }
+      }
 
     @Nonnull
     private final Site site;
@@ -130,7 +133,7 @@ public class MockNodesForSitemap
               {
                 final Composite.Visitor<Layout, ?> visitor = invocation.getArgument(0);
                 childrenLayouts.forEach(visitor::visit);
-                return Optional.ofNullable(visitor.getValue());
+                return visitor.getValue();
               });
 
             nodes.add(node);
