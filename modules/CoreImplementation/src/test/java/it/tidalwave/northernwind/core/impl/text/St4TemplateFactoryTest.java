@@ -30,7 +30,6 @@ import java.util.Optional;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
-import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
@@ -73,12 +72,12 @@ public class St4TemplateFactoryTest
       throws NotFoundException
       {
         // given
-        final String expectedResult = "Text of test template";
-        final ResourcePath templatePath = ResourcePath.of("/the/path");
-        final Content content = site.find(_Content_).withRelativePath(templatePath).result();
+        final var expectedResult = "Text of test template";
+        final var templatePath = ResourcePath.of("/the/path");
+        final var content = site.find(_Content_).withRelativePath(templatePath).result();
         when(content.getProperties().getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of(expectedResult));
         // when
-        final Optional<String> actualResult = underTest.getTemplate(templatePath);
+        final var actualResult = underTest.getTemplate(templatePath);
         // then
         assertThat(actualResult.isPresent(), is(true));
         assertThat(actualResult.get(), is(expectedResult));
@@ -91,10 +90,10 @@ public class St4TemplateFactoryTest
     public void must_return_empty_when_Content_has_no_property()
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/the/path");
+        final var templatePath = ResourcePath.of("/the/path");
         // no P_TEMPLATE configured
         // when
-        final Optional<String> actualResult = underTest.getTemplate(templatePath);
+        final var actualResult = underTest.getTemplate(templatePath);
         // then
         assertThat(actualResult.isPresent(), is(false));
       }
@@ -106,9 +105,9 @@ public class St4TemplateFactoryTest
     public void must_return_empty_when_no_Content_found()
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/path/of/nonexistent/content");
+        final var templatePath = ResourcePath.of("/path/of/nonexistent/content");
         // when
-        final Optional<String> template = underTest.getTemplate(templatePath);
+        final var template = underTest.getTemplate(templatePath);
         // then
         assertThat(template.isPresent(), is(false));
       }
@@ -120,7 +119,7 @@ public class St4TemplateFactoryTest
     public void must_properly_read_the_contents_of_the_embedded_template()
       {
         // when
-        final String actualResult = underTest.getEmbeddedTemplate("testTemplate.txt");
+        final var actualResult = underTest.getEmbeddedTemplate("testTemplate.txt");
         // then
         assertThat(actualResult, is("Text of test template"));
       }

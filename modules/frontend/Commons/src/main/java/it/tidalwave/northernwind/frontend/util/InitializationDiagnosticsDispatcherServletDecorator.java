@@ -102,11 +102,11 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
     @Nonnull
     private static Throwable findUpperCauseWithMessage (@Nonnull final Throwable throwable)
       {
-        Throwable cause = throwable;
+        var cause = throwable;
 
-        for (Throwable parent = cause.getCause(); parent != null; parent = parent.getCause())
+        for (var parent = cause.getCause(); parent != null; parent = parent.getCause())
           {
-            final String message = parent.getMessage();
+            final var message = parent.getMessage();
 
             if ((message != null) && !"".equals(message.trim()))
               {
@@ -126,7 +126,7 @@ public class InitializationDiagnosticsDispatcherServletDecorator extends HttpSer
       {
         response.setStatus(500);
         response.setContentType("text/html");
-        final PrintWriter pw = new PrintWriter(new PrintStream(response.getOutputStream(), true, UTF_8));
+        final var pw = new PrintWriter(new PrintStream(response.getOutputStream(), true, UTF_8));
         pw.print("<html>\n<head>\n<title>Configuration Error</title>\n</head>\n<body>\n");
         pw.print("<h1>Configuration Error</h1>\n<pre>\n");
         pw.print(t);

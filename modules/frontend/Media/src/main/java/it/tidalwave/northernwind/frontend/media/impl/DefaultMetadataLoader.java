@@ -39,7 +39,6 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
@@ -70,7 +69,7 @@ public class DefaultMetadataLoader implements MetadataLoader
                                                @Nonnull final Id mediaId)
       throws NotFoundException
       {
-        final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
+        final var properties = siteNodeProperties.getGroup(P_GROUP_ID);
         return findMedia(mediaId, properties).map(Resource::getFile).orElseThrow(NotFoundException::new); // FIXME
       }
 
@@ -84,7 +83,7 @@ public class DefaultMetadataLoader implements MetadataLoader
       throws IOException
       {
         log.debug("loadMetadata({})", file.getPath());
-        final EditableImage image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
+        final var image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
         return new DefaultMetadata(file.getName(), image);
       }
 
@@ -100,7 +99,7 @@ public class DefaultMetadataLoader implements MetadataLoader
     @Nonnull
     private Optional<Media> findMedia (@Nonnull final Id mediaId, @Nonnull final ResourceProperties properties)
       {
-        final Site site = siteProvider.get().getSite();
+        final var site = siteProvider.get().getSite();
 
         return properties.getProperty(P_MEDIA_PATHS).orElse(emptyList())
                 .stream()

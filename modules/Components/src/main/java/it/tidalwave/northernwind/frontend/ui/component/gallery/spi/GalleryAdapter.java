@@ -63,7 +63,7 @@ public interface GalleryAdapter
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void prepareCatalog (@Nonnull List<GalleryItem> items);
+    public void prepareCatalog (@Nonnull List<? extends GalleryItem> items);
 
     /*******************************************************************************************************************
      *
@@ -73,7 +73,7 @@ public interface GalleryAdapter
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void prepareGallery (@Nonnull GalleryItem item, @Nonnull List<GalleryItem> items);
+    public void prepareGallery (@Nonnull GalleryItem item, @Nonnull List<? extends GalleryItem> items);
 
     /*******************************************************************************************************************
      *
@@ -83,7 +83,7 @@ public interface GalleryAdapter
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void prepareFallbackGallery (@Nonnull GalleryItem item, @Nonnull List<GalleryItem> items);
+    public void prepareFallbackGallery (@Nonnull GalleryItem item, @Nonnull List<? extends GalleryItem> items);
 
     /*******************************************************************************************************************
      *
@@ -92,7 +92,7 @@ public interface GalleryAdapter
      * @param  items        the list of gallery items
      *
      ******************************************************************************************************************/
-    public void prepareFallbackLightbox (@Nonnull List<GalleryItem> items);
+    public void prepareFallbackLightbox (@Nonnull List<? extends GalleryItem> items);
 
     /*******************************************************************************************************************
      *

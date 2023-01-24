@@ -69,12 +69,12 @@ public class MacroFilter implements Filter // FIXME: rename to RegexFilter
     @Override @Nonnull
     public String filter (@Nonnull final String text, @Nonnull final String mimeType)
       {
-        final Matcher matcher = pattern.matcher(text);
-        final StringBuffer buffer = new StringBuffer();
+        final var matcher = pattern.matcher(text);
+        final var buffer = new StringBuilder();
 
         while (matcher.find())
           {
-            final String filtered = doFilter(matcher);
+            final var filtered = doFilter(matcher);
             try
               {
                 matcher.appendReplacement(buffer, filtered);

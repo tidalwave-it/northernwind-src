@@ -31,7 +31,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -113,10 +112,10 @@ public final class MediaMetadataXsltAdapter
       throws NotFoundException
       {
         // FIXME: should use current SiteNode properties
-        final ResourceProperties properties = siteProvider.get().getSite().find(SiteNode.class)
-                                                                          .withRelativePath("/")
-                                                                          .result()
-                                                                          .getProperties();
+        final var properties = siteProvider.get().getSite().find(SiteNode.class)
+                                           .withRelativePath("/")
+                                           .result()
+                                           .getProperties();
         return mediaMetadataProvider.getMetadataString(id, format, properties);
       }
 
@@ -129,7 +128,7 @@ public final class MediaMetadataXsltAdapter
     private MediaMetadataProvider findMediaMetadataProvider()
       {
         // FIXME: should be read by Node properties
-        final String metadataProviderName = "EmbeddedMediaMetadataProvider";
+        final var metadataProviderName = "EmbeddedMediaMetadataProvider";
 
         try
           {

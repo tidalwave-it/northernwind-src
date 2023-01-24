@@ -37,7 +37,6 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
@@ -82,9 +81,9 @@ public class DefaultSiteNodeTest
       {
         context = helper.createSpringContext();
         site = context.getBean(InternalSite.class);
-        final ModelFactory modelFactory = context.getBean(ModelFactory.class);
-        final InheritanceHelper inheritanceHelper = context.getBean(InheritanceHelper.class);
-        final RequestLocaleManager requestLocaleManager = context.getBean(RequestLocaleManager.class);
+        final var modelFactory = context.getBean(ModelFactory.class);
+        final var inheritanceHelper = context.getBean(InheritanceHelper.class);
+        final var requestLocaleManager = context.getBean(RequestLocaleManager.class);
 
         resource = createMockResource();
         resourceFile = MockResourceFile.folder("/structure/foo/resourceFile");
@@ -92,7 +91,7 @@ public class DefaultSiteNodeTest
         when(modelFactory.createResource()).thenReturn(new Resource.Builder(modelFactory, builder -> resource));
         when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
-        final ResourceFile nodeFolder = MockResourceFile.folder("structure");
+        final var nodeFolder = MockResourceFile.folder("structure");
         when(site.getNodeFolder()).thenReturn(nodeFolder);
 
         emptyPlaceHolderLayout = mock(Layout.class);
@@ -144,7 +143,7 @@ public class DefaultSiteNodeTest
         // given
         prepareMocksForGetRelativeUri(exposedUri, fileName, parentUri, parentPath);
         // when
-        final ResourcePath relativeUri = underTest.getRelativeUri();
+        final var relativeUri = underTest.getRelativeUri();
         // then
         assertThat(relativeUri.asString(), is(expectedResult));
       }
@@ -158,9 +157,9 @@ public class DefaultSiteNodeTest
       {
         // given
         prepareMocksForGetRelativeUri("exposedUri1", "file1", "/parentUri1", "structure/parent1");
-        final int previousUriComputationCounter = underTest.uriComputationCounter;
+        final var previousUriComputationCounter = underTest.uriComputationCounter;
         // when
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
           {
             underTest.getRelativeUri();
           }
@@ -177,14 +176,14 @@ public class DefaultSiteNodeTest
                                                 @Nonnull final String parentPath)
             throws NotFoundException
       {
-        final ResourceFile parentResourceFile = MockResourceFile.folder(parentPath);
+        final var parentResourceFile = MockResourceFile.folder(parentPath);
         resourceFile = MockResourceFile.folder(parentResourceFile, fileName);
         when(resource.getFile()).thenReturn(resourceFile);
 
-        final SiteNode parentSiteNode = createMockSiteNode(site);
+        final var parentSiteNode = createMockSiteNode(site);
         when(parentSiteNode.getRelativeUri()).thenReturn(ResourcePath.of(parentUri));
 
-        final ResourceProperties properties = createMockProperties();
+        final var properties = createMockProperties();
         when(properties.getProperty(eq(SiteNode.P_EXPOSED_URI))).thenReturn(Optional.ofNullable(exposedUri));
         when(resource.getProperties()).thenReturn(properties);
 

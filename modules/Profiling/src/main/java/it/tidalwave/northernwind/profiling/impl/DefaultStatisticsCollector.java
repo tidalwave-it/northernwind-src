@@ -87,7 +87,7 @@ public class DefaultStatisticsCollector implements StatisticsCollector
     @Override
     public void onRequestEnd (@Nonnull final Request request)
       {
-        final Sample sample = sampleHolder.get();
+        final var sample = sampleHolder.get();
         sample.stop();
         sampleHolder.remove();
         log.info(">>>> {} completed in {} msec", request, sample.getElapsedTime() * 1E-6);

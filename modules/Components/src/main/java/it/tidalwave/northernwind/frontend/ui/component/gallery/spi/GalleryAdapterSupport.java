@@ -82,10 +82,10 @@ public abstract class GalleryAdapterSupport implements GalleryAdapter
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected final Template loadTemplate (@Nonnull final Key<ResourcePath> templateName,
+    protected final Template loadTemplate (@Nonnull final Key<? extends ResourcePath> templateName,
                                            @Nonnull final String fallbackTemplate)
       {
-        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+        final var viewProperties = siteNode.getPropertyGroup(view.getId());
         return siteNode.getSite().getTemplate(getClass(), viewProperties.getProperty(templateName), fallbackTemplate);
       }
   }

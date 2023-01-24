@@ -77,7 +77,7 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
       {
         try
           {
-            final ComponentsJaxb componentsJaxb = ((JAXBElement<ComponentsJaxb>)unmarshaller.unmarshal(is)).getValue();
+            final var componentsJaxb = ((JAXBElement<ComponentsJaxb>)unmarshaller.unmarshal(is)).getValue();
 
             if (!"1.0".equals(componentsJaxb.getVersion()))
               {
@@ -99,11 +99,11 @@ public class LayoutJaxbUnmarshallable implements Unmarshallable
     @Nonnull
     private Layout unmarshal (@Nonnull final ComponentJaxb componentJaxb)
       {
-        Layout layout = modelFactory.createLayout().withId(new Id(componentJaxb.getId()))
-                                                   .withType(componentJaxb.getType())
-                                                   .build();
+        var layout = modelFactory.createLayout().withId(new Id(componentJaxb.getId()))
+                                 .withType(componentJaxb.getType())
+                                 .build();
 
-        for (final ComponentJaxb childComponentJaxb : componentJaxb.getComponent())
+        for (final var childComponentJaxb : componentJaxb.getComponent())
           {
             layout = layout.withChild(unmarshal(childComponentJaxb));
           }

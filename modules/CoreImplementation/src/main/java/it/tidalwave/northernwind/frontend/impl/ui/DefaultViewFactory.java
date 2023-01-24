@@ -72,8 +72,8 @@ public class DefaultViewFactory implements ViewFactory
                                                       @Nonnull final SiteNode siteNode)
       throws NotFoundException, HttpStatusException
       {
-        final ViewBuilder viewBuilder = throwWhenNull(viewBuilderMapByTypeUri.get(viewTypeUri),
-                                                      String.format("Cannot find %s: available: %s",
+        final var viewBuilder = throwWhenNull(viewBuilderMapByTypeUri.get(viewTypeUri),
+                                              String.format("Cannot find %s: available: %s",
                                                                     viewTypeUri, viewBuilderMapByTypeUri.keySet()));
         return viewBuilder.createViewAndController(viewId, siteNode);
       }
@@ -86,13 +86,13 @@ public class DefaultViewFactory implements ViewFactory
     /* package */ void initialize() // FIXME: gets called twice
       throws IllegalArgumentException, SecurityException
       {
-        final ClassScanner classScanner = new ClassScanner().withAnnotationFilter(ViewMetadata.class);
+        final var classScanner = new ClassScanner().withAnnotationFilter(ViewMetadata.class);
 
-        for (final Class<?> viewClass : classScanner.findClasses())
+        for (final var viewClass : classScanner.findClasses())
           {
-            final ViewMetadata viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
-            final String typeUri = viewMetadata.typeUri();
-            final ViewBuilder viewBuilder = new ViewBuilder(viewClass, viewMetadata.controlledBy());
+            final var viewMetadata = viewClass.getAnnotation(ViewMetadata.class);
+            final var typeUri = viewMetadata.typeUri();
+            final var viewBuilder = new ViewBuilder(viewClass, viewMetadata.controlledBy());
             viewBuilderMapByTypeUri.put(typeUri, viewBuilder);
           }
 

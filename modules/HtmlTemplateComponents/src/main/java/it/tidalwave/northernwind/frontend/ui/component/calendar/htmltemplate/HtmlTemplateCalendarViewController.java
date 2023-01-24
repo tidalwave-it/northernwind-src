@@ -39,7 +39,6 @@ import it.tidalwave.util.TimeProvider;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
-import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
@@ -92,11 +91,11 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
                            @Nonnull final SortedMap<Integer, List<Entry>> byMonth,
                            @Nonnegative final int columns)
       {
-        final Aggregates years = IntStream.rangeClosed(firstYear, lastYear)
-                                          .mapToObj(y -> toAggregate(y, y == year))
-                                          .collect(toAggregates("years"));
+        final var years = IntStream.rangeClosed(firstYear, lastYear)
+                                   .mapToObj(y -> toAggregate(y, y == year))
+                                   .collect(toAggregates("years"));
 
-        final String[] monthNames = DateFormatSymbols.getInstance(requestLocaleManager.getLocales().get(0)).getMonths();
+        final var monthNames = DateFormatSymbols.getInstance(requestLocaleManager.getLocales().get(0)).getMonths();
         final IntFunction<List<Map<String, Object>>> entriesByMonth =
             m -> byMonth.getOrDefault(m + 1, emptyList()).stream().map(x -> toAggregate(x).getMap()).collect(toList());
         view.render(title,
@@ -125,7 +124,7 @@ public class HtmlTemplateCalendarViewController extends DefaultCalendarViewContr
     @Nonnull
     private Aggregate toAggregate (final int year, final boolean withLink)
       {
-        final Aggregate a = Aggregate.of("number", year);
+        final var a = Aggregate.of("number", year);
         return withLink ? a : a.with("link", createYearLink(year));
       }
   }

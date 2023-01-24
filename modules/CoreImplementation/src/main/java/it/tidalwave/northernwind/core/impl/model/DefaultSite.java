@@ -163,8 +163,8 @@ import lombok.extern.slf4j.Slf4j;
     @Override @Nonnull @SuppressWarnings("unchecked")
     public <Type> SiteFinder<Type> find (@Nonnull final Class<Type> type)
       {
-        final Map<String, Type> relativePathMap = (Map<String, Type>)relativePathMapsByType.get(type);
-        final RegexTreeMap<Type> relativeUriMap = (RegexTreeMap<Type>)relativeUriMapsByType.get(type);
+        final var relativePathMap = (Map<String, Type>)relativePathMapsByType.get(type);
+        final var relativeUriMap = (RegexTreeMap<Type>)relativeUriMapsByType.get(type);
         return new DefaultSiteFinder<>(type.getSimpleName(), relativePathMap, relativeUriMap);
       }
 
@@ -176,10 +176,10 @@ import lombok.extern.slf4j.Slf4j;
     @Override @Nonnull
     public String createLink (@Nonnull final ResourcePath relativeUri)
       {
-        final ResourcePath link = ResourcePath.of(contextPath).appendedWith(relativeUri);
-        String linkAsString = requestHolder.get().getBaseUrl() + link.asString();
+        final var link = ResourcePath.of(contextPath).appendedWith(relativeUri);
+        var linkAsString = requestHolder.get().getBaseUrl() + link.asString();
 
-        for (final LinkPostProcessor linkPostProcessor : linkPostProcessors)
+        for (final var linkPostProcessor : linkPostProcessors)
           {
             linkAsString = linkPostProcessor.postProcess(linkAsString);
           }
@@ -205,7 +205,7 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     @Override @Nonnull
     public Template getTemplate (@Nonnull final Class<?> clazz,
-                                 @Nonnull final Optional<ResourcePath> templatePath,
+                                 @Nonnull final Optional<? extends ResourcePath> templatePath,
                                  @Nonnull final String embeddedResourceName)
       {
         return getTemplateFactoryFor(clazz).getTemplate(templatePath, embeddedResourceName);
@@ -250,7 +250,7 @@ import lombok.extern.slf4j.Slf4j;
         relativeUriMapsByType.put(SiteNode.class, nodeMapByRelativeUri);
 
         log.info(">>>> fileSystemProvider: {}", fileSystemProvider);
-        final ResourceFileSystem fileSystem = fileSystemProvider.getFileSystem();
+        final var fileSystem = fileSystemProvider.getFileSystem();
         documentFolder = findMandatoryFolder(fileSystem, documentPath);
         libraryFolder  = findMandatoryFolder(fileSystem, libraryPath);
         mediaFolder    = findMandatoryFolder(fileSystem, mediaPath);
@@ -315,16 +315,16 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     private void createSiteNode (@Nonnull final ResourceFile folder, @Nonnull final ResourcePath relativePath)
       {
-        final SiteNode siteNode = modelFactory.createSiteNode(this, folder);
+        final var siteNode = modelFactory.createSiteNode(this, folder);
         nodeMapByRelativePath.put(relativePath.asString(), siteNode);
 
         if (!siteNode.isPlaceHolder())
           {
-            final ResourcePath relativeUri = siteNode.getRelativeUri();
+            final var relativeUri = siteNode.getRelativeUri();
             // Nodes which manage path params are registered with a relativeUri having a wildcard suffix
             if (siteNode.getProperty(SiteNode.P_MANAGES_PATH_PARAMS).orElse(false))
               {
-                final String suffix = relativeUri.asString().endsWith("/") ? "(|.*$)" : "(|/.*$)";
+                final var suffix = relativeUri.asString().endsWith("/") ? "(|.*$)" : "(|/.*$)";
                 nodeMapByRelativeUri.putRegex("^" + RegexTreeMap.escape(relativeUri.asString()) + suffix, siteNode);
               }
             else
@@ -344,8 +344,8 @@ import lombok.extern.slf4j.Slf4j;
      *
      ******************************************************************************************************************/
     private void traverse (@Nonnull final ResourceFile folder,
-                           @Nonnull final Predicate<ResourceFile> fileFilter,
-                           @Nonnull final BiConsumer<ResourceFile, ResourcePath> consumer)
+                           @Nonnull final Predicate<? super ResourceFile> fileFilter,
+                           @Nonnull final BiConsumer<ResourceFile, ? super ResourcePath> consumer)
       {
         traverse(folder.getPath(), folder, fileFilter, consumer);
       }
@@ -361,11 +361,11 @@ import lombok.extern.slf4j.Slf4j;
      ******************************************************************************************************************/
     private static void traverse (@Nonnull final ResourcePath rootPath,
                                   @Nonnull final ResourceFile file,
-                                  @Nonnull final Predicate<ResourceFile> fileFilter,
-                                  @Nonnull final BiConsumer<ResourceFile, ResourcePath> consumer)
+                                  @Nonnull final Predicate<? super ResourceFile> fileFilter,
+                                  @Nonnull final BiConsumer<? super ResourceFile, ? super ResourcePath> consumer)
       {
         log.trace("traverse({}, {}, {}, {})", rootPath, file, fileFilter, consumer);
-        final ResourcePath relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
+        final var relativePath = file.getPath().urlDecoded().relativeTo(rootPath);
 
         if (fileFilter.test(file))
           {

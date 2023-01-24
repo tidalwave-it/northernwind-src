@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.htmltemplate;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -65,19 +64,19 @@ public class HtmlTemplateHtmlTextWithTitleViewControllerTest
     private void setup()
       throws Exception
       {
-        final Site site = createMockSite();
+        final var site = createMockSite();
 
-        final SiteNode siteNode = createMockSiteNode(site);
+        final var siteNode = createMockSiteNode(site);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("uri"));
-        final ResourceProperties siteNodeProperties = createMockProperties();
+        final var siteNodeProperties = createMockProperties();
 
-        final ResourceProperties viewProperties = createMockProperties();
+        final var viewProperties = createMockProperties();
 
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
-        final Request request = mock(Request.class);
-        final RequestContext requestContext = mock(RequestContext.class);
+        final var request = mock(Request.class);
+        final var requestContext = mock(RequestContext.class);
         final RenderContext renderContext = new DefaultRenderContext(request, requestContext);
 
         view = new HtmlTemplateHtmlTextWithTitleView(viewId, site);
@@ -95,12 +94,12 @@ public class HtmlTemplateHtmlTextWithTitleViewControllerTest
       throws Exception
       {
         // given
-        final Random rnd = new Random(43);
-        final List<TextWithTitle> twts = IntStream.rangeClosed(1, 10)
-                .mapToObj(i -> new TextWithTitle(rnd.nextDouble() < 0.3 ? Optional.empty() : Optional.of("Title #" + i),
+        final var rnd = new Random(43);
+        final var twts = IntStream.rangeClosed(1, 10)
+                                  .mapToObj(i -> new TextWithTitle(rnd.nextDouble() < 0.3 ? Optional.empty() : Optional.of("Title #" + i),
                                                  Optional.of("<p>text " + i + "</p>"),
                                                  i))
-                .collect(toList());
+                                  .collect(toList());
         // when
         underTest.render(twts);
         // then

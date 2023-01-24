@@ -47,7 +47,7 @@ public class ResourcePathTest
     public void must_properly_create_an_empty_path()
       {
         // when
-        final ResourcePath underTest = ResourcePath.EMPTY;
+        final var underTest = ResourcePath.EMPTY;
         // then
         assertThat(underTest.segments, is(not(nullValue())));
         assertThat(underTest.segments.isEmpty(), is(true));
@@ -60,7 +60,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = NullPointerException.class)
     public void must_reject_null_segments()
       {
-        final ResourcePath underTest = ResourcePath.of(List.of("a", null, "/c"));
+        final var underTest = ResourcePath.of(List.of("a", null, "/c"));
       }
 
     /*******************************************************************************************************************
@@ -69,7 +69,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void must_reject_empty_segments()
       {
-        final ResourcePath underTest = ResourcePath.of(List.of("a", "", "/c"));
+        final var underTest = ResourcePath.of(List.of("a", "", "/c"));
       }
 
     /*******************************************************************************************************************
@@ -78,7 +78,7 @@ public class ResourcePathTest
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void must_reject_segments_containing_slash()
       {
-        final ResourcePath underTest = ResourcePath.of(List.of("a", "b", "/c"));
+        final var underTest = ResourcePath.of(List.of("a", "b", "/c"));
       }
 
     /*******************************************************************************************************************
@@ -91,7 +91,7 @@ public class ResourcePathTest
                                                                 @Nonnull final List<String> expectedSegments)
       {
         // when
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // then
         assertThat(underTest.segments, is(not(nullValue())));
         assertThat(underTest.segments, is(expectedSegments));
@@ -107,7 +107,7 @@ public class ResourcePathTest
           expectedExceptionsMessageRegExp = "\\QResourcePath can't hold a URL\\E")
     public void must_reject_invalid_paths (@Nonnull final String invalidPathAsString)
       {
-        final ResourcePath underTest = ResourcePath.of(invalidPathAsString);
+        final var underTest = ResourcePath.of(invalidPathAsString);
       }
 
     /*******************************************************************************************************************
@@ -119,9 +119,9 @@ public class ResourcePathTest
                                                 @Nonnull final String expectedAsString)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(segments);
+        final var underTest = ResourcePath.of(segments);
         // when
-        final String asString = underTest.asString();
+        final var asString = underTest.asString();
         // then
         assertThat(asString, is(expectedAsString));
       }
@@ -136,10 +136,10 @@ public class ResourcePathTest
                                                       @Nonnull final String expectedPathAsString)
       {
         // given
-        final ResourcePath parentPath = ResourcePath.of(parentPathAsString);
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var parentPath = ResourcePath.of(parentPathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final ResourcePath relativePath = underTest.relativeTo(parentPath);
+        final var relativePath = underTest.relativeTo(parentPath);
         // then
         assertThat(relativePath.asString(), is(expectedPathAsString));
       }
@@ -154,8 +154,8 @@ public class ResourcePathTest
                                                          @Nonnull final String parentPathAsString)
       {
         // given
-        final ResourcePath parentPath = ResourcePath.of(parentPathAsString);
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var parentPath = ResourcePath.of(parentPathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
         underTest.relativeTo(parentPath);
       }
@@ -169,9 +169,9 @@ public class ResourcePathTest
                                                        @Nonnull final String expectedTrailingSegment)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final String leading = underTest.getLeading();
+        final var leading = underTest.getLeading();
         // then
         assertThat(leading, is(expectedLeadingSegment));
       }
@@ -185,9 +185,9 @@ public class ResourcePathTest
                                                         @Nonnull final String expectedTrailingSegment)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final String trailing = underTest.getTrailing();
+        final var trailing = underTest.getTrailing();
         // then
         assertThat(trailing, is(expectedTrailingSegment));
       }
@@ -202,9 +202,9 @@ public class ResourcePathTest
                                                        @Nonnull final String expectedPathWithoutTrailingAsString)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final ResourcePath withoutLeading = underTest.withoutLeading();
+        final var withoutLeading = underTest.withoutLeading();
         // then
         assertThat(withoutLeading.asString(), is(expectedPathWithoutLeadingAsString));
       }
@@ -219,9 +219,9 @@ public class ResourcePathTest
                                                         @Nonnull final String expectedPathWithoutTrailingAsString)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(path);
+        final var underTest = ResourcePath.of(path);
         // when
-        final ResourcePath withoutTrailing = underTest.withoutTrailing();
+        final var withoutTrailing = underTest.withoutTrailing();
         // then
         assertThat(withoutTrailing.asString(), is(expectedPathWithoutTrailingAsString));
       }
@@ -235,9 +235,9 @@ public class ResourcePathTest
                                                   final boolean expectedResult)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final boolean startsWith = underTest.startsWith(leadingSegment);
+        final var startsWith = underTest.startsWith(leadingSegment);
         // then
         assertThat(startsWith, is(expectedResult));
       }
@@ -253,10 +253,10 @@ public class ResourcePathTest
                                            @Nonnull final String expectedPrependedPathAsString)
       {
         // given
-        final ResourcePath appendingPath = ResourcePath.of(secondPathAsString);
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var appendingPath = ResourcePath.of(secondPathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final ResourcePath appendedWith = underTest.appendedWith(appendingPath);
+        final var appendedWith = underTest.appendedWith(appendingPath);
         // then
         assertThat(appendedWith.asString(), is(expectedAppendedPathAsString));
       }
@@ -272,9 +272,9 @@ public class ResourcePathTest
                                              @Nonnull final String expectedPrependedPathAsString)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final ResourcePath appendedWith = underTest.appendedWith(secondPathAsString);
+        final var appendedWith = underTest.appendedWith(secondPathAsString);
         // then
         assertThat(appendedWith.asString(), is(expectedAppendedPathAsString));
       }
@@ -290,10 +290,10 @@ public class ResourcePathTest
                                             @Nonnull final String expectedPrependedPathAsString)
       {
         // given
-        final ResourcePath prependingPath = ResourcePath.of(secondPathAsString);
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var prependingPath = ResourcePath.of(secondPathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final ResourcePath prependedWith = underTest.prependedWith(prependingPath);
+        final var prependedWith = underTest.prependedWith(prependingPath);
         // then
         assertThat(prependedWith.asString(), is(expectedPrependedPathAsString));
       }
@@ -309,9 +309,9 @@ public class ResourcePathTest
                                               @Nonnull final String expectedPrependedPathAsString)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final ResourcePath prependedWith = underTest.prependedWith(secondPathAsString);
+        final var prependedWith = underTest.prependedWith(secondPathAsString);
         // then
         assertThat(prependedWith.asString(), is(expectedPrependedPathAsString));
       }
@@ -326,9 +326,9 @@ public class ResourcePathTest
                                               @Nonnull final List<String> expectedSegments)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final int segmentCount = underTest.getSegmentCount();
+        final var segmentCount = underTest.getSegmentCount();
         // then
         assertThat(segmentCount, is(expectedSegments.size()));
       }
@@ -341,9 +341,9 @@ public class ResourcePathTest
                                                  @Nonnull final String expectedExtension)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(pathAsString);
+        final var underTest = ResourcePath.of(pathAsString);
         // when
-        final String extension = underTest.getExtension();
+        final var extension = underTest.getExtension();
         // then
         assertThat(extension, is(expectedExtension));
       }
@@ -357,9 +357,9 @@ public class ResourcePathTest
                                           @Nonnull final String encodedPathAsString)
       {
         // given
-        final ResourcePath underTest = ResourcePath.of(encodedPathAsString);
+        final var underTest = ResourcePath.of(encodedPathAsString);
         // when
-        final ResourcePath urlDecoded = underTest.urlDecoded();
+        final var urlDecoded = underTest.urlDecoded();
         // then
         assertThat(urlDecoded.asString(), is(plainPathAsString));
       }

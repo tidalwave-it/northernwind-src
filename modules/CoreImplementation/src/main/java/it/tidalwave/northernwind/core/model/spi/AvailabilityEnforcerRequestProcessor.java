@@ -69,21 +69,21 @@ public class AvailabilityEnforcerRequestProcessor implements RequestProcessor
 
         log.warn("Site unavailable, sending maintenance page");
         // TODO: use a resource
-        final String page = String.format("<!DOCTYPE html>%n"
-                + "<html>\n"
-                + "<head>\n"
-                + "<meta http-equiv=\"Refresh\" content=\"15; url=%s%s\"/>\n"
-                + "</head>\n"
-                + "<body>\n"
-                + "<div style=\"padding: 5%% 0pt;\">\n"
-                + "<div style=\"padding: 10%% 0pt; text-align: center\">"
-                + "<p style=\"font-family: sans-serif; font-size: 24px\">"
-                + "Site under maintenance, please retry later.<br/>"
-                + "This page will reload automatically.</p>"
-                + "</div>\n"
-                + "</div>\n"
-                + "</body>\n"
-                + "</html>", request.getBaseUrl(), request.getOriginalRelativeUri());
+        final var page = String.format("<!DOCTYPE html>%n"
+                                       + "<html>\n"
+                                       + "<head>\n"
+                                       + "<meta http-equiv=\"Refresh\" content=\"15; url=%s%s\"/>\n"
+                                       + "</head>\n"
+                                       + "<body>\n"
+                                       + "<div style=\"padding: 5%% 0pt;\">\n"
+                                       + "<div style=\"padding: 10%% 0pt; text-align: center\">"
+                                       + "<p style=\"font-family: sans-serif; font-size: 24px\">"
+                                       + "Site under maintenance, please retry later.<br/>"
+                                       + "This page will reload automatically.</p>"
+                                       + "</div>\n"
+                                       + "</div>\n"
+                                       + "</body>\n"
+                                       + "</html>", request.getBaseUrl(), request.getOriginalRelativeUri());
         responseHolder.response().withContentType("text/html")
                                  .withStatus(503)
                                  .withExpirationTime(Duration.ZERO)

@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -77,8 +76,8 @@ public class MercurialWorkingDirectory extends ScmWorkingDirectorySupport
       {
         try
           {
-            final ProcessExecutor executor = hgCommand().withArgument("id").start().waitForCompletion();
-            final Scanner scanner = executor.getStdout().waitForCompleted().filteredAndSplitBy("(.*)", " ");
+            final var executor = hgCommand().withArgument("id").start().waitForCompletion();
+            final var scanner = executor.getStdout().waitForCompleted().filteredAndSplitBy("(.*)", " ");
             scanner.next();
             return Optional.of(new Tag(scanner.next()));
           }

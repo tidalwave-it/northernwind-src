@@ -34,10 +34,6 @@ import java.util.regex.Matcher;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.spi.ParameterLanguageOverrideLinkPostProcessor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,16 +78,16 @@ public class NodeLinkWithContentMacroFilter extends MacroFilter
     protected String filter (@Nonnull final Matcher matcher)
       throws NotFoundException
       {
-        final String relativePath = matcher.group("relativePath");
-        final String contentRelativePath = matcher.group("contentRelativePath");
-        final Optional<String> language = Optional.ofNullable(matcher.group("language"));
+        final var relativePath = matcher.group("relativePath");
+        final var contentRelativePath = matcher.group("contentRelativePath");
+        final var language = Optional.ofNullable(matcher.group("language"));
 
-        final Site site = siteProvider.get().getSite();
-        final SiteNode siteNode = site.find(_SiteNode_).withRelativePath(relativePath).result();
-        final Content content = site.find(_Content_).withRelativePath(contentRelativePath).result();
-        final ResourcePath nodePath = siteNode.getRelativeUri();
-        final ResourcePath contentPath = content.getExposedUri().orElseThrow(() -> new NotFoundException("Content with no exposed URI"));
-        final String link = site.createLink(nodePath.appendedWith(contentPath));
+        final var site = siteProvider.get().getSite();
+        final var siteNode = site.find(_SiteNode_).withRelativePath(relativePath).result();
+        final var content = site.find(_Content_).withRelativePath(contentRelativePath).result();
+        final var nodePath = siteNode.getRelativeUri();
+        final var contentPath = content.getExposedUri().orElseThrow(() -> new NotFoundException("Content with no exposed URI"));
+        final var link = site.createLink(nodePath.appendedWith(contentPath));
 
         return language.flatMap(l -> postProcessor.map(pp -> pp.postProcess(link, l))).orElse(link);
       }

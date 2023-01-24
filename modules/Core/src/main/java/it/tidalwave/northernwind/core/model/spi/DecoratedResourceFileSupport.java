@@ -85,7 +85,7 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
             return false;
           }
 
-        final ResourceFile other = (ResourceFile)object;
+        final var other = (ResourceFile)object;
         return (this.getFileSystem() == other.getFileSystem()) && this.getPath().equals(other.getPath());
       }
 

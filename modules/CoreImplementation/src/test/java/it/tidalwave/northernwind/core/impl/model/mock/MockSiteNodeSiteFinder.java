@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import it.tidalwave.util.spi.HierarchicFinderSupport;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
@@ -105,7 +104,7 @@ public class MockSiteNodeSiteFinder extends HierarchicFinderSupport<SiteNode, Si
     public MockSiteNodeSiteFinder (@Nonnull final MockSiteNodeSiteFinder other, @Nonnull final Object override)
       {
         super(other, override);
-        final MockSiteNodeSiteFinder source = getSource(MockSiteNodeSiteFinder.class, other, override);
+        final var source = getSource(MockSiteNodeSiteFinder.class, other, override);
         this.site         = source.site;
         this.relativePath = source.relativePath;
         this.relativeUri  = source.relativeUri;
@@ -133,15 +132,15 @@ public class MockSiteNodeSiteFinder extends HierarchicFinderSupport<SiteNode, Si
             return Collections.emptyList();
           }
 
-        final Map<String, SiteNode> nodeMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
+        final var nodeMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
         return List.of(nodeMapByRelativePath.computeIfAbsent(relativePath, this::createMockSiteNodeWithPath));
       }
 
     @Nonnull
     private SiteNode createMockSiteNodeWithPath (@Nonnull final String relativePath)
       {
-        final SiteNode siteNode = createMockSiteNode(site);
-        final ResourceProperties properties = createMockProperties();
+        final var siteNode = createMockSiteNode(site);
+        final var properties = createMockProperties();
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("URI-" + relativePath.substring(1)));
         when(siteNode.getProperties()).thenReturn(properties);
 

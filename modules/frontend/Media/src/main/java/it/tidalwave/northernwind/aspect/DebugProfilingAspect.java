@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.aspect;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -50,13 +49,13 @@ public class DebugProfilingAspect
       throws Throwable
       {
         log.debug("getMetadataString({})", pjp.getArgs());
-        final long time = System.currentTimeMillis();
+        final var time = System.currentTimeMillis();
         
-        final Object result = pjp.proceed();
+        final var result = pjp.proceed();
         
         if (log.isDebugEnabled())
           {
-            final DebugProfiling annotation = getAnnotation(pjp, DebugProfiling.class);
+            final var annotation = getAnnotation(pjp, DebugProfiling.class);
             log.debug(">>>> {} in {} msec", annotation.message(), System.currentTimeMillis() - time);
           }
 
@@ -69,12 +68,12 @@ public class DebugProfilingAspect
                                                            @Nonnull final Class<T> annotationClass)
       throws NoSuchMethodException
       {
-        final MethodSignature methodSignature = (MethodSignature)pjp.getSignature();
-        Method method = methodSignature.getMethod();
+        final var methodSignature = (MethodSignature)pjp.getSignature();
+        var method = methodSignature.getMethod();
         
         if (method.getDeclaringClass().isInterface()) // FIXME && annotation inheritance -- FIXME also ancestor class
           {
-            final String methodName = pjp.getSignature().getName();
+            final var methodName = pjp.getSignature().getName();
             method = pjp.getTarget().getClass().getDeclaredMethod(methodName, method.getParameterTypes());    
           }          
         

@@ -79,16 +79,16 @@ public class DefaultSiteTest
         context = new ClassPathXmlApplicationContext("DefaultSiteTest/TestBeans.xml");
         modelFactory = context.getBean(MockModelFactory.class);
 
-        final Request request = mock(Request.class);
+        final var request = mock(Request.class);
         when(request.getBaseUrl()).thenReturn("/baseUrl");
-        final RequestHolder requestHolder = context.getBean(RequestHolder.class);
+        final var requestHolder = context.getBean(RequestHolder.class);
         when(requestHolder.get()).thenReturn(request);
 
-        final ResourceFileSystemProvider resourceFileSystemProvider = context.getBean(ResourceFileSystemProvider.class);
+        final var resourceFileSystemProvider = context.getBean(ResourceFileSystemProvider.class);
         resourceFileSystem = mock(ResourceFileSystem.class);
         when(resourceFileSystemProvider.getFileSystem()).thenReturn(resourceFileSystem);
 
-        final Site.Builder.CallBack callback = mock(Site.Builder.CallBack.class);
+        final var callback = mock(Site.Builder.CallBack.class);
         siteBuilder = new Site.Builder(modelFactory, callback)
                                         .withContextPath("/contextpath") // TODO: should also test ""
                                         .withDocumentPath("/content/document")
@@ -148,7 +148,7 @@ public class DefaultSiteTest
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
         // when
-        final DefaultSiteFinder<Content> finder = (DefaultSiteFinder<Content>)underTest.find(Content.class);
+        final var finder = (DefaultSiteFinder<Content>)underTest.find(Content.class);
         // then
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(underTest.documentMapByRelativePath)));
@@ -168,7 +168,7 @@ public class DefaultSiteTest
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
         // when
-        final DefaultSiteFinder<Resource> finder = (DefaultSiteFinder<Resource>)underTest.find(Resource.class);
+        final var finder = (DefaultSiteFinder<Resource>)underTest.find(Resource.class);
         // then
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(underTest.libraryMapByRelativePath)));
@@ -188,7 +188,7 @@ public class DefaultSiteTest
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
         // when
-        final DefaultSiteFinder<Media> finder = (DefaultSiteFinder<Media>)underTest.find(Media.class);
+        final var finder = (DefaultSiteFinder<Media>)underTest.find(Media.class);
         // then
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(underTest.mediaMapByRelativePath)));
@@ -208,7 +208,7 @@ public class DefaultSiteTest
         underTest = new DefaultSite(siteBuilder);
         underTest.initialize();
         // when
-        final DefaultSiteFinder<SiteNode> finder = (DefaultSiteFinder<SiteNode>)underTest.find(SiteNode.class);
+        final var finder = (DefaultSiteFinder<SiteNode>)underTest.find(SiteNode.class);
         // then
 //        assertThat(finder.getName) TODO
         assertThat(finder.mapByRelativePath, is(sameInstance(underTest.nodeMapByRelativePath)));
@@ -224,7 +224,7 @@ public class DefaultSiteTest
         // given
         underTest = new DefaultSite(siteBuilder);
         // when
-        final String result = underTest.createLink(ResourcePath.of("link"));
+        final var result = underTest.createLink(ResourcePath.of("link"));
         // given
         assertThat(result, is("lpp3-lpp2-lpp1-/baseUrl/contextpath/link"));
       }

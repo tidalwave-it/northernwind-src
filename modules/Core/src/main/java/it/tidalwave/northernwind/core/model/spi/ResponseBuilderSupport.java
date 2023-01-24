@@ -118,7 +118,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
       {
         ResponseBuilder<RESPONSE_TYPE> result = this;
 
-        for (final Map.Entry<String, String> entry : headers.entrySet())
+        for (final var entry : headers.entrySet())
           {
             result = result.withHeader(entry.getKey(), entry.getValue());
           }
@@ -167,7 +167,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     @Override @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> withExpirationTime (@Nonnull final Duration duration)
       {
-        final ZonedDateTime expirationTime = ZonedDateTime.now(clockSupplier.get()).plus(duration);
+        final var expirationTime = ZonedDateTime.now(clockSupplier.get()).plus(duration);
         return withHeader(HEADER_EXPIRES, createFormatter(PATTERN_RFC1123).format(expirationTime))
               .withHeader(HEADER_CACHE_CONTROL, String.format("max-age=%d", duration.getSeconds()));
       }
@@ -207,7 +207,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     public ResponseBuilder<RESPONSE_TYPE> fromFile (@Nonnull final ResourceFile file)
       throws IOException
       {
-        final byte[] bytes = file.asBytes(); // TODO: this always loads, in some cases would not be needed
+        final var bytes = file.asBytes(); // TODO: this always loads, in some cases would not be needed
 
         return withContentType(file.getMimeType())
               .withContentLength(bytes.length)
@@ -261,7 +261,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     @Override @Nonnull
     public ResponseBuilder<RESPONSE_TYPE> forException (@Nonnull final HttpStatusException e)
       {
-        String message = String.format("<h1>HTTP Status: %d</h1>%n", e.getHttpStatus());
+        var message = String.format("<h1>HTTP Status: %d</h1>%n", e.getHttpStatus());
 
         switch (e.getHttpStatus()) // FIXME: get from a resource bundle
           {
@@ -376,8 +376,8 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     @Nonnull
     protected ResponseBuilder<RESPONSE_TYPE> cacheSupport()
       {
-        final Optional<String> eTag = getHeader(HEADER_ETAG);
-        final Optional<ZonedDateTime> lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
+        final var eTag = getHeader(HEADER_ETAG);
+        final var lastModified = getDateTimeHeader(HEADER_LAST_MODIFIED);
 
         log.debug(">>>> eTag: {} - requestIfNoneMatch: {}", eTag, requestIfNoneMatch);
         log.debug(">>>> lastModified: {} - requestIfNotModifiedSince: {}", lastModified, requestIfModifiedSince);
@@ -415,7 +415,7 @@ public abstract class ResponseBuilderSupport<RESPONSE_TYPE> implements ResponseB
     @Nonnull
     private static ZonedDateTime parseDate (@Nonnull final String string)
       {
-        for (final String dateFormat : DATE_FORMATS)
+        for (final var dateFormat : DATE_FORMATS)
           {
             try
               {

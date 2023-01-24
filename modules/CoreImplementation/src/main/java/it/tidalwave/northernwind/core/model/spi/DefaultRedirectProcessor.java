@@ -39,9 +39,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
@@ -67,7 +65,7 @@ public class DefaultRedirectProcessor implements RequestProcessor
 
         public Mapping (@Nonnull final String configuration)
           {
-            final String[] parts = configuration.split(" -> ");
+            final var parts = configuration.split(" -> ");
             regex = parts[0];
             replacement = parts[1];
           }
@@ -111,30 +109,30 @@ public class DefaultRedirectProcessor implements RequestProcessor
             throws NotFoundException
       {
         site = siteProvider.get().getSite();
-        final SiteNode rootSiteNode = site.find(_SiteNode_).withRelativeUri("/").result();
-        final ResourceProperties rootSiteNodeProperties = rootSiteNode.getProperties();
-        final ResourceProperties properties = rootSiteNodeProperties.getGroup(P_GROUP_ID);
+        final var rootSiteNode = site.find(_SiteNode_).withRelativeUri("/").result();
+        final var rootSiteNodeProperties = rootSiteNode.getProperties();
+        final var properties = rootSiteNodeProperties.getGroup(P_GROUP_ID);
 
-        for (final String permanentRedirectConfig : properties.getProperty(P_PERMANENT_REDIRECTS).orElse(emptyList()))
+        for (final var permanentRedirectConfig : properties.getProperty(P_PERMANENT_REDIRECTS).orElse(emptyList()))
           {
             permanentMappings.add(new Mapping(permanentRedirectConfig));
           }
 
-        for (final String temporaryRedirectConfig : properties.getProperty(P_TEMPORARY_REDIRECTS).orElse(emptyList()))
+        for (final var temporaryRedirectConfig : properties.getProperty(P_TEMPORARY_REDIRECTS).orElse(emptyList()))
           {
             temporaryMappings.add(new Mapping(temporaryRedirectConfig));
           }
 
         log.info("Permanent redirect mappings:");
 
-        for (final Mapping mapping : permanentMappings)
+        for (final var mapping : permanentMappings)
           {
             log.info(">>>> {}", mapping);
           }
 
         log.info("Temporary redirect mappings:");
 
-        for (final Mapping mapping : temporaryMappings)
+        for (final var mapping : temporaryMappings)
           {
             log.info(">>>> {}", mapping);
           }
@@ -167,11 +165,11 @@ public class DefaultRedirectProcessor implements RequestProcessor
                   }
               } // END FIXME
 
-            final String relativeUri = request.getRelativeUri();
+            final var relativeUri = request.getRelativeUri();
 
-            for (final Mapping mapping : permanentMappings)
+            for (final var mapping : permanentMappings)
               {
-                final String newRelativeUri = mapping.replace(relativeUri);
+                final var newRelativeUri = mapping.replace(relativeUri);
 
                 if (!newRelativeUri.equals(relativeUri))
                   {
@@ -180,9 +178,9 @@ public class DefaultRedirectProcessor implements RequestProcessor
                   }
               }
 
-            for (final Mapping mapping : temporaryMappings)
+            for (final var mapping : temporaryMappings)
               {
-                final String newRelativeUri = mapping.replace(relativeUri);
+                final var newRelativeUri = mapping.replace(relativeUri);
 
                 if (!newRelativeUri.equals(relativeUri))
                   {

@@ -28,8 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.menu;
 
 import javax.annotation.Nonnull;
 import org.springframework.context.annotation.Scope;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
@@ -63,8 +61,8 @@ public class DefaultMenuViewController implements MenuViewController
     @Override
     public void renderView (@Nonnull final RenderContext context)
      {
-        final Site site = siteNode.getSite();
-        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+        final var site = siteNode.getSite();
+        final var viewProperties = siteNode.getPropertyGroup(view.getId());
         viewProperties.getProperty(P_TITLE).ifPresent(view::setTitle);
         viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(p -> site.getTemplate(getClass(), p))
                                                    .ifPresent(view::setTemplate);

@@ -39,7 +39,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.Node;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
@@ -57,14 +56,12 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.Filter;
 import lombok.extern.slf4j.Slf4j;
 import static org.springframework.core.Ordered.*;
 import static it.tidalwave.northernwind.core.model.Resource._Resource_;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
-import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
 
 /***********************************************************************************************************************
@@ -104,18 +101,18 @@ public class XsltMacroFilter implements Filter
     private void initialize()
       {
         log.info("Retrieving XSLT templates");
-        final Site site = siteProvider.get().getSite();
-        final Aggregates macros = site.find(_Resource_).withRelativePath(XSLT_TEMPLATES_PATH)
-                                      .stream()
-                                      .map(Resource::getFile)
-                                      .map(f -> Aggregate.of("body", asText(f)).with("name", f.getPath()))
-                                      .collect(toAggregates("macros"));
+        final var site = siteProvider.get().getSite();
+        final var macros = site.find(_Resource_).withRelativePath(XSLT_TEMPLATES_PATH)
+                               .stream()
+                               .map(Resource::getFile)
+                               .map(f -> Aggregate.of("body", asText(f)).with("name", f.getPath()))
+                               .collect(toAggregates("macros"));
         xslt = site.getTemplate(getClass(), Optional.empty(), "XsltTemplate.xslt").render(macros);
         log.trace(">>>> xslt: {}", xslt);
 
         try
           {
-            final Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(
+            final var clazz = Thread.currentThread().getContextClassLoader().loadClass(
                     "it.tidalwave.northernwind.core.impl.util.XhtmlMarkupSerializerDecoupler");
             serializerMethod = clazz.getMethod("serialize", Node.class, StringWriter.class);
           }
@@ -152,12 +149,12 @@ public class XsltMacroFilter implements Filter
 
         try
           {
-            final DOMResult result = new DOMResult();
-            final Transformer transformer = createTransformer();
+            final var result = new DOMResult();
+            final var transformer = createTransformer();
             // Fix for NW-100
             transformer.transform(new DOMSource(stringToNode(text.replace("xml:lang", "xml_lang"))), result);
 
-            final StringWriter stringWriter = new StringWriter();
+            final var stringWriter = new StringWriter();
 
             if (text.startsWith(DOCTYPE_HTML))
               {
@@ -196,11 +193,11 @@ public class XsltMacroFilter implements Filter
       throws TransformerConfigurationException
       {
         final Source transformation = new StreamSource(new StringReader(xslt));
-        final Transformer transformer = transformerFactory.newTransformer(transformation);
+        final var transformer = transformerFactory.newTransformer(transformation);
 
         try
           {
-            final URIResolver uriResolver = context.getBean(URIResolver.class);
+            final var uriResolver = context.getBean(URIResolver.class);
             log.trace("Using URIResolver: {}", uriResolver.getClass());
             transformer.setURIResolver(uriResolver);
           }
@@ -237,8 +234,8 @@ public class XsltMacroFilter implements Filter
       throws IOException, SAXException, ParserConfigurationException
       {
         factory.setValidating(false);
-        final DocumentBuilder builder = factory.newDocumentBuilder();
-        final InputSource source = new InputSource(new StringReader(string));
+        final var builder = factory.newDocumentBuilder();
+        final var source = new InputSource(new StringReader(string));
         return builder.parse(source);
       }
   }

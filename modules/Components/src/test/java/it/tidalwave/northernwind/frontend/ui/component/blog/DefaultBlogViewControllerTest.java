@@ -34,7 +34,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.ZonedDateTime;
 import it.tidalwave.util.Id;
@@ -49,7 +48,6 @@ import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
@@ -98,9 +96,9 @@ public class DefaultBlogViewControllerTest
           }
 
         @Override
-        protected void renderPosts (@Nonnull final List<Content> fullPosts,
-                                    @Nonnull final List<Content> leadinPosts,
-                                    @Nonnull final List<Content> linkedPosts)
+        protected void renderPosts (@Nonnull final List<? extends Content> fullPosts,
+                                    @Nonnull final List<? extends Content> leadinPosts,
+                                    @Nonnull final List<? extends Content> linkedPosts)
           {
             _fullPosts.addAll(fullPosts);
             _leadInPosts.addAll(leadinPosts);
@@ -108,7 +106,7 @@ public class DefaultBlogViewControllerTest
           }
 
         @Override
-        protected void renderTagCloud (@Nonnull final Collection<TagAndCount> tagsAndCount)
+        protected void renderTagCloud (@Nonnull final Collection<? extends TagAndCount> tagsAndCount)
           {
             this.tagsAndCount.addAll(tagsAndCount);
           }
@@ -144,19 +142,19 @@ public class DefaultBlogViewControllerTest
       {
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
 
-        final Site site = createMockSite();
+        final var site = createMockSite();
         MockSiteNodeSiteFinder.registerTo(site);
         MockContentSiteFinder.registerTo(site);
 
         viewProperties = createMockProperties();
-        final ResourceProperties siteNodeProperties = createMockProperties();
+        final var siteNodeProperties = createMockProperties();
 
         siteNode = createMockSiteNode(site);
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of(SITE_NODE_RELATIVE_URI));
 
-        final BlogView view = mock(BlogView.class);
+        final var view = mock(BlogView.class);
         when(view.getId()).thenReturn(viewId);
 
         request = mock(Request.class);
@@ -201,15 +199,15 @@ public class DefaultBlogViewControllerTest
         underTest._leadInPosts.forEach(post -> log.info(">>>> lead in: {}", post));
         underTest._linkedPosts.forEach(post -> log.info(">>>> linked:  {}", post));
 
-        final List<Integer> actualFullPostsIds   = getPostIds(underTest._fullPosts);
-        final List<Integer> actualLeadInPostsIds = getPostIds(underTest._leadInPosts);
-        final List<Integer> actualLinkedPostsIds = getPostIds(underTest._linkedPosts);
+        final var actualFullPostsIds   = getPostIds(underTest._fullPosts);
+        final var actualLeadInPostsIds = getPostIds(underTest._leadInPosts);
+        final var actualLinkedPostsIds = getPostIds(underTest._linkedPosts);
         assertThat("full posts",   actualFullPostsIds,   is(expectedFullPostIds));
         assertThat("leadIn posts", actualLeadInPostsIds, is(expectedLeadInPostIds));
         assertThat("all posts",    actualLinkedPostsIds, is(expectedLinkedPostIds));
 
-        final List<Content> allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
-        final List<ZonedDateTime> publishingDates = allPosts
+        final var allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
+        final var publishingDates = allPosts
                 .stream()
                 .map(post -> post.getProperty(Content.P_PUBLISHING_DATE).get())
                 .collect(toList());
@@ -290,12 +288,12 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.renderView(renderContext);
         // then
-        final List<Content> allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
+        final var allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
         assertThat("full posts",   underTest._fullPosts.size(), is(0));    // TODO: should be: method not called
         assertThat("leadIn posts", underTest._leadInPosts.size(), is(0));  // TODO: should be: method not called
         assertThat("all posts",    allPosts.size(), is(0));                // TODO: should be: method not called
 
-        final List<TagAndCount> actualTacs = underTest.tagsAndCount
+        final var actualTacs = underTest.tagsAndCount
                             .stream()
                             .sorted(comparing(TagAndCount::getCount).reversed().thenComparing(TagAndCount::getTag))
                             .collect(toList());
@@ -318,12 +316,12 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.renderView(renderContext);
         // then
-        final List<Content> allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
+        final var allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
         assertThat("full posts",   underTest._fullPosts.size(), is(0));    // TODO: should be: method not called
         assertThat("leadIn posts", underTest._leadInPosts.size(), is(0));  // TODO: should be: method not called
         assertThat("all posts",    allPosts.size(), is(0));                // TODO: should be: method not called
 
-        final List<TagAndCount> actualTacs = underTest.tagsAndCount
+        final var actualTacs = underTest.tagsAndCount
                             .stream()
                             .sorted(comparing(TagAndCount::getCount).reversed().thenComparing(TagAndCount::getTag))
                             .collect(toList());
@@ -357,11 +355,11 @@ public class DefaultBlogViewControllerTest
         // then
         if ((underTest.fullPosts.size() == 1) && underTest.leadInPosts.isEmpty() && underTest.linkedPosts.isEmpty())
           {
-            final Integer id = expectedFullPostIds.get(0);
+            final var id = expectedFullPostIds.get(0);
             assertThat(underTest.fullPosts.get(0), is(mockPosts.getPosts().get(id)));
             verify(requestContext).setDynamicNodeProperty(eq(PD_TITLE),    eq(expectedTitle));
 
-            final String sid = String.format("%2d", id);
+            final var sid = String.format("%2d", id);
             verify(requestContext).setDynamicNodeProperty(eq(PD_ID),       eq("id#" + sid));
             verify(requestContext).setDynamicNodeProperty(eq(PD_URL),      eq("http://acme.com/blogNode/post-" + sid + "/"));
 
@@ -395,14 +393,14 @@ public class DefaultBlogViewControllerTest
         // when
         final List<? extends SiteNode> children = underTest.findVirtualSiteNodes().results();
         // then
-        final List<String> expectedUris = mockPosts.getPosts().stream()
-                                               .map(c -> c.getExposedUri().get().prependedWith(SITE_NODE_RELATIVE_URI).asString())
-                                               .sorted()
-                                               .collect(toList());
-        final List<String> actualUris = children.stream()
-                                                .map(n -> n.getRelativeUri().asString())
-                                                .sorted()
-                                                .collect(toList());
+        final var expectedUris = mockPosts.getPosts().stream()
+                                          .map(c -> c.getExposedUri().get().prependedWith(SITE_NODE_RELATIVE_URI).asString())
+                                          .sorted()
+                                          .collect(toList());
+        final var actualUris = children.stream()
+                                       .map(n -> n.getRelativeUri().asString())
+                                       .sorted()
+                                       .collect(toList());
         assertThat(actualUris, is(expectedUris));
       }
 
@@ -417,16 +415,16 @@ public class DefaultBlogViewControllerTest
                                                @Nonnull final String expectedValue)
       {
         // given
-        final Locale locale = new Locale(localeCode, localeCode);
+        final var locale = new Locale(localeCode, localeCode);
         // default of RequestLocaleManager
-        final DateTimeFormatter dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
-                                                                 .withZone(ZoneId.of(DEFAULT_TIMEZONE));
+        final var dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
+                                                   .withZone(ZoneId.of(DEFAULT_TIMEZONE));
         when(requestLocaleManager.getLocales()).thenReturn(List.of(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
         mockViewProperty(siteNode, viewId, P_DATE_FORMAT, dateFormat);
         mockViewProperty(siteNode, viewId, P_TIME_ZONE, timeZone);
         // when
-        final String actualValue = underTest.formatDateTime(dateTime);
+        final var actualValue = underTest.formatDateTime(dateTime);
         // then
         assertThat(actualValue, is(expectedValue));
       }
@@ -618,20 +616,20 @@ public class DefaultBlogViewControllerTest
     @DataProvider
     private Object[][] dateTestDataProvider()
       {
-        final ZonedDateTime dt = Instant.ofEpochMilli(1344353463985L).atZone(ZoneId.of("GMT"));
+        final var dt = Instant.ofEpochMilli(1344353463985L).atZone(ZoneId.of("GMT"));
 
         final Optional<String> noPattern   = Optional.empty();
-        final Optional<String> pattern     = Optional.of("EEEEEEEEEE, MMMMMM d, yyyy");
-        final Optional<String> shortStyle  = Optional.of("S-");
-        final Optional<String> mediumStyle = Optional.of("M-");
-        final Optional<String> longStyle   = Optional.of("L-");
-        final Optional<String> fullStyle   = Optional.of("F-");
+        final var pattern     = Optional.of("EEEEEEEEEE, MMMMMM d, yyyy");
+        final var shortStyle  = Optional.of("S-");
+        final var mediumStyle = Optional.of("M-");
+        final var longStyle   = Optional.of("L-");
+        final var fullStyle   = Optional.of("F-");
 
         final Optional<String> tzNone      = Optional.empty();
-        final Optional<String> tzGMT       = Optional.of("GMT");
-        final Optional<String> tzCET       = Optional.of("CET");
-        final Optional<String> tzPDT       = Optional.of("America/Los_Angeles");
-        final Optional<String> tzGMT10     = Optional.of("GMT+10");
+        final var tzGMT       = Optional.of("GMT");
+        final var tzCET       = Optional.of("CET");
+        final var tzPDT       = Optional.of("America/Los_Angeles");
+        final var tzGMT10     = Optional.of("GMT+10");
 
         return new Object[][]
           {
@@ -642,11 +640,11 @@ public class DefaultBlogViewControllerTest
             { "en", noPattern,     dt,     tzPDT,      "Tuesday, August 7, 2012 8:31:03 AM PDT"},
             { "en", noPattern,     dt,     tzGMT10,    "Wednesday, August 8, 2012 1:31:03 AM GMT+10:00"},
 
-            { "it", noPattern,     dt,     tzNone,     "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
-            { "it", noPattern,     dt,     tzGMT,      "marted\u00ec 7 agosto 2012 15:31:03 GMT"},
-            { "it", noPattern,     dt,     tzCET,      "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
-            { "it", noPattern,     dt,     tzPDT,      "marted\u00ec 7 agosto 2012 8:31:03 PDT"},
-            { "it", noPattern,     dt,     tzGMT10,    "mercoled\u00ec 8 agosto 2012 1:31:03 GMT+10:00"},
+            { "it", noPattern,     dt,     tzNone,     "martedì 7 agosto 2012 17:31:03 CEST"},
+            { "it", noPattern,     dt,     tzGMT,      "martedì 7 agosto 2012 15:31:03 GMT"},
+            { "it", noPattern,     dt,     tzCET,      "martedì 7 agosto 2012 17:31:03 CEST"},
+            { "it", noPattern,     dt,     tzPDT,      "martedì 7 agosto 2012 8:31:03 PDT"},
+            { "it", noPattern,     dt,     tzGMT10,    "mercoledì 8 agosto 2012 1:31:03 GMT+10:00"},
 
 
             { "en", pattern,       dt,     tzNone,     "Tuesday, August 7, 2012"},
@@ -655,11 +653,11 @@ public class DefaultBlogViewControllerTest
             { "en", pattern,       dt,     tzPDT,      "Tuesday, August 7, 2012"},
             { "en", pattern,       dt,     tzGMT10,    "Wednesday, August 8, 2012"},
 
-            { "it", pattern,       dt,     tzNone,     "marted\u00ec, agosto 7, 2012"}, // FIXME: should be '7 agosto'
-            { "it", pattern,       dt,     tzGMT,      "marted\u00ec, agosto 7, 2012"},
-            { "it", pattern,       dt,     tzCET,      "marted\u00ec, agosto 7, 2012"},
-            { "it", pattern,       dt,     tzPDT,      "marted\u00ec, agosto 7, 2012"},
-            { "it", pattern,       dt,     tzGMT10,    "mercoled\u00ec, agosto 8, 2012"},
+            { "it", pattern,       dt,     tzNone,     "martedì, agosto 7, 2012"}, // FIXME: should be '7 agosto'
+            { "it", pattern,       dt,     tzGMT,      "martedì, agosto 7, 2012"},
+            { "it", pattern,       dt,     tzCET,      "martedì, agosto 7, 2012"},
+            { "it", pattern,       dt,     tzPDT,      "martedì, agosto 7, 2012"},
+            { "it", pattern,       dt,     tzGMT10,    "mercoledì, agosto 8, 2012"},
 
 
             { "en", shortStyle,    dt,     tzNone,     "8/7/12 5:31 PM"},
@@ -707,11 +705,11 @@ public class DefaultBlogViewControllerTest
             { "en", fullStyle,     dt,     tzPDT,      "Tuesday, August 7, 2012 8:31:03 AM PDT"},
             { "en", fullStyle,     dt,     tzGMT10,    "Wednesday, August 8, 2012 1:31:03 AM GMT+10:00"},
 
-            { "it", fullStyle,     dt,     tzNone,     "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
-            { "it", fullStyle,     dt,     tzGMT,      "marted\u00ec 7 agosto 2012 15:31:03 GMT"},
-            { "it", fullStyle,     dt,     tzCET,      "marted\u00ec 7 agosto 2012 17:31:03 CEST"},
-            { "it", fullStyle,     dt,     tzPDT,      "marted\u00ec 7 agosto 2012 8:31:03 PDT"},
-            { "it", fullStyle,     dt,     tzGMT10,    "mercoled\u00ec 8 agosto 2012 1:31:03 GMT+10:00"},
+            { "it", fullStyle,     dt,     tzNone,     "martedì 7 agosto 2012 17:31:03 CEST"},
+            { "it", fullStyle,     dt,     tzGMT,      "martedì 7 agosto 2012 15:31:03 GMT"},
+            { "it", fullStyle,     dt,     tzCET,      "martedì 7 agosto 2012 17:31:03 CEST"},
+            { "it", fullStyle,     dt,     tzPDT,      "martedì 7 agosto 2012 8:31:03 PDT"},
+            { "it", fullStyle,     dt,     tzGMT10,    "mercoledì 8 agosto 2012 1:31:03 GMT+10:00"},
           };
       }
 
@@ -720,9 +718,9 @@ public class DefaultBlogViewControllerTest
      ******************************************************************************************************************/
     private static void assertSortedInReverseOrder (@Nonnull final List<ZonedDateTime> dates)
       {
-        final List<ZonedDateTime> sorted = dates.stream()
-                                                .sorted(comparing(ZonedDateTime::toEpochSecond).reversed())
-                                                .collect(toList());
+        final var sorted = dates.stream()
+                                .sorted(comparing(ZonedDateTime::toEpochSecond).reversed())
+                                .collect(toList());
         assertThat("Improperly sorted", dates, is(sorted));
       }
 

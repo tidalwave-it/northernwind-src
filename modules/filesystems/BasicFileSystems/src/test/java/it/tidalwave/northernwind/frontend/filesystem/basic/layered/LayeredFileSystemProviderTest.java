@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.List;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
@@ -118,18 +117,18 @@ public class LayeredFileSystemProviderTest
         // given
         final List<ResourceFileSystemProvider> fileSystemProviders = new ArrayList<>();
 
-        for (final String fileSystemName : fileSystemNames)
+        for (final var fileSystemName : fileSystemNames)
           {
             // TODO: should mock a ResourceFileSystemProvider instead of using a LocalFileSystemProvider
             //       Otherwise, declare this an integration test.
-            final LocalFileSystemProvider fs1 = new LocalFileSystemProvider();
+            final var fs1 = new LocalFileSystemProvider();
             fs1.setRootPath(FS_BASE + testCase + fileSystemName);
             fileSystemProviders.add(fs1);
           }
         // when
         underTest.setDelegates(fileSystemProviders);
         // then
-        final TestResource tr = helper.testResourceFor(testCase + ".txt");
+        final var tr = helper.testResourceFor(testCase + ".txt");
         dump(underTest.getFileSystem(), tr);
         tr.assertActualFileContentSameAsExpected();
       }
@@ -164,7 +163,7 @@ public class LayeredFileSystemProviderTest
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private static void dump (@Nonnull final ResourceFile file, @Nonnull final List<String> lines)
+    private static void dump (@Nonnull final ResourceFile file, @Nonnull final List<? super String> lines)
             throws IOException
       {
         if (file.isData())
@@ -175,7 +174,7 @@ public class LayeredFileSystemProviderTest
           }
         else
           {
-            for (final ResourceFile child : file.findChildren().results())
+            for (final var child : file.findChildren().results())
               {
                 dump(child, lines);
               }
@@ -190,7 +189,7 @@ public class LayeredFileSystemProviderTest
                                     @Nonnull final String path)
             throws IOException
       {
-        final Path file = Paths.get(FS_BASE, testCase + fileSystemName, path);
+        final var file = Paths.get(FS_BASE, testCase + fileSystemName, path);
         Files.createDirectories(file.getParent());
         Files.write(file, List.of(fileSystemName + ": " + path));
         log.info("Created {} - {}:{}", testCase, fileSystemName, path);

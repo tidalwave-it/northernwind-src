@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.io.ByteArrayOutputStream;
@@ -54,12 +53,12 @@ public class ResponseBuilderTestable extends ResponseBuilderSupport<byte[]>
     @Override @Nonnull
     protected byte[] doBuild()
       {
-        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             final DataOutputStream dos = new DataOutputStream(baos))
+        try (final var baos = new ByteArrayOutputStream();
+             final var dos = new DataOutputStream(baos))
           {
             dos.writeBytes("HTTP/1.1 " + httpStatus + "\n");
 
-            for (final Entry<String, String> entry : headerMap.entrySet())
+            for (final var entry : headerMap.entrySet())
               {
                 dos.writeBytes(String.format("%s: %s%n", entry.getKey(), entry.getValue()));
               }

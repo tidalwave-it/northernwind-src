@@ -192,7 +192,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     public String getExtension()
       {
-        final String trailing = getTrailing();
+        final var trailing = getTrailing();
         return !trailing.contains(".") ? "" : trailing.replaceAll("^.*\\.", "");
       }
 
@@ -347,7 +347,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     public String asString()
       {
-        final String string = segments.stream().collect(joining("/", "/", ""));
+        final var string = segments.stream().collect(joining("/", "/", ""));
 
         // FIXME: this check is probably redundant now that there are safety tests
         if (string.contains("//"))
@@ -389,7 +389,7 @@ public class ResourcePath implements Serializable
             throw new IllegalArgumentException("ResourcePath can't hold a URL");
           }
 
-        final int start = path.startsWith("/") ? 1 : 0;
+        final var start = path.startsWith("/") ? 1 : 0;
         return path.substring(start);
       }
 
@@ -401,7 +401,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     private static List<String> validated (@Nonnull final List<String> segments)
       {
-        for (final String segment : segments)
+        for (final var segment : segments)
           {
             if ("".equals(segment))
               {

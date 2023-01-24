@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
 import it.tidalwave.northernwind.frontend.filesystem.basic.ZipFileSystemProvider;
@@ -59,17 +58,17 @@ public class DelegateZipFileSystemsDiscoverer implements FileSystemProvidersProv
 
         try
           {
-            final ResourceFile zipFolder = localFileSystemProvider.getFileSystem().findFileByPath(fileSystemsFolder);
+            final var zipFolder = localFileSystemProvider.getFileSystem().findFileByPath(fileSystemsFolder);
 
             if (zipFolder != null)
               {
-                for (final ResourceFile fo : zipFolder.findChildren().results())
+                for (final var fo : zipFolder.findChildren().results())
                   {
 //                    if (fo.hasExt("zip") || fo.hasExt("jar"))
-                    final String name = fo.getName();
+                    final var name = fo.getName();
                     if (name.endsWith(".zip") || name.endsWith(".jar"))
                       {
-                        final ZipFileSystemProvider zipFileSystemProvider = new ZipFileSystemProvider();
+                        final var zipFileSystemProvider = new ZipFileSystemProvider();
                         zipFileSystemProvider.setZipFilePath(fo.toFile().getAbsolutePath());
                         fileSystemProviders.add(zipFileSystemProvider);
                       }

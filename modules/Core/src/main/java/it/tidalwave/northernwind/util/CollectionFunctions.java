@@ -42,6 +42,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public final class CollectionFunctions
   {
+    // FIXME: drop this class, use CollectionUtils in TFT.
     /*******************************************************************************************************************
      *
      * Returns a concatenation of the given {@link Collection}s.
@@ -52,11 +53,11 @@ public final class CollectionFunctions
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> List<T>   concat (@Nonnull final Collection<T>... collections)
+    public static <T> List<T> concat (@Nonnull final Collection<T>... collections)
       {
         final List<T> result = new ArrayList<>();
 
-        for (final Collection<T> collection : collections)
+        for (final var collection : collections)
           {
             result.addAll(collection);
           }
@@ -79,7 +80,7 @@ public final class CollectionFunctions
     @Nonnull
     public static <T> List<T> safeSubList (@Nonnull final List<T> list, final int from, final int to)
       {
-        final int to2 = Math.min(list.size(), to);
+        final var to2 = Math.min(list.size(), to);
         return (from >= to2) ? emptyList() : list.subList(from, to2);
       }
 
@@ -98,7 +99,7 @@ public final class CollectionFunctions
       {
         final List<List<T>> result = new ArrayList<>();
 
-        for (int i = 0; i < boundary.length - 1; i++)
+        for (var i = 0; i < boundary.length - 1; i++)
           {
             result.add(safeSubList(list, boundary[i], boundary[i + 1]));
           }

@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.core.impl.text;
 import javax.annotation.Nonnull;
 import org.stringtemplate.v4.ST;
 import it.tidalwave.northernwind.core.model.Template;
-import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
@@ -87,7 +86,7 @@ public class St4Template implements Template
     @Override @Nonnull
     public String render (@Nonnull final Aggregates ... aggregatesSet)
       {
-        for (final Aggregates aggregates : aggregatesSet)
+        for (final var aggregates : aggregatesSet)
           {
             if (aggregates.getSize() == 1)
               {
@@ -95,7 +94,7 @@ public class St4Template implements Template
               }
             else
               {
-                for (final Aggregate aggregate : aggregates)
+                for (final var aggregate : aggregates)
                   {
                     st.add(aggregates.getName(), aggregate.getMap());
                   }

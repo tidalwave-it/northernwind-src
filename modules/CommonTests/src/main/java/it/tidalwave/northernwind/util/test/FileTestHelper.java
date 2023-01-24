@@ -59,8 +59,8 @@ public class FileTestHelper
     public void assertFileContents (@Nonnull final byte[] content, @Nonnull final String fileName)
       throws IOException
       {
-        final Path actualPath = actualResults.resolve(fileName);
-        final Path expectedPath = expectedResults.resolve(fileName);
+        final var actualPath = actualResults.resolve(fileName);
+        final var expectedPath = expectedResults.resolve(fileName);
         Files.createDirectories(actualResults);
         Files.write(actualPath, content);
         assertSameContents(expectedPath.toFile(), actualPath.toFile());

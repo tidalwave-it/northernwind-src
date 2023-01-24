@@ -29,9 +29,7 @@ package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.htmlte
 import java.util.List;
 import java.util.Optional;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
@@ -82,12 +80,12 @@ public class HtmlTemplateHtmlTextWithTitleViewTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/the/template/path");
-        final Content template = site.find(_Content_).withRelativePath(templatePath).result();
-        final ResourceProperties properties = template.getProperties();
+        final var templatePath = ResourcePath.of("/the/template/path");
+        final var template = site.find(_Content_).withRelativePath(templatePath).result();
+        final var properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("$title$ $text$ $level$"));
 
-        final Aggregates aggregates = new Aggregates("content", List.of(
+        final var aggregates = new Aggregates("content", List.of(
             Aggregate.of("title", "title").with("text", "text").with("level", 2)));
 
         // when
@@ -104,12 +102,12 @@ public class HtmlTemplateHtmlTextWithTitleViewTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/the/template/path");
-        final Content template = site.find(_Content_).withRelativePath(templatePath).result();
-        final ResourceProperties properties = template.getProperties();
+        final var templatePath = ResourcePath.of("/the/template/path");
+        final var template = site.find(_Content_).withRelativePath(templatePath).result();
+        final var properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("<div class='my'>\n  $content$\n</div>"));
 
-        final Aggregates aggregates = new Aggregates("content", List.of(
+        final var aggregates = new Aggregates("content", List.of(
             Aggregate.of("title", "title 1").with("text", "text 1").with("level", 2),
             Aggregate.of("title", "title 2").with("text", "text 2").with("level", 2),
             Aggregate.of("title", "title 3").with("text", "text 3").with("level", 2)));

@@ -34,7 +34,6 @@ import java.util.stream.IntStream;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
@@ -88,7 +87,7 @@ public class HtmlTemplateCalendarView extends HtmlTemplateHtmlFragmentView imple
                         @Nonnull final Map<Integer, List<Map<String, Object>>> entries,
                         final int columns)
       {
-        final Template template = site.getTemplate(getClass(), templatePath, "Calendar.st");
+        final var template = site.getTemplate(getClass(), templatePath, "Calendar.st");
         title.ifPresent(t -> template.addAttribute("title", t));
         template.addAttribute("year",    year);
         template.addAttribute("month",   monthNames);

@@ -31,9 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.apache.commons.io.FileUtils;
-import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.spi.HierarchicFinderSupport;
 import it.tidalwave.util.test.FileComparisonUtils;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
@@ -102,27 +100,27 @@ public class XsltTemplateTestSupport
     public void setup()
       throws Exception
       {
-        final ApplicationContext context = helper.createSpringContext(
+        final var context = helper.createSpringContext(
                 "META-INF/CommonsAutoBeans.xml",
                 "XsltTemplateTest/TestBeans.xml",
                 "META-INF/CachedUriResolverBeans.xml");
         filter = context.getBean(XsltMacroFilter.class);
         context.getBean(CachedURIResolver.class).setCacheFolderPath("target/CachedUriResolver");
-        final SiteProvider siteProvider = context.getBean(SiteProvider.class);
-        final Site site = mock(Site.class);
+        final var siteProvider = context.getBean(SiteProvider.class);
+        final var site = mock(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
 
-        final ResourceFileSystemProvider fileSystemProvider = mock(ResourceFileSystemProvider.class);
+        final var fileSystemProvider = mock(ResourceFileSystemProvider.class);
         when(site.getFileSystemProvider()).thenReturn(fileSystemProvider);
 
-        final File root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
+        final var root = new File("src/main/resources/content/library/XsltTemplates").getAbsoluteFile();
         final ResourceFileSystemProvider localFileSystemProvider = new LocalFileSystemProvider();
-        final ResourceFile file = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
+        final var file = localFileSystemProvider.getFileSystem().findFileByPath(root.getAbsolutePath());
         final List<Resource> resources = new ArrayList<>();
 
-        for (final ResourceFile xsltFile : file.findChildren().results())
+        for (final var xsltFile : file.findChildren().results())
           {
-            final Resource resource = mock(Resource.class);
+            final var resource = mock(Resource.class);
             when(resource.getFile()).thenReturn(xsltFile);
             resources.add(resource);
           }
@@ -136,11 +134,11 @@ public class XsltTemplateTestSupport
     protected void test (@Nonnull final String sourceFileName)
       throws IOException
       {
-        final File sourceFile = new File("src/test/resources/" + sourceFileName);
-        final String text = FileUtils.readFileToString(sourceFile);
-        final String filter1 = filter.filter(text, "application/xhtml+xml");
-        final File actualFile = new File("target/test-artifacts/Filtered" + sourceFileName);
-        final File expectedFile = new File("src/test/resources/expected-results/Filtered" + sourceFileName);
+        final var sourceFile = new File("src/test/resources/" + sourceFileName);
+        final var text = FileUtils.readFileToString(sourceFile);
+        final var filter1 = filter.filter(text, "application/xhtml+xml");
+        final var actualFile = new File("target/test-artifacts/Filtered" + sourceFileName);
+        final var expectedFile = new File("src/test/resources/expected-results/Filtered" + sourceFileName);
         FileUtils.writeStringToFile(actualFile, filter1);
         FileComparisonUtils.assertSameContents(expectedFile, actualFile);
       }

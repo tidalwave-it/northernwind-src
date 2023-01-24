@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.htmlte
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
@@ -97,9 +96,9 @@ public class HtmlTemplateHtmlTextWithTitleViewController extends DefaultHtmlText
      *
      ******************************************************************************************************************/
     @Override
-    protected void render (@Nonnull final List<TextWithTitle> txts)
+    protected void render (@Nonnull final List<? extends TextWithTitle> txts)
       {
-        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+        final var viewProperties = siteNode.getPropertyGroup(view.getId());
         view.render(viewProperties.getProperty(P_WRAPPER_TEMPLATE_PATH),
                     viewProperties.getProperty(P_TEMPLATE_PATH),
                     txts.stream().map(HtmlTemplateHtmlTextWithTitleViewController::toAggregate).collect(toAggregates("contents")));

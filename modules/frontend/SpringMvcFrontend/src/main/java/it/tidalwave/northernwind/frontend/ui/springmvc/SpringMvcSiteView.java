@@ -76,13 +76,11 @@ public class SpringMvcSiteView implements SiteView
         log.info("renderSiteNode({})", siteNode);
         httpStatus.set(HttpStatus.OK);
         final RenderContext renderContext = new DefaultRenderContext(request, requestContext);
-        final ViewAndControllerLayoutBuilder vacBuilder = new ViewAndControllerLayoutBuilder(siteNode,
-                                                                                             renderContext,
-                                                                                             this::createErrorView);
+        final var vacBuilder = new ViewAndControllerLayoutBuilder(siteNode, renderContext, this::createErrorView);
         siteNode.getLayout().accept(vacBuilder);
-        final NodeViewRenderer<TextHolder> renderer = new NodeViewRenderer<>(request, requestContext, vacBuilder, SpringMvcSiteView::attach);
+        final var renderer = new NodeViewRenderer<>(request, requestContext, vacBuilder, SpringMvcSiteView::attach);
         siteNode.getLayout().accept(renderer);
-        final TextHolder textHolder = renderer.getRootComponent();
+        final var textHolder = renderer.getRootComponent();
         responseHolder.response().withStatus(httpStatus.get().value())
                                  .withBody(textHolder.asBytes(UTF_8))
                                  .withContentType(textHolder.getMimeType())
@@ -102,7 +100,7 @@ public class SpringMvcSiteView implements SiteView
     private TextHolder createErrorView (@Nonnull final Layout layout, @Nonnull final Throwable t)
       {
         log.warn("While processing " + layout, t);
-        final HttpStatus status = (t instanceof HttpStatusException)
+        final var status = (t instanceof HttpStatusException)
                 ? HttpStatus.valueOf(((HttpStatusException)t).getHttpStatus())
                 : HttpStatus.INTERNAL_SERVER_ERROR;
         httpStatus.set(status);

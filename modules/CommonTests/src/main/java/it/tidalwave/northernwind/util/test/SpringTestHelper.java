@@ -212,7 +212,7 @@ public class SpringTestHelper
      ******************************************************************************************************************/
     @Nonnull
     public ApplicationContext createSpringContext (@Nonnull final Map<String, Object> properties,
-                                                   @Nonnull final Consumer<GenericApplicationContext> modifier,
+                                                   @Nonnull final Consumer<? super GenericApplicationContext> modifier,
                                                    @Nonnull final String ... configurationFiles)
       {
         return createSpringContext(properties, modifier, new ArrayList<>(List.of(configurationFiles)));
@@ -223,14 +223,14 @@ public class SpringTestHelper
      ******************************************************************************************************************/
     @Nonnull
     private ApplicationContext createSpringContext (@Nonnull final Map<String, Object> properties,
-                                                    @Nonnull final Consumer<GenericApplicationContext> modifier,
-                                                    @Nonnull final Collection<String> configurationFiles)
+                                                    @Nonnull final Consumer<? super GenericApplicationContext> modifier,
+                                                    @Nonnull final Collection<? super String> configurationFiles)
       {
         configurationFiles.add(test.getClass().getSimpleName() + "/TestBeans.xml");
 
-        final StandardEnvironment environment = new StandardEnvironment();
+        final var environment = new StandardEnvironment();
         environment.getPropertySources().addFirst(new MapPropertySource("test", properties));
-        final GenericXmlApplicationContext context = new GenericXmlApplicationContext();
+        final var context = new GenericXmlApplicationContext();
         context.setEnvironment(environment);
         context.load(configurationFiles.toArray(new String[0]));
         modifier.accept(context);
@@ -253,7 +253,7 @@ public class SpringTestHelper
     @Nonnull
     public Path resourceFileFor (@Nonnull final String resourceName)
       {
-        final String testName = test.getClass().getSimpleName();
+        final var testName = test.getClass().getSimpleName();
         return Paths.get("target/test-classes", testName, "test-resources", resourceName);
       }
 
@@ -271,11 +271,11 @@ public class SpringTestHelper
     public String readStringFromResource (@Nonnull final String resourceName)
       throws IOException
       {
-        final Path file = resourceFileFor(resourceName);
-        final StringBuilder buffer = new StringBuilder();
-        String separator = "";
+        final var file = resourceFileFor(resourceName);
+        final var buffer = new StringBuilder();
+        var separator = "";
 
-        for (final String string : Files.readAllLines(file, UTF_8))
+        for (final var string : Files.readAllLines(file, UTF_8))
           {
             buffer.append(separator).append(string);
             separator = "\n";
@@ -305,9 +305,9 @@ public class SpringTestHelper
     public TestResource testResourceFor (@Nonnull final String resourceName)
       throws IOException
       {
-        final String testName = test.getClass().getSimpleName();
-        final Path expectedFile = findExpectedFilePath(resourceName);
-        final Path actualFile = Paths.get("target/test-artifacts", testName, resourceName);
+        final var testName = test.getClass().getSimpleName();
+        final var expectedFile = findExpectedFilePath(resourceName);
+        final var actualFile = Paths.get("target/test-artifacts", testName, resourceName);
         Files.createDirectories(actualFile.getParent());
         return new TestResource(resourceName, actualFile, expectedFile);
       }
@@ -319,9 +319,9 @@ public class SpringTestHelper
     private Path findExpectedFilePath (@Nonnull final String resourceName)
       throws IOException
       {
-        for (Class<?> testClass = test.getClass(); testClass != null; testClass = testClass.getSuperclass())
+        for (var testClass = test.getClass(); testClass != null; testClass = testClass.getSuperclass())
           {
-            final Path expectedFile = Paths.get("target/test-classes", testClass.getSimpleName(), "expected-results", resourceName);
+            final var expectedFile = Paths.get("target/test-classes", testClass.getSimpleName(), "expected-results", resourceName);
 
             if (Files.exists(expectedFile))
               {

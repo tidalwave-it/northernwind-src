@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
@@ -93,7 +92,7 @@ public abstract class DefaultHtmlTextWithTitleViewController implements HtmlText
     @Override
     public void renderView (@Nonnull final RenderContext context)
       {
-        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+        final var viewProperties = siteNode.getPropertyGroup(view.getId());
         final int titleLevel = viewProperties.getProperty(P_LEVEL).orElse(2);
         view.setClassName(viewProperties.getProperty(P_CLASS).orElse("nw-" + view.getId()));
         render(viewProperties.getProperty(P_CONTENT_PATHS).orElse(emptyList())
@@ -110,5 +109,5 @@ public abstract class DefaultHtmlTextWithTitleViewController implements HtmlText
      * @param   contents    the contents to render
      *
      ******************************************************************************************************************/
-    protected abstract void render (@Nonnull List<TextWithTitle> contents);
+    protected abstract void render (@Nonnull List<? extends TextWithTitle> contents);
   }

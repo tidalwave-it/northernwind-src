@@ -80,7 +80,7 @@ public class NorthernWindContextLoaderListener extends ContextLoaderListener
         @Override
         public String getInitParameter (@Nonnull final String name)
           {
-            final String value = name.equals(CONTEXT_CONFIG_LOCATION)
+            final var value = name.equals(CONTEXT_CONFIG_LOCATION)
                     ? (String)getAttribute("nw.contextConfigLocation")
                     : name.startsWith("nw.") ? (String)getAttribute(name)
                                              : delegate.getInitParameter(name);

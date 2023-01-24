@@ -31,7 +31,6 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
-import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -94,7 +93,7 @@ public class ViewBuilderTest
       {
         site = createMockSite();
         context = helper.createSpringContext();
-        final SiteProvider siteProvider = context.getBean(SiteProvider.class);
+        final var siteProvider = context.getBean(SiteProvider.class);
         service1 = context.getBean(MockService1.class);
         service2 = context.getBean(MockService2.class);
 
@@ -114,18 +113,18 @@ public class ViewBuilderTest
       throws Exception
       {
         // when
-        final ViewAndController viewAndController = underTest.createViewAndController(id, siteNode);
+        final var viewAndController = underTest.createViewAndController(id, siteNode);
         // then
-        final ViewController oController = viewAndController.getController();
-        final Object oView = viewAndController.getView();
+        final var oController = viewAndController.getController();
+        final var oView = viewAndController.getView();
 
         assertThat(oController, is(not(nullValue())));
         assertThat(oView, is(not(nullValue())));
         assertThat(oController, is(instanceOf(MockController.class)));
         assertThat(oView, is(instanceOf(MockView.class)));
 
-        final MockController controller = (MockController)oController;
-        final MockView view = (MockView)oView;
+        final var controller = (MockController)oController;
+        final var view = (MockView)oView;
 
         assertThat(controller.view, is(sameInstance(view)));
         assertThat(controller.siteNode, is(sameInstance(siteNode)));

@@ -74,9 +74,9 @@ public class HtmlTemplateBlogViewTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/the/template/path");
-        final Content template = site.find(_Content_).withRelativePath(templatePath).result();
-        final ResourceProperties properties = template.getProperties();
+        final var templatePath = ResourcePath.of("/the/template/path");
+        final var template = site.find(_Content_).withRelativePath(templatePath).result();
+        final var properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom posts template"));
         // when
         underTest.renderPosts(Optional.of(templatePath), Aggregates.EMPTY, Aggregates.EMPTY, Aggregates.EMPTY);
@@ -92,9 +92,9 @@ public class HtmlTemplateBlogViewTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/the/template/path");
-        final Content template = site.find(_Content_).withRelativePath(templatePath).result();
-        final ResourceProperties properties = template.getProperties();
+        final var templatePath = ResourcePath.of("/the/template/path");
+        final var template = site.find(_Content_).withRelativePath(templatePath).result();
+        final var properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom tag cloud template"));
         // when
         underTest.renderTagCloud(Optional.of(templatePath), Aggregates.EMPTY);

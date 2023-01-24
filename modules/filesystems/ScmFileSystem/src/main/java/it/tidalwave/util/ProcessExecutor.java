@@ -116,7 +116,7 @@ public interface ProcessExecutor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static ProcessExecutor forExecutable (@Nonnull String executable)
+    public static ProcessExecutor forExecutable (@Nonnull final String executable)
             throws IOException
       {
         return new DefaultProcessExecutor(executable);

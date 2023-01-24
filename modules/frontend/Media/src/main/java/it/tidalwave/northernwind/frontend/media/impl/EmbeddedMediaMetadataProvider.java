@@ -72,7 +72,7 @@ public class EmbeddedMediaMetadataProvider implements MediaMetadataProvider
       {
         try
           {
-            final Metadata metadata = metadataCache.findMetadataById(mediaId, properties);
+            final var metadata = metadataCache.findMetadataById(mediaId, properties);
             return metadata.interpolateString(template, properties);
           }
         catch (NotFoundException e)

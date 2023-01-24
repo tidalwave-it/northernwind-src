@@ -34,7 +34,6 @@ import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
 import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
 import java.time.Clock;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -79,7 +78,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends NorthernWindTestSu
         // given
         when(siteProvider.isSiteAvailable()).thenReturn(true);
         // when
-        final Status result = underTest.process(request);
+        final var result = underTest.process(request);
         // then
         assertThat(result, is(Status.CONTINUE));
 //        verifyZeroInteractions(responseHolder); FIXME would require a spy(), but it breaks DI
@@ -95,11 +94,11 @@ public class AvailabilityEnforcerRequestProcessorTest extends NorthernWindTestSu
         // given
         when(siteProvider.isSiteAvailable()).thenReturn(false);
         // when
-        final Status result = underTest.process(request);
+        final var result = underTest.process(request);
         // then
         assertThat(result, is(Status.BREAK));
 
-        final TestResource tr = helper.testResourceFor("response.txt");
+        final var tr = helper.testResourceFor("response.txt");
         tr.writeToActualFile(responseHolder.get());
         tr.assertActualFileContentSameAsExpected();
       }

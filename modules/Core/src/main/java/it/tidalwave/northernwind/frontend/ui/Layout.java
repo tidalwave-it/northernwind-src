@@ -32,7 +32,6 @@ import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite;
-import it.tidalwave.role.Composite.Visitor;
 import it.tidalwave.role.Identifiable;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
@@ -132,7 +131,7 @@ public interface Layout extends As, Identifiable, Composite<Layout, LayoutFinder
      *
      ******************************************************************************************************************/
     @Nonnull // TODO: push up to Composite
-    public <T> Optional<T> accept (@Nonnull Visitor<Layout, T> visitor);
+    public <T> Optional<T> accept (@Nonnull Visitor<? super Layout, T> visitor);
 
     /*******************************************************************************************************************
      *

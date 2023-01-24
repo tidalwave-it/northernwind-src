@@ -31,7 +31,6 @@ import java.util.Optional;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
@@ -98,7 +97,7 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
       {
 //        final Template postTemplate = templateHelper.getTemplate("/Templates/Blog/Post", "Post.st");
 //        postsTemplate.include("/singlePost", postTemplate);
-        final Template postsTemplate = site.getTemplate(getClass(), templatePath, "Posts.st");
+        final var postsTemplate = site.getTemplate(getClass(), templatePath, "Posts.st");
         postsTemplate.addAttribute("title", title);
         addComponent(new HtmlHolder(postsTemplate.render(fullPosts, leadinPosts, linkedPosts)));
       }
@@ -114,7 +113,7 @@ public class HtmlTemplateBlogView extends HtmlTemplateHtmlFragmentView implement
      ******************************************************************************************************************/
     public void renderTagCloud (@Nonnull final Optional<ResourcePath> templatePath, @Nonnull final Aggregates tags)
       {
-        final Template tagCloudTemplate = site.getTemplate(getClass(), templatePath, "TagCloud.st");
+        final var tagCloudTemplate = site.getTemplate(getClass(), templatePath, "TagCloud.st");
         tagCloudTemplate.addAttribute("title", title);
         addComponent(new HtmlHolder(tagCloudTemplate.render(tags)));
       }

@@ -33,7 +33,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -134,10 +133,10 @@ public class DefaultResourceProperties implements ResourceProperties
 
         final Map<Id, Map<String, Object>> othersMap = new HashMap<>();
 
-        for (final Entry<String, Object> entry : map.entrySet())
+        for (final var entry : map.entrySet())
           {
-            final String s = entry.getKey();
-            final Object value = entry.getValue();
+            final var s = entry.getKey();
+            final var value = entry.getValue();
 
             if (!s.contains("."))
               {
@@ -145,14 +144,14 @@ public class DefaultResourceProperties implements ResourceProperties
               }
             else
               {
-                final String[] x = s.split("\\.");
-                final Id groupId = new Id(x[0]);
-                final Map<String, Object> otherMap = othersMap.computeIfAbsent(groupId, __ -> new HashMap<>());
+                final var x = s.split("\\.");
+                final var groupId = new Id(x[0]);
+                final var otherMap = othersMap.computeIfAbsent(groupId, __ -> new HashMap<>());
                 otherMap.put(x[1], value);
               }
           }
 
-        for (final Entry<Id, Map<String, Object>> entry : othersMap.entrySet())
+        for (final var entry : othersMap.entrySet())
           {
             groupMap.put(entry.getKey(), new DefaultResourceProperties(entry.getKey(), entry.getValue(), propertyResolver));
           }
@@ -164,11 +163,11 @@ public class DefaultResourceProperties implements ResourceProperties
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    public <T> Optional<T> getProperty (@Nonnull final Key<T> key)
+    public <T> Optional<T> getProperty (@Nonnull final Key<? extends T> key)
       {
         try
           {
-            final Object value = propertyMap.get(key.getName());
+            final var value = propertyMap.get(key.getName());
             return Optional.of(convertValue(key, (value != null) ? value : propertyResolver.resolveProperty(id, key)));
           }
         catch (IOException e)
@@ -191,7 +190,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public ResourceProperties getGroup (@Nonnull final Id id)
       {
-        final DefaultResourceProperties properties = groupMap.get(id);
+        final var properties = groupMap.get(id);
         return properties != null ? properties : new DefaultResourceProperties(this);
 //                                  : new DefaultResourceProperties(new Builder().withId(id).withPropertyResolver(propertyResolver));
       }
@@ -226,7 +225,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public <T> DefaultResourceProperties withProperty (@Nonnull final Key<T> key, @Nonnull final T value)
       {
-        final DefaultResourceProperties result = new DefaultResourceProperties(this);
+        final var result = new DefaultResourceProperties(this);
         result.propertyMap.put(key.getName(), value); // FIXME: clone property
         return result;
       }
@@ -239,7 +238,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public DefaultResourceProperties withoutProperty (@Nonnull final Key<?> key)
       {
-        final DefaultResourceProperties result = new DefaultResourceProperties(this);
+        final var result = new DefaultResourceProperties(this);
         result.propertyMap.remove(key.getName());
         return result;
       }
@@ -252,7 +251,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public DefaultResourceProperties withProperties (@Nonnull final ResourceProperties properties)
       {
-        final DefaultResourceProperties result = new DefaultResourceProperties(this);
+        final var result = new DefaultResourceProperties(this);
         result.groupMap.put(properties.getId(), new DefaultResourceProperties((DefaultResourceProperties)properties));
         return result;
       }
@@ -265,7 +264,7 @@ public class DefaultResourceProperties implements ResourceProperties
     @Override @Nonnull
     public ResourceProperties merged (@Nonnull final ResourceProperties properties)
       {
-        final DefaultResourceProperties otherProperties = (DefaultResourceProperties)properties;
+        final var otherProperties = (DefaultResourceProperties)properties;
 
         if (!id.equals(otherProperties.id))
           {
@@ -274,14 +273,14 @@ public class DefaultResourceProperties implements ResourceProperties
 
         ResourceProperties result = new DefaultResourceProperties(this);
 
-        for (final Entry<String, Object> entry : otherProperties.propertyMap.entrySet())
+        for (final var entry : otherProperties.propertyMap.entrySet())
           {
             result = result.withProperty(Key.of(entry.getKey()), entry.getValue());
           }
 
-        for (final Entry<Id, DefaultResourceProperties> entry : otherProperties.groupMap.entrySet())
+        for (final var entry : otherProperties.groupMap.entrySet())
           {
-            final Id groupId = entry.getKey();
+            final var groupId = entry.getKey();
             final ResourceProperties propertyGroup = entry.getValue();
             result = (!groupMap.containsKey(groupId)) ? result.withProperties(propertyGroup)
                                                       : result.withProperties(groupMap.get(groupId).merged(propertyGroup));

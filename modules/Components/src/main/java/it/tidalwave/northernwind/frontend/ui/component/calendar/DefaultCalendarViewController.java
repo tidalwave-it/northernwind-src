@@ -142,9 +142,9 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
     public void prepareRendering (@Nonnull final RenderContext context)
       throws HttpStatusException
       {
-        final int requestedYear = getRequestedYear(context.getPathParams(siteNode));
-        final ResourceProperties siteNodeProperties = siteNode.getProperties();
-        final ResourceProperties viewProperties = getViewProperties();
+        final var requestedYear = getRequestedYear(context.getPathParams(siteNode));
+        final var siteNodeProperties = siteNode.getProperties();
+        final var viewProperties = getViewProperties();
 
         year      = viewProperties.getProperty(P_SELECTED_YEAR).orElse(requestedYear);
         firstYear = viewProperties.getProperty(P_FIRST_YEAR).orElse(Math.min(year, requestedYear));

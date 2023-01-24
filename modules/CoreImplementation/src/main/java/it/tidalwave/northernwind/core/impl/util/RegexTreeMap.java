@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.core.impl.util;
 
 import javax.annotation.Nonnull;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
@@ -47,11 +46,11 @@ public class RegexTreeMap<Type> extends TreeMap<String, Type>
     @Nonnull
     public static String escape (@Nonnull final String string)
       {
-        final StringBuilder builder = new StringBuilder();
+        final var builder = new StringBuilder();
 
-        for (int i = 0; i < string.length(); i++)
+        for (var i = 0; i < string.length(); i++)
           {
-            final char c = string.charAt(i);
+            final var c = string.charAt(i);
 
             if ("[\\^$.|?*+()".contains("" + c))
               {
@@ -78,15 +77,15 @@ public class RegexTreeMap<Type> extends TreeMap<String, Type>
     @Override
     public Type get (@Nonnull final Object value)
       {
-        final String stringValue = (String)value;
-        Type result = super.get(Pattern.quote(stringValue)); // first try a direct match that is fast
-        int matchLength = 0;
+        final var stringValue = (String)value;
+        var result = super.get(Pattern.quote(stringValue)); // first try a direct match that is fast
+        var matchLength = 0;
 
         if (result == null) // otherwise returns the longest match
           {
-            for (final Entry<String, Type> entry : super.entrySet())
+            for (final var entry : entrySet())
               {
-                final String regex = entry.getKey();
+                final var regex = entry.getKey();
 
                 if (stringValue.matches(regex) && (regex.length() > matchLength))
                   {

@@ -38,12 +38,10 @@ import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.mockito.InOrder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import static it.tidalwave.northernwind.core.model.Content.*;
@@ -77,7 +75,7 @@ public class DefaultMenuViewControllerTest
     private void setup()
       throws Exception
       {
-        final Id viewId = new Id("id");
+        final var viewId = new Id("id");
 
         site = createMockSite();
         MockSiteNodeSiteFinder.registerTo(site);
@@ -90,7 +88,7 @@ public class DefaultMenuViewControllerTest
           });
 
         viewProperties = createMockProperties();
-        final SiteNode siteNode = createMockSiteNode(site);
+        final var siteNode = createMockSiteNode(site);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
         view = mock(MenuView.class);
@@ -111,8 +109,8 @@ public class DefaultMenuViewControllerTest
       throws Exception
       {
         // given
-        final String templateContent = "the template content";
-        final ResourcePath templatePath = ResourcePath.of("/path/to/template");
+        final var templateContent = "the template content";
+        final var templatePath = ResourcePath.of("/path/to/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         mockProperty(_Content_, templatePath, P_TEMPLATE, templateContent);
         // when
@@ -128,7 +126,7 @@ public class DefaultMenuViewControllerTest
     public void must_not_set_the_template_when_no_property_set()
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/path/to/template");
+        final var templatePath = ResourcePath.of("/path/to/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // don't set P_TEMPLATE
         // when
@@ -144,7 +142,7 @@ public class DefaultMenuViewControllerTest
     public void must_not_set_the_template_when_no_Content()
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/path/to/nonexistent/template");
+        final var templatePath = ResourcePath.of("/path/to/nonexistent/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
         underTest.renderView(renderContext);
@@ -194,7 +192,7 @@ public class DefaultMenuViewControllerTest
         // when
         underTest.renderView(renderContext);
         // then
-        final InOrder inOrder = inOrder(view);
+        final var inOrder = inOrder(view);
         inOrder.verify(view).addLink("Node 1 title", "http://acme.com/URI-node1");
         inOrder.verify(view).addLink("Node 2 title", "http://acme.com/URI-node2");
         inOrder.verify(view).addLink("no nav. label", "http://acme.com/URI-node3");
@@ -210,7 +208,7 @@ public class DefaultMenuViewControllerTest
                                    @Nonnull final T value)
       throws NotFoundException
       {
-        final ResourceProperties properties = site.find(type).withRelativePath(path).result().getProperties();
+        final var properties = site.find(type).withRelativePath(path).result().getProperties();
         when(properties.getProperty(eq(key))).thenReturn(Optional.of(value));
       }
   }

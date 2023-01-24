@@ -61,7 +61,7 @@ public interface ResourceProperties extends As, Identifiable
      * A builder of a {@link ResourceProperties}.
      *
      ******************************************************************************************************************/
-    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor @SuppressWarnings("FieldMayBeFinal")
+    @AllArgsConstructor(access = AccessLevel.PRIVATE) @RequiredArgsConstructor
     @Getter @ToString(exclude = "callBack")
     public final class Builder
       {
@@ -134,7 +134,7 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public <T> Optional<T> getProperty (@Nonnull Key<T> key);
+    public <T> Optional<T> getProperty (@Nonnull Key<? extends T> key);
 
     /*******************************************************************************************************************
      *
@@ -145,7 +145,7 @@ public interface ResourceProperties extends As, Identifiable
      *
      ******************************************************************************************************************/
     @Nonnull
-    public default <T> Optional<T> getProperty (@Nonnull final List<Key<T>> keys)
+    public default <T> Optional<T> getProperty (@Nonnull final List<? extends Key<T>> keys)
       {
         return keys.stream().flatMap(key -> getProperty(key).stream()).findFirst();
       }

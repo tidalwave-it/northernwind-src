@@ -66,14 +66,14 @@ public class HtmlCleanupFilter implements Filter
     public static String formatHtml (@Nonnull final String text)
       throws IOException
       {
-        final StringWriter sw = new StringWriter();
-        final BufferedReader br = new BufferedReader(new StringReader(text));
+        final var sw = new StringWriter();
+        final var br = new BufferedReader(new StringReader(text));
 
-        boolean inBody = false;
+        var inBody = false;
 
         for (;;)
           {
-            final String s = br.readLine();
+            final var s = br.readLine();
 
             if (s == null)
               {

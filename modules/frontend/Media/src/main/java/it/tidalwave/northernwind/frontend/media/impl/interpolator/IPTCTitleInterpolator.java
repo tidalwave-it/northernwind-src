@@ -27,10 +27,7 @@
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
-import java.util.Optional;
 import it.tidalwave.image.metadata.IPTC;
-import it.tidalwave.image.metadata.XMP;
 
 /***********************************************************************************************************************
  *
@@ -47,8 +44,8 @@ public class IPTCTitleInterpolator extends MetadataInterpolatorSupport
     @Override @Nonnull
     public String interpolate (@Nonnull final String template, @Nonnull final Context context)
       {
-        final IPTC iptc = context.getMetadata().getDirectory(IPTC.class);
-        final Optional<String> title = iptc.get(517, String.class);
+        final var iptc = context.getMetadata().getDirectory(IPTC.class);
+        final var title = iptc.get(517, String.class);
 
         return template.replace("$" + macro + "$", title.orElse(""));
       }

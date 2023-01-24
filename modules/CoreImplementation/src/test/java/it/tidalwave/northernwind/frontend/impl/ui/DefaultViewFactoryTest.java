@@ -28,8 +28,6 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController1;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController2;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController3;
@@ -74,17 +72,17 @@ public class DefaultViewFactoryTest
         // then
         assertThat(underTest.viewBuilderMapByTypeUri.size(), is(3));
 
-        final ViewBuilder viewBuilder1 = underTest.viewBuilderMapByTypeUri.get("type1");
+        final var viewBuilder1 = underTest.viewBuilderMapByTypeUri.get("type1");
         assertThat(viewBuilder1, is(not(nullValue())));
         assertThat(viewBuilder1.viewConstructor,           is(MockView1.class.getConstructors()[0]));
         assertThat(viewBuilder1.viewControllerConstructor, is(MockController1.class.getConstructors()[0]));
 
-        final ViewBuilder viewBuilder2 = underTest.viewBuilderMapByTypeUri.get("type2");
+        final var viewBuilder2 = underTest.viewBuilderMapByTypeUri.get("type2");
         assertThat(viewBuilder2, is(not(nullValue())));
         assertThat(viewBuilder2.viewConstructor,           is(MockView2.class.getConstructors()[0]));
         assertThat(viewBuilder2.viewControllerConstructor, is(MockController2.class.getConstructors()[0]));
 
-        final ViewBuilder viewBuilder3 = underTest.viewBuilderMapByTypeUri.get("type3");
+        final var viewBuilder3 = underTest.viewBuilderMapByTypeUri.get("type3");
         assertThat(viewBuilder3, is(not(nullValue())));
         assertThat(viewBuilder3.viewConstructor,           is(MockView3.class.getConstructors()[0]));
         assertThat(viewBuilder3.viewControllerConstructor, is(MockController3.class.getConstructors()[0]));
@@ -98,15 +96,15 @@ public class DefaultViewFactoryTest
       throws Exception
       {
         // given
-        final ViewBuilder viewBuilder = mock(ViewBuilder.class);
-        final Site site = createMockSite();
-        final SiteNode siteNode = createMockSiteNode(site);
-        final Id id = new Id("theId");
-        final ViewAndController viewAndController = mock(ViewAndController.class);
+        final var viewBuilder = mock(ViewBuilder.class);
+        final var site = createMockSite();
+        final var siteNode = createMockSiteNode(site);
+        final var id = new Id("theId");
+        final var viewAndController = mock(ViewAndController.class);
         when(viewBuilder.createViewAndController(eq(id), same(siteNode))).thenReturn(viewAndController);
         underTest.viewBuilderMapByTypeUri.put("type1", viewBuilder);
         // when
-        final ViewAndController vac = underTest.createViewAndController("type1", id, siteNode);
+        final var vac = underTest.createViewAndController("type1", id, siteNode);
         // then
         verify(viewBuilder).createViewAndController(eq(id), same(siteNode));
         assertThat(vac, is(sameInstance(viewAndController)));
@@ -122,12 +120,12 @@ public class DefaultViewFactoryTest
       throws Exception
       {
         // given
-        final ViewBuilder viewBuilder = mock(ViewBuilder.class);
-        final Site site = createMockSite();
-        final SiteNode siteNode = createMockSiteNode(site);
-        final Id id = new Id("theId");
+        final var viewBuilder = mock(ViewBuilder.class);
+        final var site = createMockSite();
+        final var siteNode = createMockSiteNode(site);
+        final var id = new Id("theId");
         underTest.viewBuilderMapByTypeUri.put("registeredType", viewBuilder);
         // then
-        final ViewAndController vac = underTest.createViewAndController("unregisteredType", id, siteNode);
+        final var vac = underTest.createViewAndController("unregisteredType", id, siteNode);
       }
   }

@@ -57,7 +57,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RequiredArgsConstructor @ToString
 public abstract class MockFileSystemSupport
   {
-    private static Finder listFinder (@Nonnull final Collection<ResourceFile> results)
+    private static Finder listFinder (@Nonnull final Collection<? extends ResourceFile> results)
       {
         return ResourceFileFinderSupport.withComputeResults(input -> new ArrayList<>(results));
       }
@@ -83,7 +83,7 @@ public abstract class MockFileSystemSupport
     protected ResourceFile createRootMockFolder (@Nonnull final ResourceFileSystem fileSystem,
                                                  @Nonnull final String name)
       {
-        final ResourceFile folder = createMockFolder(name);
+        final var folder = createMockFolder(name);
         when(fileSystem.findFileByPath(eq(name))).thenReturn(folder);
         return folder;
       }
@@ -96,9 +96,9 @@ public abstract class MockFileSystemSupport
                                              @Nonnull final ResourceFile parentFolder,
                                              @Nonnull final String name)
       {
-        final ResourcePath path = parentFolder.getPath().appendedWith(name);
+        final var path = parentFolder.getPath().appendedWith(name);
 
-        final ResourceFile folder = createMockFolder(name);
+        final var folder = createMockFolder(name);
         when(folder.getParent()).thenReturn(parentFolder);
         when(folder.getPath()).thenReturn(path);
         when(folder.toString()).thenReturn(path.asString());
@@ -119,9 +119,9 @@ public abstract class MockFileSystemSupport
                                            @Nonnull final ResourceFile parentFolder,
                                            @Nonnull final String name)
       {
-        final ResourcePath path = parentFolder.getPath().appendedWith(name);
+        final var path = parentFolder.getPath().appendedWith(name);
 
-        final ResourceFile file = createMockFile(name);
+        final var file = createMockFile(name);
         when(file.getParent()).thenReturn(parentFolder);
         when(file.getPath()).thenReturn(path);
         when(file.toString()).thenReturn(path.asString());
@@ -140,7 +140,7 @@ public abstract class MockFileSystemSupport
     @Nonnull
     private static ResourceFile createMockFolder (@Nonnull final String name)
       {
-        final ResourceFile folder = mock(ResourceFile.class);
+        final var folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
         when(folder.getPath()).thenReturn(ResourcePath.of(name));
         when(folder.isData()).thenReturn(false);
@@ -157,7 +157,7 @@ public abstract class MockFileSystemSupport
     @Nonnull
     private static ResourceFile createMockFile (@Nonnull final String name)
       {
-        final ResourceFile folder = mock(ResourceFile.class);
+        final var folder = mock(ResourceFile.class);
         when(folder.getName()).thenReturn(name);
         when(folder.getPath()).thenReturn(ResourcePath.of(name));
         when(folder.toString()).thenReturn(name);

@@ -46,7 +46,7 @@ public class DefaultResourcePropertiesTest
     public void testConvertValue (@Nonnull final Key<?> key, @Nonnull final Object value, @Nonnull final Object expectedValue)
       {
         // when
-        final Object actualValue = DefaultResourceProperties.convertValue(key, value);
+        final var actualValue = DefaultResourceProperties.convertValue(key, value);
         // then
         assertThat(actualValue, is(expectedValue));
       }

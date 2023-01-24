@@ -34,7 +34,6 @@ import java.util.ListIterator;
 import java.io.IOException;
 import it.tidalwave.util.As;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSystem;
 import it.tidalwave.northernwind.frontend.filesystem.basic.FileSystemProvidersProvider;
@@ -86,7 +85,7 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
         if (fileSystemProvidersProvider != null)
           {
             delegates.clear();
-            final List<? extends ResourceFileSystemProvider> fileSystemProviders = fileSystemProvidersProvider.getFileSystemProviders();
+            final var fileSystemProviders = fileSystemProvidersProvider.getFileSystemProviders();
             delegates.addAll(fileSystemProviders);
           }
 
@@ -95,8 +94,8 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
           {
             try
               {
-                final ResourceFileSystem fileSystem = i.previous().getFileSystem();
-                final ResourceFile fileObject = fileSystem.findFileByPath(name);
+                final var fileSystem = i.previous().getFileSystem();
+                final var fileObject = fileSystem.findFileByPath(name);
 
                 if (fileObject != null)
                   {
@@ -129,7 +128,7 @@ public class LayeredResourceFileSystem implements DecoratedResourceFileSystem
             return null;
           }
 
-        ResourceFile decorator = delegateLightWeightMap.get(delegateFile);
+        var decorator = delegateLightWeightMap.get(delegateFile);
 
         if (decorator == null)
           {

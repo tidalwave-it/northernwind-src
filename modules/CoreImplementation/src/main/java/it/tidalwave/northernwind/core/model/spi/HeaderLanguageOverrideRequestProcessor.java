@@ -29,12 +29,10 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Locale;
 import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.DefaultRequestLocaleManager;
 import lombok.extern.slf4j.Slf4j;
@@ -62,9 +60,9 @@ public class HeaderLanguageOverrideRequestProcessor implements RequestProcessor
     @Override @Nonnull
     public Status process (@Nonnull final Request request)
       {
-        final Site site = siteProvider.get().getSite();
+        final var site = siteProvider.get().getSite();
 
-        for (final Locale locale : request.getPreferredLocales())
+        for (final var locale : request.getPreferredLocales())
           {
             if (site.getConfiguredLocales().contains(locale))
               {

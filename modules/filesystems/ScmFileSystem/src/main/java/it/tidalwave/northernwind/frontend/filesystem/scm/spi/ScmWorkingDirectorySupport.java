@@ -85,7 +85,7 @@ public abstract class ScmWorkingDirectorySupport implements ScmWorkingDirectory
     public Optional<Tag> getLatestTagMatching (@Nonnull final String regexp)
             throws InterruptedException, IOException
       {
-        final List<Tag> tags = getTags();
+        final var tags = getTags();
         Collections.reverse(tags);
         return tags.stream().filter(tag -> tag.getName().matches(regexp)).findFirst();
       }

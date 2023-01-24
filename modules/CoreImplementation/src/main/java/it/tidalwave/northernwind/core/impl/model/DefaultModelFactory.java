@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,7 +130,7 @@ public class DefaultModelFactory extends ModelFactorySupport
     @Override @Nonnull
     public Request createRequestFrom (@Nonnull final HttpServletRequest httpServletRequest)
       {
-        String relativeUri = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
+        var relativeUri = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
         relativeUri = "".equals(relativeUri) ? "/" : relativeUri;
         return createRequest().withBaseUrl(getBaseUrl(httpServletRequest))
                               .withRelativeUri(relativeUri)
@@ -183,10 +182,10 @@ public class DefaultModelFactory extends ModelFactorySupport
       {
         final Map<String, List<String>> headerMap = new HashMap<>();
 
-        for (final Enumeration<String> e = httpServletRequest.getHeaderNames(); e.hasMoreElements(); )
+        for (final var e = httpServletRequest.getHeaderNames(); e.hasMoreElements(); )
           {
-            final String headerName = e.nextElement();
-            final String headerValue = httpServletRequest.getHeader(headerName); // FIXME: lacks support for multivalue
+            final var headerName = e.nextElement();
+            final var headerValue = httpServletRequest.getHeader(headerName); // FIXME: lacks support for multivalue
             headerMap.put(headerName, List.of(headerValue));
           }
 

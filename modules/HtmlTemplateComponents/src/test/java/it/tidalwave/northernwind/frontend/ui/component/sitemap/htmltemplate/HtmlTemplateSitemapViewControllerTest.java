@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.sitemap.htmltemplate;
 
-import java.util.List;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.*;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
@@ -62,20 +61,20 @@ public class HtmlTemplateSitemapViewControllerTest
     public void setup()
       throws Exception
       {
-        final Site site = createMockSite();
+        final var site = createMockSite();
 
-        final MockNodesForSitemap mockSiteNodes = new MockNodesForSitemap(site);
-        final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%02d");
+        final var mockSiteNodes = new MockNodesForSitemap(site);
+        final var nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%02d");
 
         final SiteFinder<SiteNode> finder = createMockSiteFinder();
-        when(finder.results()).thenReturn((List)nodes);
+        when(finder.results()).thenReturn(nodes);
         when(site.find(eq(SiteNode.class))).thenReturn(finder);
 
         view = new HtmlTemplateSitemapView(viewId, site);
 
-        final SiteNode siteNode = createMockSiteNode(site);
-        final ResourceProperties siteNodeProperties = createMockProperties();
-        final ResourceProperties viewProperties = createMockProperties();
+        final var siteNode = createMockSiteNode(site);
+        final var siteNodeProperties = createMockProperties();
+        final var viewProperties = createMockProperties();
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("blog"));
@@ -92,7 +91,7 @@ public class HtmlTemplateSitemapViewControllerTest
       throws Exception
       {
         // given
-        final RenderContext context = mock(RenderContext.class);
+        final var context = mock(RenderContext.class);
         // when
         underTest.renderView(context);
         // then

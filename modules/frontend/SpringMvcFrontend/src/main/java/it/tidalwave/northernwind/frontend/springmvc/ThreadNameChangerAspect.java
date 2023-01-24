@@ -46,12 +46,12 @@ public class ThreadNameChangerAspect
     public Object advice (@Nonnull final ProceedingJoinPoint pjp)
       throws Throwable
       {
-        final Thread thread = Thread.currentThread();
-        final String saveName = thread.getName();
+        final var thread = Thread.currentThread();
+        final var saveName = thread.getName();
 
         try
           {
-            final HttpServletRequest request = (HttpServletRequest)pjp.getArgs()[0];
+            final var request = (HttpServletRequest)pjp.getArgs()[0];
             thread.setName(String.format("%s-%d", request.getRemoteAddr(), counter++));
             return pjp.proceed();
           }

@@ -30,10 +30,8 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.io.InputStream;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
@@ -69,7 +67,7 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
     private final Map<Locale, Layout> layoutMapByLocale = new HashMap<>();
 
     @Getter @Nonnull
-    /* package */ InternalSite site;
+    final /* package */ InternalSite site;
 
     @Inject
     private InheritanceHelper inheritanceHelper;
@@ -119,13 +117,13 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
             uriComputationCounter++;
 
             relativeUri = ResourcePath.EMPTY;
-            final ResourceFile file = getResource().getFile();
+            final var file = getResource().getFile();
 
             if (!file.equals(site.getNodeFolder()))
               {
                 try
                   {
-                    final String segment = getResource().getProperty(P_EXPOSED_URI).orElse(decodedUtf8(file.getName()));
+                    final var segment = getResource().getProperty(P_EXPOSED_URI).orElse(decodedUtf8(file.getName()));
                     relativeUri = relativeUri.appendedWith(getParent().getRelativeUri()).appendedWith(segment);
                   }
                 catch (NotFoundException e) // FIXME: for getParent()
@@ -171,18 +169,18 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
     private void loadLayouts()
       throws IOException
       {
-        for (final Locale locale : localeRequestManager.getLocales())
+        for (final var locale : localeRequestManager.getLocales())
           {
             Layout layout = null;
             // Cannot be implemented by recursion, since each SiteNode could have a local override for its Layout -
             // local overrides are not inherited. Perhaps you could do if you keep two layouts per Node, one without the override.
             // On the other hand, inheritanceHelper encapsulates the local override policy, which applies also to Properties...
-            final List<ResourceFile> layoutFiles = inheritanceHelper.getInheritedPropertyFiles(getResource().getFile(),
-                                                                                               locale,
-                                                                                               "Components");
-            for (final ResourceFile layoutFile : layoutFiles)
+            final var layoutFiles = inheritanceHelper.getInheritedPropertyFiles(getResource().getFile(),
+                                                                                locale,
+                                                                                "Components");
+            for (final var layoutFile : layoutFiles)
               {
-                final DefaultLayout overridingLayout = loadLayout(layoutFile);
+                final var overridingLayout = loadLayout(layoutFile);
                 layout = (layout == null) ? overridingLayout : layout.withOverride(overridingLayout);
 
                 if (log.isDebugEnabled())
@@ -218,8 +216,8 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
     private SiteNode getParent()
       throws NotFoundException
       {
-        final ResourcePath parentRelativePath = getResource().getFile().getParent().getPath().urlDecoded()
-                                              .relativeTo(site.getNodeFolder().getPath());
+        final var parentRelativePath = getResource().getFile().getParent().getPath().urlDecoded()
+                                                    .relativeTo(site.getNodeFolder().getPath());
 
         return site.find(_SiteNode_).withRelativePath(parentRelativePath).result();
       }
@@ -232,7 +230,7 @@ import static it.tidalwave.northernwind.util.UrlEncoding.*;
       throws IOException
       {
         log.trace(">>>> reading layout from {}...", layoutFile.getPath().asString());
-        @Cleanup final InputStream is = layoutFile.getInputStream();
+        @Cleanup final var is = layoutFile.getInputStream();
         return modelFactory.createLayout().build().as(_Unmarshallable_).unmarshal(is);
       }
   }

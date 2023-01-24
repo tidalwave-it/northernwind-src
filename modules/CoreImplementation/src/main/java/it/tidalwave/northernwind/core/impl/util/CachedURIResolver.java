@@ -31,8 +31,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.net.URL;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -75,15 +73,15 @@ public class CachedURIResolver implements URIResolver
           {
             log.info("resolve({}, {})", href, base);
 
-            final File cacheFolder = new File(cacheFolderPath);
+            final var cacheFolder = new File(cacheFolderPath);
 
             if (!cacheFolder.exists())
               {
                 mkdirs(cacheFolder);
               }
 
-            final File cachedFile = new File(cacheFolder, encodedUtf8(href));
-            final long elapsed = System.currentTimeMillis() - cachedFile.lastModified();
+            final var cachedFile = new File(cacheFolder, encodedUtf8(href));
+            final var elapsed = System.currentTimeMillis() - cachedFile.lastModified();
 
             log.debug(">>>> cached file is {} elapsed time is {} msec", cachedFile, elapsed);
 
@@ -107,12 +105,12 @@ public class CachedURIResolver implements URIResolver
       throws IOException
       {
         log.debug(">>>> caching external document to {}", cachedFile);
-        final File tempFile = File.createTempFile("temp", ".txt", new File(cacheFolderPath));
+        final var tempFile = File.createTempFile("temp", ".txt", new File(cacheFolderPath));
         tempFile.deleteOnExit();
         log.debug(">>>> waiting for lock...");
 
-        try (final FileChannel channel = new RandomAccessFile(tempFile, "rw").getChannel();
-             final FileLock lock = channel.lock())
+        try (final var channel = new RandomAccessFile(tempFile, "rw").getChannel();
+             final var lock = channel.lock())
           {
             log.debug(">>>> got lock: {}", lock);
             FileUtils.copyURLToFile(new URL(href), tempFile, connectionTimeout, readTimeout);

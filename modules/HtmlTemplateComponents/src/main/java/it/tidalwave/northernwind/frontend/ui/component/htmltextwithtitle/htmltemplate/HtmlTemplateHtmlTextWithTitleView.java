@@ -31,7 +31,6 @@ import java.util.Optional;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleView;
@@ -88,8 +87,8 @@ public class HtmlTemplateHtmlTextWithTitleView extends HtmlHolder implements Htm
       {
         addComponent(new HtmlHolder(contents.stream().map(a ->
           {
-            final Template textTemplate = site.getTemplate(getClass(), templatePath, "Text.st");
-            final Template wrapperTemplate = site.getTemplate(getClass(), wrapperTemplatePath, "Wrapper.st");
+            final var textTemplate = site.getTemplate(getClass(), templatePath, "Text.st");
+            final var wrapperTemplate = site.getTemplate(getClass(), wrapperTemplatePath, "Wrapper.st");
 
             a.get("title").ifPresent(t -> textTemplate.addAttribute("title", t.toString()));
             a.get("text").ifPresent(t -> textTemplate.addAttribute("text", t.toString()));

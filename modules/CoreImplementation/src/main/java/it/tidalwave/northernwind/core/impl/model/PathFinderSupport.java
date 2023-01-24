@@ -38,7 +38,6 @@ import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.ToString;
@@ -80,7 +79,7 @@ public class PathFinderSupport<T extends Resource> extends HierarchicFinderSuppo
       {
         try
           {
-            final Site site = siteProvider.get().getSite();
+            final var site = siteProvider.get().getSite();
             this.typeClass = getInterface(parentResource);
             this.resourceRootPath = site.find(typeClass).withRelativePath("/").result().getFile().getPath();
             this.parentFile = parentResource.getFile();
@@ -114,7 +113,7 @@ public class PathFinderSupport<T extends Resource> extends HierarchicFinderSuppo
     @Nonnull
     protected List<T> computeResults()
       {
-        final Site site = siteProvider.get().getSite();
+        final var site = siteProvider.get().getSite();
         return parentFile.findChildren().withRecursion(true).results().stream()
             .filter(ResourceFile::isFolder)
             .flatMap(c -> site.find(typeClass).withRelativePath(c.getPath().relativeTo(resourceRootPath).urlDecoded())
@@ -131,7 +130,7 @@ public class PathFinderSupport<T extends Resource> extends HierarchicFinderSuppo
       {
         for (Class<?> type = resource.getClass(); type != null; type = type.getSuperclass())
           {
-            for (final Class<?> interface_ : type.getInterfaces())
+            for (final var interface_ : type.getInterfaces())
               {
                 if (ALLOWED_TYPES.contains(interface_))
                   {

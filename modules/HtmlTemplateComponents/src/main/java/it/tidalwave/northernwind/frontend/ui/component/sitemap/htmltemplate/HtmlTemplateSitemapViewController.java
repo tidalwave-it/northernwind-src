@@ -76,7 +76,7 @@ public class HtmlTemplateSitemapViewController extends DefaultSitemapViewControl
       }
 
     @Override
-    protected void render (@Nonnull final Set<Entry> entries)
+    protected void render (@Nonnull final Set<? extends Entry> entries)
       {
         view.setMimeType("application/xml");
         view.render(getViewProperties().getProperty(P_SITEMAP_TEMPLATE_PATH),

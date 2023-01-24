@@ -58,7 +58,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     interface Exclusions
       {
         public <T> Optional<T> getProperty (Key<T> key);
-        public <T> Optional<T> getProperty (List<Key<T>> keys);
+        public <T> Optional<T> getProperty (List<Key<? extends T>> keys);
       }
 
     @Nonnull @Delegate(types=ResourceProperties.class, excludes=Exclusions.class)
@@ -66,7 +66,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
     @Nonnull
     @Override
-    public <T> Optional<T> getProperty (@Nonnull final Key<T> key)
+    public <T> Optional<T> getProperty (@Nonnull final Key<? extends T> key)
       {
         try
           {
@@ -124,7 +124,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Override @Nonnull
     public Optional<ResourcePath> getExposedUri()
       {
-        final Optional<String> exposedUri = getProperty(P_EXPOSED_URI);
+        final var exposedUri = getProperty(P_EXPOSED_URI);
         return exposedUri.isPresent() ? exposedUri.map(ResourcePath::of) : getDefaultExposedUri();
 //        return getProperty(P_EXPOSED_URI).map(ResourcePath::of).orElseGet(() -> getDefaultExposedUri()); TODO
       }
@@ -160,8 +160,8 @@ class ResourcePropertiesDelegate implements ResourceProperties
     @Nonnull
     public static String deAccent (@Nonnull final String string)
       {
-        final String nfdNormalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
-        final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        final var nfdNormalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
+        final var pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(nfdNormalizedString).replaceAll("");
       }
 

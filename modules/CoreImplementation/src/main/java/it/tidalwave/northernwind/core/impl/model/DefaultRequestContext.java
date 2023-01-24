@@ -118,7 +118,7 @@ public class DefaultRequestContext implements RequestContext
     @Override
     public <Type> void setDynamicNodeProperty (@Nonnull final Key<Type> key, @Nonnull final Type value)
       {
-        final ResourceProperties properties = dynamicNodePropertiesHolder.get();
+        final var properties = dynamicNodePropertiesHolder.get();
         dynamicNodePropertiesHolder.set(properties.withProperty(key, value));
       }
 

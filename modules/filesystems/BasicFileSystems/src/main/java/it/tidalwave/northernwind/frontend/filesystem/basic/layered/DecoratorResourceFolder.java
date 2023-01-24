@@ -29,13 +29,11 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.io.IOException;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSupport;
@@ -80,8 +78,8 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
       {
         return ResourceFileFinderSupport.withComputeResults(finder ->
           {
-            final String name = finder.getName();
-            final boolean recursive = finder.isRecursive();
+            final var name = finder.getName();
+            final var recursive = finder.isRecursive();
 
             if (name != null)
               {
@@ -90,7 +88,7 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
                     throw new IllegalArgumentException("relativePath: " + name);
                   }
 
-                final ResourceFile child = getChildrenMap().get(name);
+                final var child = getChildrenMap().get(name);
                 return (child != null) ? singletonList(child) : emptyList();
               }
             //
@@ -116,17 +114,17 @@ class DecoratorResourceFolder extends DecoratedResourceFileSupport
           {
             childrenMap = new TreeMap<>();
 
-            for (final ListIterator<? extends ResourceFileSystemProvider> i = delegates.listIterator(delegates.size());
+            for (final var i = delegates.listIterator(delegates.size());
                  i.hasPrevious(); )
               {
                 try
                   {
-                    final ResourceFileSystem fileSystem = i.previous().getFileSystem();
-                    final ResourceFile delegateDirectory = fileSystem.findFileByPath(path.asString());
+                    final var fileSystem = i.previous().getFileSystem();
+                    final var delegateDirectory = fileSystem.findFileByPath(path.asString());
 
                     if (delegateDirectory != null)
                       {
-                        for (final ResourceFile fileObject : delegateDirectory.findChildren().results())
+                        for (final var fileObject : delegateDirectory.findChildren().results())
                           {
                             if (!childrenMap.containsKey(fileObject.getName()))
                               {

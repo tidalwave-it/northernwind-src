@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -67,10 +66,11 @@ class ImageTestBuilder
       throws Exception 
       {
         // TODO: EditableImage getMetadata() can't be mocked :-( because it's final - use PowerMock?
-        final EditableImage image = EditableImage.create(new CreateOp(10, 10, EditableImage.DataType.BYTE)); // mock(EditableImage.class);
-        final Field metadataMapByClassField = image.getClass().getDeclaredField("metadataMapByClass");
+        final var image = EditableImage.create(new CreateOp(10, 10, EditableImage.DataType.BYTE)); // mock(EditableImage.class);
+        final var metadataMapByClassField = image.getClass().getDeclaredField("metadataMapByClass");
         metadataMapByClassField.setAccessible(true);
-        final Map<Class<? extends Directory>, List<? extends Directory>> metadataMapByClass = (Map<Class<? extends Directory>, List<? extends Directory>>) metadataMapByClassField.get(image);
+        final var
+                metadataMapByClass = (Map<Class<? extends Directory>, List<? extends Directory>>) metadataMapByClassField.get(image);
         metadataMapByClass.put(TIFF.class, Collections.singletonList(tiff));
         metadataMapByClass.put(EXIF.class, Collections.singletonList(exif));
         metadataMapByClass.put(IPTC.class, Collections.singletonList(iptc));

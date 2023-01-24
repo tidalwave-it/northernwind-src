@@ -78,7 +78,7 @@ public class ViewAndControllerLayoutBuilder implements Composite.Visitor<Layout,
       {
         try
           {
-            final ViewAndController vac = createComponent(layout);
+            final var vac = createComponent(layout);
             vac.getController().prepareRendering(renderContext);
             viewAndControllerMapByLayout.put(layout, vac);
           }

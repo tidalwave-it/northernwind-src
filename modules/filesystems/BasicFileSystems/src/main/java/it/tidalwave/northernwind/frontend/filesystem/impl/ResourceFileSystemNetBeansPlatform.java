@@ -72,7 +72,7 @@ public class ResourceFileSystemNetBeansPlatform implements ResourceFileSystem
             return null;
           }
 
-        ResourceFile decorator = delegateLightWeightMap.get(fileObject);
+        var decorator = delegateLightWeightMap.get(fileObject);
 
         if (decorator == null)
           {

@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.ui.component.htmlfragment;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
@@ -66,7 +65,7 @@ public class DefaultHtmlFragmentViewController implements HtmlFragmentViewContro
     @Override
     public void renderView (@Nonnull final RenderContext context)
       {
-        final ResourceProperties viewProperties = siteNode.getPropertyGroup(view.getId());
+        final var viewProperties = siteNode.getPropertyGroup(view.getId());
         view.setContent(viewProperties.getProperty(P_CONTENT_PATHS).orElse(emptyList())
                                       .stream()
                                       .flatMap(path -> site.find(_Content_).withRelativePath(path).stream())

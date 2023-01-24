@@ -64,7 +64,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     @Override @Nonnull
     public List<Locale> getLocales()
       {
-        final Locale requestLocale = localeHolder.get();
+        final var requestLocale = localeHolder.get();
         final List<Locale> locales = new ArrayList<>(siteProvider.get().getSite().getConfiguredLocales());
 
         if (requestLocale != null)
@@ -89,7 +89,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
         final List<String> suffixes = new ArrayList<>();
         suffixes.add("");
 
-        for (final Locale locale : getLocales())
+        for (final var locale : getLocales())
           {
             suffixes.add("_" + locale.getLanguage());
           }

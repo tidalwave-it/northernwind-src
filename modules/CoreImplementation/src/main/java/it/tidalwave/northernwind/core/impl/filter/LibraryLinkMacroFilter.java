@@ -51,7 +51,7 @@ public class LibraryLinkMacroFilter extends MacroFilter
     @Override @Nonnull
     protected String filter (@Nonnull final Matcher matcher)
       {
-        final ResourcePath relativePath = ResourcePath.of(matcher.group(1));
+        final var relativePath = ResourcePath.of(matcher.group(1));
         return siteProvider.get().getSite().createLink(relativePath);
       }
   }

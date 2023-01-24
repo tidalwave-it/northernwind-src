@@ -34,7 +34,6 @@ import java.util.Optional;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
@@ -88,8 +87,8 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     public void renderView (@Nonnull final RenderContext context)
       throws Exception
       {
-        final ResourceProperties viewProperties     = getViewProperties();
-        final ResourceProperties siteNodeProperties = context.getRequestContext().getNodeProperties();
+        final var viewProperties     = getViewProperties();
+        final var siteNodeProperties = context.getRequestContext().getNodeProperties();
         viewProperties.getProperty(P_TEMPLATE_PATH).flatMap(p -> siteNode.getSite().getTemplate(getClass(), p))
                                                                                    .ifPresent(view::setTemplate);
 
@@ -156,7 +155,7 @@ public class DefaultNodeContainerViewController implements NodeContainerViewCont
     @Nonnull
     private String computeRssFeedsSection()
       {
-        final Site site = siteNode.getSite();
+        final var site = siteNode.getSite();
         return streamOf(P_RSS_FEEDS)
                 .flatMap(relativePath -> site.find(_SiteNode_).withRelativePath(relativePath).stream())
                 .map(node -> String.format(TEMPLATE_RSS_LINK,

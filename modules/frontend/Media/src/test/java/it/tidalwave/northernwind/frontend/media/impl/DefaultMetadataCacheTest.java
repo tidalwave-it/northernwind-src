@@ -40,7 +40,6 @@ import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.frontend.media.impl.DefaultMetadataCache.ExpirableMetadata;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -130,16 +129,16 @@ public class DefaultMetadataCacheTest
       throws Exception
       {
         // when
-        final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
+        final var metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
         // then
-        final ZonedDateTime expectedExpirationTime = initialTime.plusSeconds(underTest.getMetadataExpirationTime());
+        final var expectedExpirationTime = initialTime.plusSeconds(underTest.getMetadataExpirationTime());
         // FIXME: the validity of loaded data must be moved to the loader test
         assertThat(metadata.getDirectory(TIFF.class), sameInstance(tiff));
         assertThat(metadata.getDirectory(EXIF.class), sameInstance(exif));
         assertThat(metadata.getDirectory(IPTC.class), sameInstance(iptc));
         assertThat(metadata.getDirectory(XMP.class),  sameInstance(xmp));
 
-        final ExpirableMetadata expirableMetadata = underTest.metadataMapById.get(mediaId);
+        final var expirableMetadata = underTest.metadataMapById.get(mediaId);
         assertThat(expirableMetadata, is(notNullValue()));
         assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata));
         assertThat(expirableMetadata.getCreationTime(),   is(initialTime));
@@ -156,20 +155,20 @@ public class DefaultMetadataCacheTest
       throws Exception
       {
         // given
-        final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
-        final ZonedDateTime expectedExpirationTime = initialTime.plusSeconds(underTest.getMetadataExpirationTime());
+        final var metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
+        final var expectedExpirationTime = initialTime.plusSeconds(underTest.getMetadataExpirationTime());
 
-        for (ZonedDateTime now = initialTime;
+        for (var now = initialTime;
              now.isBefore(expectedExpirationTime);
              now = now.plusSeconds(underTest.getMetadataExpirationTime() / 100))
           {
             setTime(now);
             // when
-            final Metadata metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
+            final var metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
             // then
             assertThat(metadata2, is(sameInstance(metadata)));
 
-            final ExpirableMetadata expirableMetadata = underTest.metadataMapById.get(mediaId);
+            final var expirableMetadata = underTest.metadataMapById.get(mediaId);
             assertThat(expirableMetadata,                     is(notNullValue()));
             assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
             assertThat(expirableMetadata.getCreationTime(),   is(initialTime));
@@ -189,22 +188,22 @@ public class DefaultMetadataCacheTest
       throws Exception
       {
         // given
-        ZonedDateTime nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMetadataExpirationTime());
+        var nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMetadataExpirationTime());
         when(mediaFile.getLatestModificationTime()).thenReturn(initialTime.minusNanos(1));
 
-        final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
+        final var metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
 
-        for (int count = 1; count <= 10; count++)
+        for (var count = 1; count <= 10; count++)
           {
-            final ZonedDateTime now = nextExpectedExpirationTime.plusNanos(1);
+            final var now = nextExpectedExpirationTime.plusNanos(1);
             setTime(now);
             nextExpectedExpirationTime = now.plusSeconds(underTest.getMetadataExpirationTime());
             // when
-            final Metadata metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
+            final var metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
             // then
             assertThat(metadata2, is(sameInstance(metadata)));
 
-            final ExpirableMetadata expirableMetadata = underTest.metadataMapById.get(mediaId);
+            final var expirableMetadata = underTest.metadataMapById.get(mediaId);
             assertThat(expirableMetadata,                     is(notNullValue()));
             assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
             assertThat(expirableMetadata.getCreationTime(),   is(initialTime));
@@ -224,21 +223,21 @@ public class DefaultMetadataCacheTest
       throws Exception
       {
         // given
-        ZonedDateTime nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMetadataExpirationTime());
-        final Metadata metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
+        var nextExpectedExpirationTime = initialTime.plusSeconds(underTest.getMetadataExpirationTime());
+        final var metadata = underTest.findMetadataById(mediaId, siteNodeProperties);
 
-        for (int count = 1; count < 10; count++)
+        for (var count = 1; count < 10; count++)
           {
-            final ZonedDateTime now = nextExpectedExpirationTime.plusNanos(1);
+            final var now = nextExpectedExpirationTime.plusNanos(1);
             setTime(now);
             when(mediaFile.getLatestModificationTime()).thenReturn(now.plusNanos(1));
             nextExpectedExpirationTime = now.plusSeconds(underTest.getMetadataExpirationTime());
             // when
-            final Metadata metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
+            final var metadata2 = underTest.findMetadataById(mediaId, siteNodeProperties);
             // then
             assertThat(metadata2, is(not(sameInstance(metadata))));
 
-            final ExpirableMetadata expirableMetadata = underTest.metadataMapById.get(mediaId);
+            final var expirableMetadata = underTest.metadataMapById.get(mediaId);
             assertThat(expirableMetadata,                     is(notNullValue()));
             assertThat(expirableMetadata.getMetadata(),       sameInstance(metadata2));
             assertThat(expirableMetadata.getCreationTime(),   is(now));

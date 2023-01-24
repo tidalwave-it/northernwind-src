@@ -34,15 +34,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import jakarta.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Id;
-import it.tidalwave.util.Key;
 import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.io.Marshallable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
-import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;
-import it.tidalwave.northernwind.core.impl.io.jaxb.ValuesJaxb;
 import jakarta.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -99,8 +95,8 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
     @Nonnull
     private PropertiesJaxb marshal (@Nonnull final ResourceProperties properties)
       {
-        final PropertiesJaxb propertiesJaxb = objectFactory.createPropertiesJaxb();
-        final Id id = properties.getId();
+        final var propertiesJaxb = objectFactory.createPropertiesJaxb();
+        final var id = properties.getId();
 
         if ("".equals(id.stringValue()))
           {
@@ -111,15 +107,15 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
             propertiesJaxb.setId(id.stringValue());
           }
 
-        for (final Key<?> key : new TreeSet<>(properties.getKeys()))
+        for (final var key : new TreeSet<>(properties.getKeys()))
           {
-            final PropertyJaxb propertyJaxb = objectFactory.createPropertyJaxb();
+            final var propertyJaxb = objectFactory.createPropertyJaxb();
             propertyJaxb.setName(key.stringValue());
             properties.getProperty(key).ifPresent(value ->
               {
                 if (value instanceof Collection)
                   {
-                    final ValuesJaxb valuesJaxb = objectFactory.createValuesJaxb();
+                    final var valuesJaxb = objectFactory.createValuesJaxb();
                     propertyJaxb.setValues(valuesJaxb);
 
                     for (final Object valueItem : (Collection<?>)value)
@@ -136,7 +132,7 @@ public class ResourcePropertiesJaxbMarshallable implements Marshallable
               });
           }
 
-        for (final Id groupId : new TreeSet<>(properties.getGroupIds()))
+        for (final var groupId : new TreeSet<>(properties.getGroupIds()))
           {
             propertiesJaxb.getProperties().add(marshal(properties.getGroup(groupId)));
           }

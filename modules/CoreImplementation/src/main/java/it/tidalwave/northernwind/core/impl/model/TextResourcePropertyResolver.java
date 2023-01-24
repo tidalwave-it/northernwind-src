@@ -106,10 +106,10 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
       {
         log.trace("resolveProperty({})", propertyName);
 
-        final ResourceFile propertyFile = findLocalizedFile(propertyName.stringValue());
+        final var propertyFile = findLocalizedFile(propertyName.stringValue());
         log.trace(">>>> reading from {}", propertyFile.getPath());
-        final String mimeType = propertyFile.getMimeType();
-        final String charset = "application/xhtml+xml".equals(mimeType) ? "UTF-8" : Charset.defaultCharset().name();
+        final var mimeType = propertyFile.getMimeType();
+        final var charset = "application/xhtml+xml".equals(mimeType) ? "UTF-8" : Charset.defaultCharset().name();
 
         try
           {
@@ -130,14 +130,14 @@ public class TextResourcePropertyResolver implements ResourceProperties.Property
       throws NotFoundException
       {
         log.trace("findLocalizedFile({})", fileName);
-        final StringBuilder fileNamesNotFound = new StringBuilder();
-        String separator = "";
+        final var fileNamesNotFound = new StringBuilder();
+        var separator = "";
 
-        for (final String localeSuffix : localeRequestManager.getLocaleSuffixes())
+        for (final var localeSuffix : localeRequestManager.getLocaleSuffixes())
           {
-            for (final String extension : EXTENSIONS)
+            for (final var extension : EXTENSIONS)
               {
-                final String localizedFileName = fileName + localeSuffix + extension;
+                final var localizedFileName = fileName + localeSuffix + extension;
 
                 try
                   {

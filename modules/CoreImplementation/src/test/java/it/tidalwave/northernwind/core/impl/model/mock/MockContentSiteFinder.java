@@ -36,7 +36,6 @@ import java.util.Optional;
 import it.tidalwave.util.spi.HierarchicFinderSupport;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import lombok.AccessLevel;
@@ -106,7 +105,7 @@ public class MockContentSiteFinder extends HierarchicFinderSupport<Content, Site
     public MockContentSiteFinder (@Nonnull final MockContentSiteFinder other, @Nonnull final Object override)
       {
         super(other, override);
-        final MockContentSiteFinder source = getSource(MockContentSiteFinder.class, other, override);
+        final var source = getSource(MockContentSiteFinder.class, other, override);
         this.site         = source.site;
         this.relativePath = source.relativePath;
         this.relativeUri  = source.relativeUri;
@@ -134,15 +133,15 @@ public class MockContentSiteFinder extends HierarchicFinderSupport<Content, Site
             return Collections.emptyList();
           }
 
-        final Map<String, Content> contentMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
+        final var contentMapByRelativePath = SITE_CACHE.computeIfAbsent(site, __ -> new HashMap<>());
         return List.of(contentMapByRelativePath.computeIfAbsent(relativePath, MockContentSiteFinder::createMockContentWithPath));
       }
 
     @Nonnull
     private static Content createMockContentWithPath (@Nonnull final String relativePath)
       {
-        final Content content = createMockContent();
-        final ResourceProperties properties = createMockProperties();
+        final var content = createMockContent();
+        final var properties = createMockProperties();
         when(content.getProperties()).thenReturn(properties);
         when(content.getExposedUri()).thenReturn(Optional.of(mockedExposedUri(relativePath)));
 

@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.frontend.filesystem.git.impl;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import it.tidalwave.util.ProcessExecutor;
 import it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmPreparer;
@@ -46,7 +45,7 @@ public class GitPreparer extends ScmPreparer
     protected void stripChangesetsAfter (@Nonnull final String tag)
             throws IOException, InterruptedException
       {
-        final Path sourceBundle = Paths.get("src/test/resources/GitFileSystemProviderTest/git.bundle");
+        final var sourceBundle = Paths.get("src/test/resources/GitFileSystemProviderTest/git.bundle");
         gitCommand().withArguments("clone", sourceBundle.toFile().getCanonicalPath(), ".")
                     .start()
                     .waitForCompletion();

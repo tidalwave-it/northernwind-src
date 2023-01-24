@@ -45,7 +45,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import lombok.RequiredArgsConstructor;
 import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
 import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
 
@@ -98,7 +97,7 @@ public class ResponseBuilderTest
         request = mock(Request.class);
         when(request.getHeader(anyString())).thenAnswer(i -> Optional.ofNullable(headers.get(i.getArgument(0))));
 
-        final MockResponseHolder responseHolder = responseHolderFactory.get();
+        final var responseHolder = responseHolderFactory.get();
         responseHolder.setClockSupplier(() -> Clock.fixed(currentTime.toInstant(), currentTime.getZone()));
         underTest = responseHolder.response();
       }
@@ -111,7 +110,7 @@ public class ResponseBuilderTest
       throws Exception
       {
         // when
-        final ResponseBuilder<?> builder = underTest.fromFile(resourceFile);
+        final var builder = underTest.fromFile(resourceFile);
         // then
         assertContents(builder, "ResourceFileOutput.txt");
       }
@@ -124,7 +123,7 @@ public class ResponseBuilderTest
       throws Exception
       {
         // when
-        final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).withExpirationTime(Duration.ofDays(7));
+        final var builder = underTest.fromFile(resourceFile).withExpirationTime(Duration.ofDays(7));
         // then
         assertContents(builder, "ResourceFileOutputWithExpirationTime.txt");
       }
@@ -139,7 +138,7 @@ public class ResponseBuilderTest
         // given
         headers.put(HEADER_IF_NONE_MATCH, "\"xxxx\"");
         // when
-        final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).forRequest(request);
+        final var builder = underTest.fromFile(resourceFile).forRequest(request);
         // then
         assertContents(builder, "ResourceFileOutput.txt");
       }
@@ -154,7 +153,7 @@ public class ResponseBuilderTest
         // given
         headers.put(HEADER_IF_NONE_MATCH, "\"1341242553456\"");
         // when
-        final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).forRequest(request);
+        final var builder = underTest.fromFile(resourceFile).forRequest(request);
         // then
         assertContents(builder, "ResourceFileNotModifiedOutput.txt");
       }
@@ -166,13 +165,13 @@ public class ResponseBuilderTest
     public void must_output_a_ResourceFile_when_IfModifiedSince_less_recent_than_ModifiedTime()
       throws Exception
       {
-        for (int deltaSeconds = -10; deltaSeconds < 0; deltaSeconds++)
+        for (var deltaSeconds = -10; deltaSeconds < 0; deltaSeconds++)
           {
             // given
-            final ZonedDateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
+            final var ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             headers.put(HEADER_IF_MODIFIED_SINCE, toRfc1123String(ifModifiedSinceTime));
             // when
-            final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).forRequest(request);
+            final var builder = underTest.fromFile(resourceFile).forRequest(request);
             // then
             assertContents(builder, "ResourceFileOutput.txt");
           }
@@ -186,13 +185,13 @@ public class ResponseBuilderTest
       throws Exception
       {
         // corner case: same time should return NotModified
-        for (int deltaSeconds = 0; deltaSeconds < 10; deltaSeconds++)
+        for (var deltaSeconds = 0; deltaSeconds < 10; deltaSeconds++)
           {
             // given
-            final ZonedDateTime ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
+            final var ifModifiedSinceTime = resourceLatestModifiedTime.plusSeconds(deltaSeconds);
             headers.put(HEADER_IF_MODIFIED_SINCE, toRfc1123String(ifModifiedSinceTime));
             // when
-            final ResponseBuilder<?> builder = underTest.fromFile(resourceFile).forRequest(request);
+            final var builder = underTest.fromFile(resourceFile).forRequest(request);
             // then
             assertContents(builder, "ResourceFileNotModifiedOutput.txt");
           }
@@ -208,9 +207,9 @@ public class ResponseBuilderTest
       throws Exception
       {
         // given
-        final NotFoundException e = new NotFoundException("foo bar");
+        final var e = new NotFoundException("foo bar");
         // when
-        final ResponseBuilder<?> builder = underTest.forException(e);
+        final var builder = underTest.forException(e);
         // then
         assertContents(builder, "NotFoundExceptionOutput.txt");
       }
@@ -223,9 +222,9 @@ public class ResponseBuilderTest
       throws Exception
       {
         // given
-        final IOException e = new IOException("foo bar");
+        final var e = new IOException("foo bar");
         // when
-        final ResponseBuilder<?> builder = underTest.forException(e);
+        final var builder = underTest.forException(e);
         // then
         assertContents(builder, "InternalErrorOutput.txt");
       }
@@ -238,7 +237,7 @@ public class ResponseBuilderTest
       throws Exception
       {
         // when
-        final ResponseBuilder<?> builder = underTest.permanentRedirect("http://acme.com");
+        final var builder = underTest.permanentRedirect("http://acme.com");
         // then
         assertContents(builder, "PermanentRedirectOutput.txt");
       }
@@ -249,7 +248,7 @@ public class ResponseBuilderTest
     protected void assertContents (@Nonnull final ResponseBuilder<?> builder, final String fileName)
       throws Exception
       {
-        final TestResource tr = helper.testResourceFor(fileName);
+        final var tr = helper.testResourceFor(fileName);
         tr.writeToActualFile((byte[])builder.build());
         tr.assertActualFileContentSameAsExpected();
       }

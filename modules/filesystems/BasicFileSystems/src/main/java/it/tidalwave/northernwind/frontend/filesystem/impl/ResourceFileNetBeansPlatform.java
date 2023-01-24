@@ -126,14 +126,14 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       {
         return ResourceFileFinderSupport.withComputeResults(getClass().getSimpleName(), f ->
           {
-            final String name = f.getName();
-            final boolean recursive = f.isRecursive();
+            final var name = f.getName();
+            final var recursive = f.isRecursive();
 
             final List<ResourceFile> result = new ArrayList<>();
 
             if (name != null)
               {
-                final FileObject child = delegate.getFileObject(name);
+                final var child = delegate.getFileObject(name);
 
                 if (child != null)
                   {
@@ -162,9 +162,9 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     public ZonedDateTime getLatestModificationTime()
       {
         // See NW-154
-        final File file = toFile();
+        final var file = toFile();
 
-        final long millis = (file != null) ? file.lastModified() : delegate.lastModified().getTime();
+        final var millis = (file != null) ? file.lastModified() : delegate.lastModified().getTime();
         return Instant.ofEpochMilli(millis).atZone(ZoneId.of("GMT"));
       }
 

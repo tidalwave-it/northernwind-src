@@ -49,15 +49,15 @@ public final class BootLogger
     public void log (@Nonnull final String string)
       {
         @SuppressWarnings("squid:S106")
-        final String s = String.format("%s: %s", owner.getSimpleName(), string);
+        final var s = String.format("%s: %s", owner.getSimpleName(), string);
         System.err.println(s);
         BUILDER.append(s).append("\n");
       }
 
     public void log (@Nonnull final Throwable t)
       {
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw);
+        final var sw = new StringWriter();
+        final var pw = new PrintWriter(sw);
         t.printStackTrace(pw);
         pw.flush();
         log(t + "\n" + sw);

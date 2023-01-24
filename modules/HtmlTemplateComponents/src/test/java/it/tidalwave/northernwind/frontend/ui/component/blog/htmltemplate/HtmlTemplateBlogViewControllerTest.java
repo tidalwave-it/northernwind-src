@@ -32,7 +32,6 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import it.tidalwave.util.LocalizedDateTimeFormatters;
 import it.tidalwave.util.Id;
@@ -85,7 +84,7 @@ public class HtmlTemplateBlogViewControllerTest
 
         view = new HtmlTemplateBlogView(viewId, site);
 
-        final ResourceProperties nodeProperties = createMockProperties();
+        final var nodeProperties = createMockProperties();
         node = createMockSiteNode(site);
         when(node.getProperties()).thenReturn(nodeProperties);
         when(node.getRelativeUri()).thenReturn(ResourcePath.of("blog"));
@@ -105,17 +104,17 @@ public class HtmlTemplateBlogViewControllerTest
       {
         // given
         // default of RequestLocaleManager
-        final Locale locale = Locale.UK;
-        final DateTimeFormatter dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
-                                                                 .withZone(ZoneId.of(DEFAULT_TIMEZONE));
+        final var locale = Locale.UK;
+        final var dtf = LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.FULL, locale)
+                                                   .withZone(ZoneId.of(DEFAULT_TIMEZONE));
         when(requestLocaleManager.getLocales()).thenReturn(List.of(locale));
         when(requestLocaleManager.getDateTimeFormatter()).thenReturn(dtf);
         mockViewProperty(node, viewId, P_DATE_FORMAT, Optional.of("F-"));
         mockViewProperty(node, viewId, P_TIME_ZONE, Optional.of("GMT"));
 
-        final MockPosts mockPosts = new MockPosts(site, null);
+        final var mockPosts = new MockPosts(site, null);
         mockPosts.createMockData(43);
-        final List<List<Content>> posts = split(mockPosts.getPosts(), 0, 3, 5, 7);
+        final var posts = split(mockPosts.getPosts(), 0, 3, 5, 7);
         // when
         underTest.renderPosts(posts.get(0), posts.get(1), posts.get(2));
         // then
@@ -130,10 +129,10 @@ public class HtmlTemplateBlogViewControllerTest
       throws Exception
       {
         // given
-        final Random rnd = new Random(17);
-        final List<TagAndCount> tags = IntStream.range(1, 10)
-                                                .mapToObj(i -> new TagAndCount("tag" + i, rnd.nextInt(100), "" + rnd.nextInt(10)))
-                                                .collect(toList());
+        final var rnd = new Random(17);
+        final var tags = IntStream.range(1, 10)
+                                  .mapToObj(i -> new TagAndCount("tag" + i, rnd.nextInt(100), "" + rnd.nextInt(10)))
+                                  .collect(toList());
         // when
         underTest.renderTagCloud(tags);
         // then

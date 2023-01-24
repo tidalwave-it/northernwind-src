@@ -75,11 +75,11 @@ public class DefaultSiteProviderTest
 
         siteBuilderCallback = mock(Site.Builder.CallBack.class);
         when(siteBuilderCallback.build(any(Site.Builder.class))).thenReturn(site);
-        final ModelFactory modelFactory = context.getBean(ModelFactory.class);
-        final Site.Builder builder = new Site.Builder(modelFactory, siteBuilderCallback);
+        final var modelFactory = context.getBean(ModelFactory.class);
+        final var builder = new Site.Builder(modelFactory, siteBuilderCallback);
         when(modelFactory.createSite()).thenReturn(builder);
 
-        final ServletContext servletContext = context.getBean(ServletContext.class);
+        final var servletContext = context.getBean(ServletContext.class);
         when(servletContext.getContextPath()).thenReturn(SERVLET_CONTEXT_PATH);
       }
 
