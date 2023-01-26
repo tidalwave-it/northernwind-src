@@ -35,6 +35,7 @@ import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import it.tidalwave.util.test.SpringTestHelper;
 import org.testng.annotations.BeforeMethod;
 import static org.mockito.Mockito.*;
 

@@ -45,7 +45,7 @@ import org.springframework.context.ApplicationContext;
 import org.mockito.InOrder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
 import static javax.servlet.http.HttpServletResponse.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;

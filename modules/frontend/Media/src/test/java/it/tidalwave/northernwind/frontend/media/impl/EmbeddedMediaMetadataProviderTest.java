@@ -34,7 +34,7 @@ import org.springframework.context.ApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;

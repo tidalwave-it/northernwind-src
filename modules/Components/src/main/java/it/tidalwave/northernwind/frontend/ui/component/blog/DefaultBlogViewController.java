@@ -63,7 +63,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
 import static javax.servlet.http.HttpServletResponse.*;
 import static it.tidalwave.util.LocalizedDateTimeFormatters.getDateTimeFormatterFor;
-import static it.tidalwave.northernwind.util.CollectionFunctions.*;
+import static it.tidalwave.util.CollectionUtils.*;
 import static it.tidalwave.northernwind.util.UrlEncoding.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
@@ -465,8 +465,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
     protected final void prepareBlogPosts (@Nonnull final RenderContext context, @Nonnull final ResourceProperties properties)
       throws HttpStatusException
       {
-        final var maxFullItems   = indexMode ? 0 : properties.getProperty(P_MAX_FULL_ITEMS).orElse(NO_LIMIT);
-        final var maxLeadinItems = indexMode ? 0 : properties.getProperty(P_MAX_LEADIN_ITEMS).orElse(NO_LIMIT);
+        final var maxFullItems   = indexMode ? 0        : properties.getProperty(P_MAX_FULL_ITEMS).orElse(NO_LIMIT);
+        final var maxLeadinItems = indexMode ? 0        : properties.getProperty(P_MAX_LEADIN_ITEMS).orElse(NO_LIMIT);
         final var maxItems       = indexMode ? NO_LIMIT : properties.getProperty(P_MAX_ITEMS).orElse(NO_LIMIT);
 
         log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {} (index: {}, tag: {}, uri: {})",
@@ -660,9 +660,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
                                        .distinct()
                                        .sorted(reverseOrder())
                                        .collect(toList());
-        return tagsAndCount.stream()
-                           .map(tac -> tac.withRank(rankOf(tac.count, counts)))
-                           .collect(toList());
+        return tagsAndCount.stream().map(tac -> tac.withRank(rankOf(tac.count, counts))).collect(toList());
       }
 
     /*******************************************************************************************************************

@@ -32,9 +32,7 @@ import java.util.Map;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import it.tidalwave.messagebus.MessageBus;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +72,6 @@ public class ScmFileSystemProviderTestSupport
     public void setup()
             throws Exception
       {
-        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
         scmPreparer.prepareAtTag(TAG_PUBLISHED_0_8);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", REPOSITORY_FOLDER.toUri().toString());

@@ -34,7 +34,7 @@ import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmpDcTitleInte
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 

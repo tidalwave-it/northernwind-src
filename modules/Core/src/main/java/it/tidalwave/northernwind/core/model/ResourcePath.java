@@ -35,7 +35,7 @@ import it.tidalwave.northernwind.util.UrlEncoding;
 import lombok.EqualsAndHashCode;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
-import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
+import static it.tidalwave.util.CollectionUtils.concatAll;
 
 /***********************************************************************************************************************
  *
@@ -275,7 +275,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     public ResourcePath prependedWith (@Nonnull final ResourcePath path)
       {
-        return ResourcePath.of(concat(path.segments, this.segments));
+        return ResourcePath.of(concatAll(path.segments, this.segments));
       }
 
     /*******************************************************************************************************************
@@ -305,7 +305,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     public ResourcePath appendedWith (@Nonnull final ResourcePath path)
       {
-        return ResourcePath.of(concat(this.segments, path.segments));
+        return ResourcePath.of(concatAll(this.segments, path.segments));
       }
 
     /*******************************************************************************************************************

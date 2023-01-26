@@ -46,7 +46,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.HtmlTemplateBlogViewController.*;
-import static it.tidalwave.northernwind.util.CollectionFunctions.split;
+import static it.tidalwave.util.CollectionUtils.split;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************

@@ -42,7 +42,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.util.CachedURIResolver;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
 import org.testng.annotations.BeforeMethod;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
 
 //@RequiredArgsConstructor

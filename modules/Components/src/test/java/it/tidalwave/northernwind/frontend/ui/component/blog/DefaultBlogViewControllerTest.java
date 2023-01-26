@@ -39,8 +39,6 @@ import java.time.ZonedDateTime;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.LocalizedDateTimeFormatters;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
@@ -60,7 +58,7 @@ import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
-import static it.tidalwave.northernwind.util.CollectionFunctions.*;
+import static it.tidalwave.util.CollectionUtils.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
@@ -140,8 +138,6 @@ public class DefaultBlogViewControllerTest
     private void setup()
       throws Exception
       {
-        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
-
         final var site = createMockSite();
         MockSiteNodeSiteFinder.registerTo(site);
         MockContentSiteFinder.registerTo(site);
@@ -206,7 +202,7 @@ public class DefaultBlogViewControllerTest
         assertThat("leadIn posts", actualLeadInPostsIds, is(expectedLeadInPostIds));
         assertThat("all posts",    actualLinkedPostsIds, is(expectedLinkedPostIds));
 
-        final var allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
+        final var allPosts = concatAll(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
         final var publishingDates = allPosts
                 .stream()
                 .map(post -> post.getProperty(Content.P_PUBLISHING_DATE).get())
@@ -288,7 +284,7 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.renderView(renderContext);
         // then
-        final var allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
+        final var allPosts = concatAll(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
         assertThat("full posts",   underTest._fullPosts.size(), is(0));    // TODO: should be: method not called
         assertThat("leadIn posts", underTest._leadInPosts.size(), is(0));  // TODO: should be: method not called
         assertThat("all posts",    allPosts.size(), is(0));                // TODO: should be: method not called
@@ -316,7 +312,7 @@ public class DefaultBlogViewControllerTest
         // when
         underTest.renderView(renderContext);
         // then
-        final var allPosts = concat(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
+        final var allPosts = concatAll(underTest._fullPosts, underTest._leadInPosts, underTest._linkedPosts);
         assertThat("full posts",   underTest._fullPosts.size(), is(0));    // TODO: should be: method not called
         assertThat("leadIn posts", underTest._leadInPosts.size(), is(0));  // TODO: should be: method not called
         assertThat("all posts",    allPosts.size(), is(0));                // TODO: should be: method not called

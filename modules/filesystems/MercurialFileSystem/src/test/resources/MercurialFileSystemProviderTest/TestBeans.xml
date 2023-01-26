@@ -48,10 +48,4 @@
         <constructor-arg value="it.tidalwave.messagebus.MessageBus"/>
     </bean>
 
-    <bean id="contextManager"
-          class="it.tidalwave.role.spi.DefaultContextManager"/>
-
-    <bean id="contextManagerProvider"
-          class="it.tidalwave.role.spring.spi.SpringContextManagerProvider"/>
-
 </beans>

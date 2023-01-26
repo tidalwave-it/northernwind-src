@@ -33,8 +33,6 @@ import java.util.List;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
@@ -43,8 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
+import it.tidalwave.util.test.BaseTestHelper.TestResource;
+import it.tidalwave.util.test.SpringTestHelper;
 
 /***********************************************************************************************************************
  *
@@ -66,7 +64,6 @@ public class LayeredFileSystemProviderTest
     @BeforeMethod
     public void setup()
       {
-        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
         underTest = new LayeredFileSystemProvider();
       }
 

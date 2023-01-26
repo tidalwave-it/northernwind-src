@@ -44,7 +44,7 @@ import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.core.impl.model.mock.MockResourceFile;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.*;

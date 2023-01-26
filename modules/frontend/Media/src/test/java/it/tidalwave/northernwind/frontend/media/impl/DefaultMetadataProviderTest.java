@@ -43,7 +43,7 @@ import it.tidalwave.image.metadata.IPTC;
 import it.tidalwave.image.op.ReadOp;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
 import static it.tidalwave.image.metadata.Directory.Tag;
 
 /***********************************************************************************************************************

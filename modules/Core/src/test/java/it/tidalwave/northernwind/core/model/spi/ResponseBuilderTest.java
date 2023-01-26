@@ -44,7 +44,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import lombok.RequiredArgsConstructor;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.model.spi.ResponseBuilderSupport.*;
 

@@ -28,8 +28,6 @@ package it.tidalwave.northernwind.core.impl.text;
 
 import java.util.Optional;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
@@ -57,8 +55,6 @@ public class St4TemplateFactoryTest
     @BeforeMethod
     private void setup()
       {
-        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
-
         site = mock(Site.class);
         MockContentSiteFinder.registerTo(site);
         underTest = new St4TemplateFactory(St4TemplateFactoryTest.class, site);
