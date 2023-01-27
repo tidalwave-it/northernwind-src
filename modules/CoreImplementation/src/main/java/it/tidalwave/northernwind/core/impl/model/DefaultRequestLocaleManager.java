@@ -29,12 +29,12 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.time.ZoneId;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.SiteProvider;
@@ -64,7 +64,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
     @Override @Nonnull
     public List<Locale> getLocales()
       {
-        final Locale requestLocale = localeHolder.get();
+        final var requestLocale = localeHolder.get();
         final List<Locale> locales = new ArrayList<>(siteProvider.get().getSite().getConfiguredLocales());
 
         if (requestLocale != null)
@@ -89,7 +89,7 @@ public class DefaultRequestLocaleManager implements RequestLocaleManager, Reques
         final List<String> suffixes = new ArrayList<>();
         suffixes.add("");
 
-        for (final Locale locale : getLocales())
+        for (final var locale : getLocales())
           {
             suffixes.add("_" + locale.getLanguage());
           }

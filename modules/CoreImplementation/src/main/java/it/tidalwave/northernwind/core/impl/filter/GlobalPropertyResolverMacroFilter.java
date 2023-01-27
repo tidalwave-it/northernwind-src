@@ -34,10 +34,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import static org.springframework.core.Ordered.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 
 /***********************************************************************************************************************
@@ -64,10 +62,10 @@ public class GlobalPropertyResolverMacroFilter extends MacroFilter
         try
           {
             // FIXME: should be pushed into @PostConstruct, but can't - see NW-224
-            final Site site = siteProvider.get().getSite();
-            final SiteNode rootSiteNode = site.find(_SiteNode_).withRelativeUri("/").result(); // See NW-223
+            final var site = siteProvider.get().getSite();
+            final var rootSiteNode = site.find(_SiteNode_).withRelativeUri("/").result(); // See NW-223
             // END FIXME
-            final Key<String> key = Key.of(matcher.group(1), String.class);
+            final var key = Key.of(matcher.group(1), String.class);
             return rootSiteNode.getProperty(key).orElse("");
           }
         catch (NotFoundException  e)

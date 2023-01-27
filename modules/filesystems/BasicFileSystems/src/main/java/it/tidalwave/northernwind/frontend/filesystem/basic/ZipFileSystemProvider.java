@@ -30,16 +30,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.openide.filesystems.JarFileSystem;
-import org.openide.filesystems.FileObject;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
@@ -93,8 +92,8 @@ public class ZipFileSystemProvider implements ResourceFileSystemProvider
             try
               {
                 getFileSystem(); // force initialization
-                final File zipFile = fileSystemDelegate.getJarFile();
-                final ZonedDateTime timestamp = Instant.ofEpochMilli(zipFile.lastModified()).atZone(ZoneId.of("GMT"));
+                final var zipFile = fileSystemDelegate.getJarFile();
+                final var timestamp = Instant.ofEpochMilli(zipFile.lastModified()).atZone(ZoneId.of("GMT"));
                 //            log.debug(">>>> checking zip file latest modification: was {}, is now {}",
                 //            latestModified, timestamp);
 
@@ -148,9 +147,9 @@ public class ZipFileSystemProvider implements ResourceFileSystemProvider
       {
         if (fileSystem == null)
           {
-            final File zipFile = new File(zipFilePath);
+            final var zipFile = new File(zipFilePath);
             fileSystemDelegate = new JarFileSystem(zipFile);
-            final FileObject rootFolder = fileSystemDelegate.getRoot();
+            final var rootFolder = fileSystemDelegate.getRoot();
 
             if (rootFolder == null)
               {

@@ -27,8 +27,8 @@
 package it.tidalwave.northernwind.frontend.ui.component.sitemap.htmltemplate;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
@@ -76,7 +76,7 @@ public class HtmlTemplateSitemapViewController extends DefaultSitemapViewControl
       }
 
     @Override
-    protected void render (@Nonnull final Set<Entry> entries)
+    protected void render (@Nonnull final Set<? extends Entry> entries)
       {
         view.setMimeType("application/xml");
         view.render(getViewProperties().getProperty(P_SITEMAP_TEMPLATE_PATH),

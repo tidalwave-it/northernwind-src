@@ -74,7 +74,7 @@ public class GitWorkingDirectory extends ScmWorkingDirectorySupport
       {
         try
           {
-            final ProcessExecutor executor =
+            final var executor =
                     gitCommand().withArguments("describe", "--tags", "--candidates=0").start().waitForCompletion();
             return executor.getStdout().waitForCompleted().getContent().stream().findFirst().map(Tag::new);
           }

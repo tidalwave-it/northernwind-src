@@ -26,20 +26,18 @@
  */
 package it.tidalwave.northernwind.frontend.util;
 
-import java.lang.reflect.Method;
 import javax.annotation.Nonnull;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TreeMap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.naming.InitialContext;
-import javax.naming.NameNotFoundException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
 
 /***********************************************************************************************************************
  *
@@ -61,8 +59,8 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     @Override
     public void contextInitialized (@Nonnull final ServletContextEvent event)
       {
-        final ServletContext servletContext = event.getServletContext();
-        final String configurationPath = getConfigurationPath(servletContext) + "/configuration.properties";
+        final var servletContext = event.getServletContext();
+        final var configurationPath = getConfigurationPath(servletContext) + "/configuration.properties";
         log.log("configurationPath: " + configurationPath);
         loadProperties(servletContext, configurationPath);
       }
@@ -85,8 +83,8 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     protected static void loadProperties (@Nonnull final ServletContext servletContext,
                                           @Nonnull final String configurationFile)
       {
-        final File file = new File(configurationFile);
-        final Properties properties = new Properties();
+        final var file = new File(configurationFile);
+        final var properties = new Properties();
 
         if (Boolean.getBoolean("nw.useSystemProperties"))
           {
@@ -146,21 +144,21 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     @Nonnull
     private static String getConfigurationPath (@Nonnull final ServletContext servletContext)
       {
-        final String configurationPath = servletContext.getInitParameter("it.tidalwave.northernwind.configurationPath");
+        final var configurationPath = servletContext.getInitParameter("it.tidalwave.northernwind.configurationPath");
 
         if (configurationPath != null)
           {
             return configurationPath;
           }
 
-        final String jndiName = "org.mortbay.jetty.plus.naming.EnvEntry/it.tidalwave.northernwind.configurationPath";
+        final var jndiName = "org.mortbay.jetty.plus.naming.EnvEntry/it.tidalwave.northernwind.configurationPath";
 
         try // Jetty specific JNDI setting - see e.g. http://stackoverflow.com/questions/3895047/jetty-set-system-property
           {
-            final InitialContext context = new InitialContext();
-            final Object env = context.lookup(jndiName);
-            final Class<?> envClass = env.getClass();
-            final Method method = envClass.getDeclaredMethod("getObjectToBind");
+            final var context = new InitialContext();
+            final var env = context.lookup(jndiName);
+            final var envClass = env.getClass();
+            final var method = envClass.getDeclaredMethod("getObjectToBind");
             return (String)method.invoke(env);
           }
         catch (NameNotFoundException e)
@@ -184,10 +182,10 @@ public class ExternalConfigurationServletContextListener implements ServletConte
       {
         log.log("using system properties");
 
-        for (final Entry<Object, Object> entry : new TreeMap<>(System.getProperties()).entrySet())
+        for (final var entry : new TreeMap<>(System.getProperties()).entrySet())
           {
-            final Object propertyName = entry.getKey();
-            final Object propertyValue = entry.getValue();
+            final var propertyName = entry.getKey();
+            final var propertyValue = entry.getValue();
 
             if (((String)propertyName).startsWith("nw."))
               {
@@ -221,10 +219,10 @@ public class ExternalConfigurationServletContextListener implements ServletConte
                                                          @Nonnull final Properties properties)
       {
         log.log("Copying properties to servlet context as attributes");
-        final String nwcontextConfigLocation = computeConfigLocation(properties);
+        final var nwcontextConfigLocation = computeConfigLocation(properties);
         properties.put("nw.contextConfigLocation", nwcontextConfigLocation);
 
-        for (final Entry<Object, Object> entry : new TreeMap<>(properties).entrySet())
+        for (final var entry : new TreeMap<>(properties).entrySet())
           {
             log.log(">>>> " + entry.getKey() + " = " + entry.getValue());
             servletContext.setAttribute(entry.getKey().toString(), entry.getValue().toString());
@@ -239,11 +237,11 @@ public class ExternalConfigurationServletContextListener implements ServletConte
     @Nonnull
     private static String computeConfigLocation (final Properties properties)
       {
-        final String nwBeans = properties.getProperty("nw.beans", "");
-        final StringBuilder builder = new StringBuilder();
-        String separator = "";
+        final var nwBeans = properties.getProperty("nw.beans", "");
+        final var builder = new StringBuilder();
+        var separator = "";
 
-        for (final String nwBean : nwBeans.split(","))
+        for (final var nwBean : nwBeans.split(","))
           {
             if (!"".equals(nwBean.trim()))
               {

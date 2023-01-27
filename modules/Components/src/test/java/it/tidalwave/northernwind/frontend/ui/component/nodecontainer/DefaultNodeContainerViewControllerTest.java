@@ -30,8 +30,8 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import it.tidalwave.util.Key;
 import it.tidalwave.util.Id;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
@@ -40,19 +40,18 @@ import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.mockito.stubbing.Answer;
 import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
-import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
-import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
 import static org.mockito.Mockito.*;
 
@@ -89,7 +88,7 @@ public class DefaultNodeContainerViewControllerTest
     private void setup()
       throws Exception
       {
-        final Id viewId = new Id("id");
+        final var viewId = new Id("id");
 
         site = createMockSite();
         MockSiteNodeSiteFinder.registerTo(site);
@@ -98,7 +97,7 @@ public class DefaultNodeContainerViewControllerTest
         nodeProperties = createMockProperties();
         viewProperties = createMockProperties();
 
-        final SiteNode siteNode = createMockSiteNode(site);
+        final var siteNode = createMockSiteNode(site);
         when(siteNode.getProperties()).thenReturn(nodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
@@ -106,10 +105,10 @@ public class DefaultNodeContainerViewControllerTest
         when(view.getId()).thenReturn(viewId);
         doAnswer(logInvocation).when(view).addAttribute(any(String.class), any(String.class));
 
-        final RequestLocaleManager requestLocaleManager = mock(RequestLocaleManager.class);
+        final var requestLocaleManager = mock(RequestLocaleManager.class);
         when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.US));
 
-        final RequestContext requestContext = mock(RequestContext.class);
+        final var requestContext = mock(RequestContext.class);
         when(requestContext.getNodeProperties()).thenReturn(nodeProperties);
 
         renderContext = new DefaultRenderContext(mock(Request.class), requestContext);
@@ -127,8 +126,8 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        final String templateContent = "the template content";
-        final ResourcePath templatePath = ResourcePath.of("/path/to/template");
+        final var templateContent = "the template content";
+        final var templatePath = ResourcePath.of("/path/to/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         mockProperty(_Content_, templatePath, P_TEMPLATE, templateContent);
         // when
@@ -145,7 +144,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/path/to/template");
+        final var templatePath = ResourcePath.of("/path/to/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // don't set P_TEMPLATE
         // when
@@ -162,7 +161,7 @@ public class DefaultNodeContainerViewControllerTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/path/to/nonexistent/template");
+        final var templatePath = ResourcePath.of("/path/to/nonexistent/template");
         when(viewProperties.getProperty(P_TEMPLATE_PATH)).thenReturn(Optional.of(templatePath));
         // when
         underTest.renderView(renderContext);
@@ -372,7 +371,7 @@ public class DefaultNodeContainerViewControllerTest
                                    @Nonnull final T value)
       throws NotFoundException
       {
-        final ResourceProperties properties = site.find(type).withRelativePath(path).result().getProperties();
+        final var properties = site.find(type).withRelativePath(path).result().getProperties();
         when(properties.getProperty(eq(key))).thenReturn(Optional.of(value));
       }
   }

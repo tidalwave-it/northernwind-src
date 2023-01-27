@@ -26,12 +26,12 @@
  */
 package it.tidalwave.northernwind.core.impl.util;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.StringWriter;
-import lombok.NoArgsConstructor;
-import javax.annotation.Nonnull;
 import org.w3c.dom.Node;
 import it.tidalwave.northernwind.core.impl.patches.XHTMLSerializer;
+import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************

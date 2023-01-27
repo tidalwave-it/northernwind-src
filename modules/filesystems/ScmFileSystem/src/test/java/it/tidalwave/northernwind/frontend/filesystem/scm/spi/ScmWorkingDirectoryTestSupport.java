@@ -28,17 +28,16 @@ package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Optional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmPreparer.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -48,7 +47,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
+@SuppressWarnings("NewClassNamingConvention") @RequiredArgsConstructor @Slf4j
 public class ScmWorkingDirectoryTestSupport
   {
     @Nonnull
@@ -97,7 +96,7 @@ public class ScmWorkingDirectoryTestSupport
         // when
         underTest.cloneFrom(REPOSITORY_FOLDER.toUri());
         // then
-        final Path configFolder = workingDirectory.resolve(underTest.getConfigFolderName());
+        final var configFolder = workingDirectory.resolve(underTest.getConfigFolderName());
         assertThat("Doesn't exist: " + configFolder, Files.exists(configFolder), is(true));
         assertThat("Not a directory: " + configFolder, Files.isDirectory(configFolder), is(true));
       }
@@ -113,9 +112,9 @@ public class ScmWorkingDirectoryTestSupport
         scmPreparer.prepareAtTag(new Tag(tagName));
         underTest.cloneFrom(REPOSITORY_FOLDER.toUri());
         // when
-        final List<Tag> tags = underTest.getTags();
-        final Optional<Tag> latestTag = underTest.getLatestTagMatching(".*");
-        final Optional<Tag> latestTagMatchingP = underTest.getLatestTagMatching("p.*");
+        final var tags = underTest.getTags();
+        final var latestTag = underTest.getLatestTagMatching(".*");
+        final var latestTagMatchingP = underTest.getLatestTagMatching("p.*");
         // then
         assertThat(tags, is(expectedTags));
         assertThat(latestTag.isPresent(), is(true));
@@ -150,7 +149,7 @@ public class ScmWorkingDirectoryTestSupport
         // when
         underTest.checkOut(tag);
         // then
-        final Optional<Tag> currentTag = underTest.getCurrentTag();
+        final var currentTag = underTest.getCurrentTag();
         assertThat(currentTag.isPresent(), is(true));
         assertThat(currentTag.get(), is(tag));
       }

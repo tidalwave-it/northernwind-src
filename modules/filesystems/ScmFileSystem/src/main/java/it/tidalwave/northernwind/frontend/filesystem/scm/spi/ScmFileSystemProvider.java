@@ -30,17 +30,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
-import java.util.Optional;
 import java.time.ZonedDateTime;
+import java.beans.PropertyVetoException;
+import java.util.Optional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.beans.PropertyVetoException;
-import it.tidalwave.util.ProcessExecutorException;
-import org.openide.filesystems.LocalFileSystem;
 import org.springframework.beans.factory.BeanFactory;
+import org.openide.filesystems.LocalFileSystem;
+import it.tidalwave.util.ProcessExecutorException;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
@@ -119,7 +119,7 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
       {
         folder = new File(folderAsString).toPath();
 
-        for (int i = 0; i < 2; i++)
+        for (var i = 0; i < 2; i++)
           {
             workingDirectories[i] = createWorkingDirectory(folder.resolve("" + (i + 1)));
 
@@ -144,7 +144,7 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
       {
         try
           {
-            final Optional<Tag> newTag = fetchChangesetsAndSearchForNewTag();
+            final var newTag = fetchChangesetsAndSearchForNewTag();
 
             if (newTag.isEmpty())
               {
@@ -152,7 +152,7 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
               }
             else
               {
-                final Tag tag = newTag.get();
+                final var tag = newTag.get();
                 log.info(">>>> new tag: {}", tag);
                 alternateWorkingDirectory.checkOut(tag);
                 swapRepositories();
@@ -223,8 +223,8 @@ public abstract class ScmFileSystemProvider implements ResourceFileSystemProvide
         log.info("Checking for updates in {} ...", alternateWorkingDirectory.getFolder());
 
         alternateWorkingDirectory.fetchChangesets();
-        final Optional<Tag> latestTag = alternateWorkingDirectory.getLatestTagMatching("^published-.*");
-        final Optional<Tag> currentTag = exposedWorkingDirectory.getCurrentTag();
+        final var latestTag = alternateWorkingDirectory.getLatestTagMatching("^published-.*");
+        final var currentTag = exposedWorkingDirectory.getCurrentTag();
 
         if (latestTag.isEmpty())
           {

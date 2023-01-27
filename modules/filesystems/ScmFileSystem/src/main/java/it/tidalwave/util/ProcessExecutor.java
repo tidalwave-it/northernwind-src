@@ -1,10 +1,10 @@
 package it.tidalwave.util;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
+import java.io.IOException;
+import java.nio.file.Path;
 import it.tidalwave.util.impl.DefaultProcessExecutor;
 
 /***********************************************************************************************************************
@@ -116,7 +116,7 @@ public interface ProcessExecutor
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static ProcessExecutor forExecutable (@Nonnull String executable)
+    public static ProcessExecutor forExecutable (@Nonnull final String executable)
             throws IOException
       {
         return new DefaultProcessExecutor(executable);

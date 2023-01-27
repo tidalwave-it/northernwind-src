@@ -31,9 +31,9 @@ import org.springframework.beans.factory.BeanFactory;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
@@ -85,10 +85,10 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
       throws Exception
       {
         super.prepareRendering(context);
-        final ResourcePath param = getParam(context);
+        final var param = getParam(context);
         log.info(">>>> pathParams: *{}*", param);
-        final TextHolder textHolder = (TextHolder)view;
-        final String siteNodeTitle = siteNode.getProperty(P_TITLE).orElse("");
+        final var textHolder = (TextHolder)view;
+        final var siteNodeTitle = siteNode.getProperty(P_TITLE).orElse("");
 
         switch (param.getSegmentCount())
           {
@@ -110,8 +110,8 @@ public class HtmlTemplateGalleryViewController extends DefaultGalleryViewControl
                         break;
 
                     default: // id of the gallery item to render, fallback mode
-                        final Id id = new Id(param.getLeading());
-                        final GalleryItem item = itemMapById.get(id);
+                        final var id = new Id(param.getLeading());
+                        final var item = itemMapById.get(id);
 
                         if (item == null)
                           {

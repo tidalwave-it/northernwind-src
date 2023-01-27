@@ -32,22 +32,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.springframework.beans.factory.annotation.Configurable;
+import it.tidalwave.util.Key;
 import it.tidalwave.image.EditableImage;
 import it.tidalwave.image.metadata.Directory;
 import it.tidalwave.image.metadata.EXIF;
 import it.tidalwave.image.metadata.IPTC;
 import it.tidalwave.image.metadata.TIFF;
 import it.tidalwave.image.metadata.XMP;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator.Context;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
-import it.tidalwave.util.Key;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 import static it.tidalwave.util.FunctionalCheckedExceptionWrappers.*;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
 
@@ -108,11 +107,11 @@ class DefaultMetadata implements Metadata
 
         // FIXME: use format as an interpolated string to get properties both from EXIF and IPTC
         //            final String string = formatted(iptc.getObject(517, String.class));
-        final Context context = new Context(this, getMap(properties, P_CAMERA_IDS), getMap(properties, P_LENS_IDS));
+        final var context = new Context(this, getMap(properties, P_CAMERA_IDS), getMap(properties, P_LENS_IDS));
 
-        String result = template;
+        var result = template;
 
-        for (final MetadataInterpolator interpolator : interpolatorFactory.getInterpolators())
+        for (final var interpolator : interpolatorFactory.getInterpolators())
           {
             if (result.contains("$" + interpolator.getMacro() + "$"))
               {
@@ -128,10 +127,10 @@ class DefaultMetadata implements Metadata
      ******************************************************************************************************************/
     private void log()
       {
-        final TIFF tiff = image.getMetadata(TIFF.class).orElseGet(TIFF::new);
-        final EXIF exif = image.getMetadata(EXIF.class).orElseGet(EXIF::new);
-        final IPTC iptc = image.getMetadata(IPTC.class).orElseGet(IPTC::new);
-        final XMP xmp = image.getMetadata(XMP.class).orElseGet(XMP::new);
+        final var tiff = image.getMetadata(TIFF.class).orElseGet(TIFF::new);
+        final var exif = image.getMetadata(EXIF.class).orElseGet(EXIF::new);
+        final var iptc = image.getMetadata(IPTC.class).orElseGet(IPTC::new);
+        final var xmp = image.getMetadata(XMP.class).orElseGet(XMP::new);
         final Map<String, String> xmpProperties = new TreeMap<>(xmp.getXmpProperties());
 
         tiff.forEachTag(t -> log.debug("{}: TIFF[{}]: {}", mediaName, t.getName(), tiff.getRaw(t.getCode())));
@@ -148,12 +147,12 @@ class DefaultMetadata implements Metadata
     private static Map<String, String> getMap (@Nonnull final ResourceProperties siteNodeProperties,
                                                @Nonnull final Key<List<String>> key)
       {
-        final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
+        final var properties = siteNodeProperties.getGroup(P_GROUP_ID);
         final Map<String, String> lensMap = new HashMap<>();
 
-        for (final String s : properties.getProperty(key).orElse(emptyList()))
+        for (final var s : properties.getProperty(key).orElse(emptyList()))
           {
-            final String[] split = s.split(":");
+            final var split = s.split(":");
             lensMap.put(split[0].trim(), split[1].trim());
           }
 

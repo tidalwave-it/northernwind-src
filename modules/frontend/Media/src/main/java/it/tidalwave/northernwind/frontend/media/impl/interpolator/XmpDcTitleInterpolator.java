@@ -27,7 +27,6 @@
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 import it.tidalwave.image.metadata.XMP;
 
 /***********************************************************************************************************************
@@ -45,7 +44,7 @@ public class XmpDcTitleInterpolator extends MetadataInterpolatorSupport
     @Override @Nonnull
     public String interpolate (@Nonnull final String template, @Nonnull final Context context)
       {
-        final Map<String, String> xmpProperties = context.getMetadata().getDirectory(XMP.class).getXmpProperties();
+        final var xmpProperties = context.getMetadata().getDirectory(XMP.class).getXmpProperties();
         
         return template.replace("$" + macro + "$", formatted(xmpProperties.get("dc:title[1]")));
       }

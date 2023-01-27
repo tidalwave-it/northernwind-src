@@ -38,11 +38,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.test.SiteBuilderMatcher;
 import it.tidalwave.northernwind.core.impl.test.TaskExecutorMock;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -75,11 +74,11 @@ public class DefaultSiteProviderTest
 
         siteBuilderCallback = mock(Site.Builder.CallBack.class);
         when(siteBuilderCallback.build(any(Site.Builder.class))).thenReturn(site);
-        final ModelFactory modelFactory = context.getBean(ModelFactory.class);
-        final Site.Builder builder = new Site.Builder(modelFactory, siteBuilderCallback);
+        final var modelFactory = context.getBean(ModelFactory.class);
+        final var builder = new Site.Builder(modelFactory, siteBuilderCallback);
         when(modelFactory.createSite()).thenReturn(builder);
 
-        final ServletContext servletContext = context.getBean(ServletContext.class);
+        final var servletContext = context.getBean(ServletContext.class);
         when(servletContext.getContextPath()).thenReturn(SERVLET_CONTEXT_PATH);
       }
 

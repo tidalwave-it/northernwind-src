@@ -32,7 +32,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.time.ZonedDateTime;
 import com.sun.syndication.feed.rss.Channel;
 import com.sun.syndication.feed.rss.Content;
 import com.sun.syndication.feed.rss.Guid;
@@ -46,9 +45,9 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
+import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.emptyMap;
 import static it.tidalwave.northernwind.core.model.Content.*;
@@ -134,9 +133,9 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderPosts (@Nonnull final List<it.tidalwave.northernwind.core.model.Content> fullPosts,
-                                @Nonnull final List<it.tidalwave.northernwind.core.model.Content> leadinPosts,
-                                @Nonnull final List<it.tidalwave.northernwind.core.model.Content> linkedPosts)
+    protected void renderPosts (@Nonnull final List<? extends it.tidalwave.northernwind.core.model.Content> fullPosts,
+                                @Nonnull final List<? extends it.tidalwave.northernwind.core.model.Content> leadinPosts,
+                                @Nonnull final List<? extends it.tidalwave.northernwind.core.model.Content> linkedPosts)
       throws Exception
       {
         fullPosts.forEach  (post -> renderPost(post, Optional.of(P_FULL_TEXT)));
@@ -151,7 +150,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
 //            feed.setEncoding("UTF-8");
 //          }
 
-        final WireFeedOutput feedOutput = new WireFeedOutput();
+        final var feedOutput = new WireFeedOutput();
         view.setContent(feedOutput.outputString(feed));
       }
 
@@ -161,18 +160,18 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     protected void renderPost (@Nonnull final it.tidalwave.northernwind.core.model.Content post,
-                               @Nonnull final Optional<Key<String>> textProperty)
+                               @Nonnull final Optional<? extends Key<String>> textProperty)
       {
-        final ZonedDateTime blogDateTime = post.getProperty(DATE_KEYS).orElse(TIME0);
+        final var blogDateTime = post.getProperty(DATE_KEYS).orElse(TIME0);
         // FIXME: compute the latest date, which is not necessarily the first
         if (feed.getLastBuildDate() == null)
           {
             feed.setLastBuildDate(Date.from(blogDateTime.toInstant()));
           }
 
-        final ResourceProperties postProperties = post.getProperties();
-        final Item item = new Item();
-        final Content content = new Content();
+        final var postProperties = post.getProperties();
+        final var item = new Item();
+        final var content = new Content();
         // FIXME: text/xhtml?
         content.setType("text/html"); // FIXME: should use post.getResourceFile().getMimeType()?
         textProperty.flatMap(postProperties::getProperty).ifPresent(content::setValue);
@@ -184,8 +183,8 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
         try
           {
             // FIXME: manipulate through site.createLink()
-            final String link = linkBase.replaceAll("/$", "") + post.getExposedUri().orElseThrow(NotFoundException::new).asString() + "/";
-            final Guid guid = new Guid();
+            final var link = linkBase.replaceAll("/$", "") + post.getExposedUri().orElseThrow(NotFoundException::new).asString() + "/";
+            final var guid = new Guid();
             guid.setPermaLink(true);
             guid.setValue(link);
             item.setGuid(guid);
@@ -205,7 +204,7 @@ public class DefaultRssFeedViewController extends DefaultBlogViewController impl
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderTagCloud (@Nonnull final Collection<TagAndCount> tagsAndCount)
+    protected void renderTagCloud (@Nonnull final Collection<? extends TagAndCount> tagsAndCount)
       {
         // not meaningful for RSS
       }

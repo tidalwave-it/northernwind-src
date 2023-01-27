@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
@@ -45,8 +45,8 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.LayoutFinder;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
-import lombok.experimental.Delegate;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *
@@ -88,8 +88,8 @@ public class DefaultLayout implements Layout, Cloneable
         @Override
         public void preVisit (@Nonnull final Layout layout)
           {
-            final DefaultLayout clone = new DefaultLayout(((DefaultLayout)layout).id,
-                                                          ((DefaultLayout)layout).typeUri);
+            final var clone = new DefaultLayout(((DefaultLayout)layout).id,
+                                                ((DefaultLayout)layout).typeUri);
 
             if (rootLayout == null)
               {
@@ -169,7 +169,7 @@ public class DefaultLayout implements Layout, Cloneable
     @Override @Nonnull
     public Layout withOverride (@Nonnull final Layout override)
       {
-        final DefaultLayout result = clone();
+        final var result = clone();
         result.applyOverride(((DefaultLayout)override).clone());
         return result;
       }
@@ -182,7 +182,7 @@ public class DefaultLayout implements Layout, Cloneable
     @Override @Nonnull
     public Layout withChild (@Nonnull final Layout layout)
       {
-        final DefaultLayout clone = clone();
+        final var clone = clone();
         clone.children.add(layout);
         clone.childrenMapById.put(layout.getId(), layout);
 
@@ -229,12 +229,12 @@ public class DefaultLayout implements Layout, Cloneable
      *
      ******************************************************************************************************************/
     @Override @Nonnull // TODO: push up to CompositeSupport
-    public <T> Optional<T> accept (@Nonnull final Visitor<Layout, T> visitor)
+    public <T> Optional<T> accept (@Nonnull final Visitor<? super Layout, T> visitor)
       {
         visitor.preVisit(this);
         visitor.visit(this);
 
-        for (final Layout child : children)
+        for (final var child : children)
           {
             child.accept(visitor);
           }
@@ -262,15 +262,15 @@ public class DefaultLayout implements Layout, Cloneable
     // Here everything is already cloned
     private void applyOverride (@Nonnull final Layout override)
       {
-        final boolean sameType = this.getTypeUri().equals(override.getTypeUri());
+        final var sameType = this.getTypeUri().equals(override.getTypeUri());
         this.typeUri = override.getTypeUri(); // FIXME: don't like this approach, as it requires typeUri non final
 
         // Complex rule, but it's to keep compatibility with Infoglue.
         if (sameType)
           {
-            for (final Layout overridingChild : override.findChildren().results())
+            for (final var overridingChild : override.findChildren().results())
               {
-                final Layout overriddenChild = childrenMapById.get(overridingChild.getId());
+                final var overriddenChild = childrenMapById.get(overridingChild.getId());
 
                 if (overriddenChild == null)
                   {
@@ -279,7 +279,7 @@ public class DefaultLayout implements Layout, Cloneable
                 else
                   {
                     childrenMapById.put(overridingChild.getId(), overridingChild);
-                    final int i = children.indexOf(overriddenChild);
+                    final var i = children.indexOf(overriddenChild);
 
                     if (i < 0)
                       {
@@ -296,7 +296,7 @@ public class DefaultLayout implements Layout, Cloneable
             this.children.clear();
             this.childrenMapById.clear();
 
-            for (final Layout overridingChild : override.findChildren().results())
+            for (final var overridingChild : override.findChildren().results())
               {
                 add(overridingChild);
               }

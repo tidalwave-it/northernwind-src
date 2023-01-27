@@ -32,7 +32,7 @@ import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *
@@ -85,7 +85,7 @@ public abstract class DecoratedResourceFileSupport implements ResourceFile
             return false;
           }
 
-        final ResourceFile other = (ResourceFile)object;
+        final var other = (ResourceFile)object;
         return (this.getFileSystem() == other.getFileSystem()) && this.getPath().equals(other.getPath());
       }
 

@@ -29,14 +29,13 @@ package it.tidalwave.northernwind.frontend.ui.component.gallery.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import it.tidalwave.util.Id;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.SiteNode;
-import it.tidalwave.northernwind.core.model.SiteProvider;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
+import it.tidalwave.util.Id;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -113,10 +112,10 @@ public final class MediaMetadataXsltAdapter
       throws NotFoundException
       {
         // FIXME: should use current SiteNode properties
-        final ResourceProperties properties = siteProvider.get().getSite().find(SiteNode.class)
-                                                                          .withRelativePath("/")
-                                                                          .result()
-                                                                          .getProperties();
+        final var properties = siteProvider.get().getSite().find(SiteNode.class)
+                                           .withRelativePath("/")
+                                           .result()
+                                           .getProperties();
         return mediaMetadataProvider.getMetadataString(id, format, properties);
       }
 
@@ -129,7 +128,7 @@ public final class MediaMetadataXsltAdapter
     private MediaMetadataProvider findMediaMetadataProvider()
       {
         // FIXME: should be read by Node properties
-        final String metadataProviderName = "EmbeddedMediaMetadataProvider";
+        final var metadataProviderName = "EmbeddedMediaMetadataProvider";
 
         try
           {

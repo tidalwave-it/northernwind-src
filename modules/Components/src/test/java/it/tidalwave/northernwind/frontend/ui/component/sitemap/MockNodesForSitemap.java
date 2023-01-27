@@ -28,23 +28,26 @@ package it.tidalwave.northernwind.frontend.ui.component.sitemap;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite;
-import it.tidalwave.northernwind.core.model.*;
+import it.tidalwave.northernwind.core.model.HttpStatusException;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import lombok.RequiredArgsConstructor;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.P_LATEST_MODIFICATION_DATE;
 import static it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapViewController.*;
@@ -87,36 +90,36 @@ public class MockNodesForSitemap
                                            @Nonnull final String uriSegment)
       throws NotFoundException, HttpStatusException
       {
-        final Random random = new Random(seed);
+        final var random = new Random(seed);
         final List<SiteNode> nodes = new ArrayList<>();
 
         IntStream.rangeClosed(1, count).forEach(i ->
           {
-            final SiteNode node = createMockSiteNode(site);
-            final ResourceProperties properties = createMockProperties();
-            final float priority = random.nextInt(10) / 10.0f;
+            final var node = createMockSiteNode(site);
+            final var properties = createMockProperties();
+            final var priority = random.nextInt(10) / 10.0f;
             when(properties.getProperty(eq(P_SITEMAP_PRIORITY))).thenReturn(Optional.of(priority));
             when(properties.getProperty(eq(P_SITEMAP_CHILDREN_PRIORITY))).thenReturn(Optional.of(priority));
 
-            final ZonedDateTime dateTime = ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneId.of("GMT"))
-                                                        .plusMinutes(random.nextInt(10 * 365 * 24 * 60));
+            final var dateTime = ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneId.of("GMT"))
+                                              .plusMinutes(random.nextInt(10 * 365 * 24 * 60));
 
             when(properties.getProperty(eq(P_LATEST_MODIFICATION_DATE))).thenReturn(Optional.of(dateTime));
             when(properties.getProperty(eq(P_SITEMAP_CHANGE_FREQUENCY))).thenReturn(Optional.of("daily"));
             when(node.getProperties()).thenReturn(properties);
 
-            final Layout layout = mock(Layout.class);
+            final var layout = mock(Layout.class);
             when(layout.getTypeUri()).thenReturn("http://northernwind.tidalwave.it/component/foobar");
             when(node.getLayout()).thenReturn(layout);
 
-            final List<Layout> childrenLayouts = IntStream.rangeClosed(1, 10).mapToObj(j ->
+            final var childrenLayouts = IntStream.rangeClosed(1, 10).mapToObj(j ->
               {
                 try
                   {
-                    final Layout childLayout = mock(Layout.class);
+                    final var childLayout = mock(Layout.class);
                     when(layout.getTypeUri()).thenReturn("http://northernwind.tidalwave.it/component/foobar-" + j);
-                    final ViewFactory.ViewAndController vac = mock(ViewFactory.ViewAndController.class);
-                    final ViewController viewController = mock(ViewController.class);
+                    final var vac = mock(ViewFactory.ViewAndController.class);
+                    final var viewController = mock(ViewController.class);
                     when(viewController.findVirtualSiteNodes()).thenCallRealMethod();
                     when(vac.getController()).thenReturn(viewController);
                     when(childLayout.createViewAndController(any(SiteNode.class))).thenReturn(vac);
@@ -157,16 +160,16 @@ public class MockNodesForSitemap
       {
         when(blogNode.getRelativeUri()).thenReturn(ResourcePath.of("/blog"));
         final Finder<SiteNode> blogFinder = createMockSiteFinder();
-        final List<SiteNode> blogNodes = createMockNodes(seed, count, "/blog/post-%02d");
-        when(blogFinder.results()).thenReturn((List)blogNodes);
+        final var blogNodes = createMockNodes(seed, count, "/blog/post-%02d");
+        when(blogFinder.results()).thenReturn(blogNodes);
 
         // Simulate more than one layout that have virtual nodes, so we test that duplicated URLs are coalesced.
-        final List<Layout> layouts = blogNode.getLayout().accept(new CollectingVisitor<>()).get();
+        final var layouts = blogNode.getLayout().accept(new CollectingVisitor<>()).get();
         Stream.of(layouts.get(3), layouts.get(4)).forEach(layout ->
           {
             try
               {
-                final ViewController viewController = layout.createViewAndController(blogNode).getController();
+                final var viewController = layout.createViewAndController(blogNode).getController();
                 when(viewController.findVirtualSiteNodes()).thenReturn(blogFinder);
               }
             catch (Exception e)

@@ -30,8 +30,8 @@ import javax.annotation.Nonnull;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -58,7 +58,7 @@ public class NormalizedLinkPostProcessorTest
     public void must_create_correct_links (@Nonnull final String link, @Nonnull final String expectedResult)
       {
         // when
-        final String result = underTest.postProcess(link);
+        final var result = underTest.postProcess(link);
         // then
         assertThat(result, is(expectedResult));
       }

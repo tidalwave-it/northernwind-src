@@ -27,12 +27,12 @@
 package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
-import java.net.URI;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.net.URI;
 import org.apache.commons.io.FileUtils;
 
 /***********************************************************************************************************************
@@ -52,9 +52,9 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
         protected void stripChangesetsAfter (@Nonnull final String tag)
                 throws IOException
           {
-            final int n = Integer.parseInt(tag.replace("published-0.", ""));
-            final List<String> tags = createTagNames(n);
-            final Path configFolder = ScmPreparer.REPOSITORY_FOLDER.resolve(MOCKSCM);
+            final var n = Integer.parseInt(tag.replace("published-0.", ""));
+            final var tags = createTagNames(n);
+            final var configFolder = ScmPreparer.REPOSITORY_FOLDER.resolve(MOCKSCM);
             Files.createDirectories(configFolder);
             Files.write(configFolder.resolve("tags"), tags);
           }
@@ -121,7 +121,7 @@ public class MockScmWorkingDirectory extends ScmWorkingDirectorySupport
     public void fetchChangesets()
             throws IOException
       {
-        final URI uri = URI.create(Files.readString(configUri));
+        final var uri = URI.create(Files.readString(configUri));
         FileUtils.deleteDirectory(folder.toFile());
         FileUtils.copyDirectory(Path.of(uri).toFile(), folder.toFile());
         Files.createDirectories(configFolder);

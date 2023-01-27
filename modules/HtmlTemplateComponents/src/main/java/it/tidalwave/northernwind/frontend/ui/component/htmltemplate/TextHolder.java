@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -140,16 +139,16 @@ public class TextHolder
     @Nonnull
     public String asString (@Nonnull final Charset charset)
       {
-        ST t = new ST(template, '$', '$');
+        var t = new ST(template, '$', '$');
 
-        for (final Entry<String, String> entry : attributeMap.entrySet())
+        for (final var entry : attributeMap.entrySet())
           {
             t = t.add(entry.getKey(), entry.getValue());
           }
 
-        final StringBuilder builder = new StringBuilder();
+        final var builder = new StringBuilder();
 
-        for (final TextHolder child : contents)
+        for (final var child : contents)
           {
             builder.append(child.asString(charset)).append("\n");
           }
@@ -170,7 +169,7 @@ public class TextHolder
 
         for (Class<?> clazz = getClass(); clazz.getSuperclass() != null; clazz = clazz.getSuperclass())
           {
-            final String templateName = clazz.getSimpleName() + ".txt";
+            final var templateName = clazz.getSimpleName() + ".txt";
             resource = new ClassPathResource(templateName, clazz);
 
             if (resource.exists())
@@ -188,8 +187,8 @@ public class TextHolder
 
             try (final Reader r = new InputStreamReader(resource.getInputStream()))
               {
-                final CharBuffer charBuffer = CharBuffer.allocate((int)resource.contentLength());
-                final int length = r.read(charBuffer);
+                final var charBuffer = CharBuffer.allocate((int)resource.contentLength());
+                final var length = r.read(charBuffer);
                 template = new String(charBuffer.array(), 0, length);
               }
           }

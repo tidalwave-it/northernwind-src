@@ -28,7 +28,6 @@ package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Configurable;
 
@@ -64,21 +63,21 @@ public class ParameterLanguageOverrideLinkPostProcessor implements LinkPostProce
     @Nonnull
     public String postProcess (@Nonnull final String link, @Nonnull final String language)
       {
-        final String parameterName = plorp.getParameterName();
-        final String regexp = "([\\?&])(" + parameterName + "=[a-z,0-9]*)";
+        final var parameterName = plorp.getParameterName();
+        final var regexp = "([\\?&])(" + parameterName + "=[a-z,0-9]*)";
 
-        final Matcher matcher = Pattern.compile(regexp).matcher(link);
+        final var matcher = Pattern.compile(regexp).matcher(link);
 
         if (matcher.find()) // replace a parameter already present
           {
-            final StringBuffer buffer = new StringBuffer();
+            final var buffer = new StringBuilder();
             matcher.appendReplacement(buffer, matcher.group(1) + parameterName + "=" + language);
             matcher.appendTail(buffer);
 
             return buffer.toString();
           }
 
-        final StringBuilder builder = new StringBuilder(link);
+        final var builder = new StringBuilder(link);
 
         if (link.contains("?"))
           {

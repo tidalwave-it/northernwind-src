@@ -27,9 +27,9 @@
 package it.tidalwave.northernwind.core.model.spi;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import java.io.IOException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;

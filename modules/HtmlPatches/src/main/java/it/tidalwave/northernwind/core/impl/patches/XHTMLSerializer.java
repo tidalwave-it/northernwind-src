@@ -18,12 +18,12 @@
 package it.tidalwave.northernwind.core.impl.patches;
 
 
+import java.io.OutputStream;
+import java.io.Writer;
 import com.sun.org.apache.xml.internal.serialize.BaseMarkupSerializer;
 import com.sun.org.apache.xml.internal.serialize.Method;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.Serializer;
-import java.io.OutputStream;
-import java.io.Writer;
 
 
 /**

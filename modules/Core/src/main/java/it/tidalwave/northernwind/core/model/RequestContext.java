@@ -27,8 +27,8 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.spi.RequestResettable;
 import it.tidalwave.util.Key;
+import it.tidalwave.northernwind.core.model.spi.RequestResettable;
 
 /***********************************************************************************************************************
  *

@@ -28,15 +28,16 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
 import java.util.Optional;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.*;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
-import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.createMockSite;
 import static it.tidalwave.northernwind.core.model.Content.*;
-import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -74,9 +75,9 @@ public class HtmlTemplateBlogViewTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/the/template/path");
-        final Content template = site.find(_Content_).withRelativePath(templatePath).result();
-        final ResourceProperties properties = template.getProperties();
+        final var templatePath = ResourcePath.of("/the/template/path");
+        final var template = site.find(_Content_).withRelativePath(templatePath).result();
+        final var properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom posts template"));
         // when
         underTest.renderPosts(Optional.of(templatePath), Aggregates.EMPTY, Aggregates.EMPTY, Aggregates.EMPTY);
@@ -92,9 +93,9 @@ public class HtmlTemplateBlogViewTest
       throws Exception
       {
         // given
-        final ResourcePath templatePath = ResourcePath.of("/the/template/path");
-        final Content template = site.find(_Content_).withRelativePath(templatePath).result();
-        final ResourceProperties properties = template.getProperties();
+        final var templatePath = ResourcePath.of("/the/template/path");
+        final var template = site.find(_Content_).withRelativePath(templatePath).result();
+        final var properties = template.getProperties();
         when(properties.getProperty(eq(P_TEMPLATE))).thenReturn(Optional.of("Custom tag cloud template"));
         // when
         underTest.renderTagCloud(Optional.of(templatePath), Aggregates.EMPTY);

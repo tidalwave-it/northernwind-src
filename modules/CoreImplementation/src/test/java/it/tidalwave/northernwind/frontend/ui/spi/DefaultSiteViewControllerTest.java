@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
@@ -41,16 +42,15 @@ import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor4;
 import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor5;
 import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable1;
 import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable2;
-import org.springframework.context.ApplicationContext;
-import org.mockito.InOrder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import org.mockito.InOrder;
+import it.tidalwave.util.test.SpringTestHelper;
 import static javax.servlet.http.HttpServletResponse.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -125,11 +125,11 @@ public class DefaultSiteViewControllerTest
     public void must_call_all_RequestProcessors_in_normal_scenario()
       {
         // when
-        final Object result = underTest.processRequest(request);
+        final var result = underTest.processRequest(request);
         // then
         assertThat(result, sameInstance(response));
 
-        final InOrder inOrder = createInOrder();
+        final var inOrder = createInOrder();
 
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();
@@ -156,11 +156,11 @@ public class DefaultSiteViewControllerTest
         // given
         mockRequestProcessor3.setStatus(Status.BREAK);
         // when
-        final Object result = underTest.processRequest(request);
+        final var result = underTest.processRequest(request);
         // then
         assertThat(result, sameInstance(response));
 
-        final InOrder inOrder = createInOrder();
+        final var inOrder = createInOrder();
 
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();
@@ -186,7 +186,7 @@ public class DefaultSiteViewControllerTest
     public void must_call_some_RequestProcessors_when_NotFoundException()
       {
         // given
-        final NotFoundException e = new NotFoundException();
+        final var e = new NotFoundException();
         mockRequestProcessor3.setThrowable(e);
         // when
         commonExceptionTestSequence();
@@ -203,7 +203,7 @@ public class DefaultSiteViewControllerTest
     public void must_call_some_RequestProcessors_when_HttpStatusException_with_SC_FOUND()
       {
         // given
-        final HttpStatusException e = new HttpStatusException(SC_FOUND);
+        final var e = new HttpStatusException(SC_FOUND);
         mockRequestProcessor3.setThrowable(e);
         // when
         commonExceptionTestSequence();
@@ -220,7 +220,7 @@ public class DefaultSiteViewControllerTest
     public void must_call_some_RequestProcessors_when_HttpStatusException_with_generic_Http_status()
       {
         // given
-        final HttpStatusException e = new HttpStatusException(SC_NOT_ACCEPTABLE);
+        final var e = new HttpStatusException(SC_NOT_ACCEPTABLE);
         mockRequestProcessor3.setThrowable(e);
         // when
         commonExceptionTestSequence();
@@ -237,7 +237,7 @@ public class DefaultSiteViewControllerTest
     public void must_call_some_RequestProcessors_when_RuntimeException()
       {
         // given
-        final RuntimeException e = new RuntimeException("Purportedly thrown exception");
+        final var e = new RuntimeException("Purportedly thrown exception");
         mockRequestProcessor3.setThrowable(e);
         // when
         commonExceptionTestSequence();
@@ -252,10 +252,10 @@ public class DefaultSiteViewControllerTest
      ******************************************************************************************************************/
     protected void commonExceptionTestSequence()
       {
-        final Object result = underTest.processRequest(request);
+        final var result = underTest.processRequest(request);
         assertThat(result, sameInstance(response));
 
-        final InOrder inOrder = createInOrder();
+        final var inOrder = createInOrder();
 
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();

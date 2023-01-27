@@ -31,21 +31,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
 import org.springframework.context.ApplicationContext;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import it.tidalwave.northernwind.util.test.SpringTestHelper.TestResource;
+import it.tidalwave.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -68,11 +67,11 @@ public class XsltMacroFilterTest
       throws Exception
       {
         context = helper.createSpringContext();
-        final SiteProvider siteProvider = context.getBean(SiteProvider.class);
-        final Site site = context.getBean(Site.class);
+        final var siteProvider = context.getBean(SiteProvider.class);
+        final var site = context.getBean(Site.class);
         when(siteProvider.getSite()).thenReturn(site);
 
-        final String xslt = helper.readStringFromResource("Photo.xslt");
+        final var xslt = helper.readStringFromResource("Photo.xslt");
         createMockResource(site, createMockTextFileOfPathAndContent("/XsltTemplates/Photo.xlst", xslt));
 
         underTest = context.getBean(XsltMacroFilter.class);
@@ -85,9 +84,9 @@ public class XsltMacroFilterTest
     public void must_not_filter_resources_that_are_not_XHTML()
       {
         // given
-        final String text = "foo bar";
+        final var text = "foo bar";
         // when
-        final String result = underTest.filter(text, "text/html");
+        final var result = underTest.filter(text, "text/html");
         // then
         assertThat(result, is(text));
       }
@@ -100,10 +99,10 @@ public class XsltMacroFilterTest
       throws IOException
       {
         // given
-        final TestResource tr = helper.testResourceFor(fileName);
-        final String text = tr.readStringFromResource();
+        final var tr = helper.testResourceFor(fileName);
+        final var text = tr.readStringFromResource();
         // when
-        final String filteredText = underTest.filter(text, "application/xhtml+xml");
+        final var filteredText = underTest.filter(text, "application/xhtml+xml");
         // then
         tr.writeToActualFile(filteredText);
         tr.assertActualFileContentSameAsExpected();
@@ -136,7 +135,7 @@ public class XsltMacroFilterTest
     private static ResourceFile createMockTextFileOfPathAndContent (@Nonnull final String path, @Nonnull final String content)
       throws IOException
       {
-        final ResourceFile file = mock(ResourceFile.class);
+        final var file = mock(ResourceFile.class);
         when(file.getPath()).thenReturn(ResourcePath.of(path));
         when(file.asText(anyString())).thenReturn(content);
         return file;
@@ -147,7 +146,7 @@ public class XsltMacroFilterTest
      ******************************************************************************************************************/
     private static void createMockResource (@Nonnull final Site site, @Nonnull final ResourceFile file)
       {
-        final Resource resource = mock(Resource.class);
+        final var resource = mock(Resource.class);
         when(resource.getFile()).thenReturn(file);
 
         final Map<String, Resource> map = new HashMap<>();

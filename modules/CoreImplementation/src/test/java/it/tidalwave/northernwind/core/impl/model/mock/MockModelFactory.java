@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.Media;
@@ -44,7 +45,6 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
 import it.tidalwave.northernwind.core.impl.text.St4TemplateFactory;
-import it.tidalwave.util.Id;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,8 +85,8 @@ public class MockModelFactory extends ModelFactorySupport
     @Override @Nonnull
     public Resource build (@Nonnull final Resource.Builder builder)
       {
-        final Resource resource = createMockResource();
-        final String path = builder.getFile().getPath().asString();
+        final var resource = createMockResource();
+        final var path = builder.getFile().getPath().asString();
         log.trace(">>>> creating Resource for {}", path);
 
         when(resource.toString()).thenReturn(String.format("Resource(path=%s)", path));
@@ -101,10 +101,10 @@ public class MockModelFactory extends ModelFactorySupport
     @Override @Nonnull
     public Content build (@Nonnull final Content.Builder builder)
       {
-        final Content content = createMockContent();
-        final ResourceProperties properties = createMockProperties();
+        final var content = createMockContent();
+        final var properties = createMockProperties();
         when(content.getProperties()).thenReturn(properties);
-        final String path = builder.getFolder().getPath().asString();
+        final var path = builder.getFolder().getPath().asString();
         log.trace(">>>> creating Content for {}", path);
 
         when(content.toString()).thenReturn(String.format("Content(path=%s)", path));
@@ -119,8 +119,8 @@ public class MockModelFactory extends ModelFactorySupport
     @Override @Nonnull
     public Media build (@Nonnull final Media.Builder builder)
       {
-        final Media media = mock(Media.class);
-        final String path = builder.getFile().getPath().asString();
+        final var media = mock(Media.class);
+        final var path = builder.getFile().getPath().asString();
         log.trace(">>>> creating Media for {}", path);
 
         when(media.toString()).thenReturn(String.format("Media(path=%s)", path));
@@ -148,22 +148,22 @@ public class MockModelFactory extends ModelFactorySupport
     @Override @Nonnull
     public SiteNode createSiteNode (@Nonnull final Site site, @Nonnull final ResourceFile folder)
       {
-        final String relativeUri = String.format("relativeUriFor:%s", folder.getPath().asString());
-        final String path = folder.getPath().asString();
+        final var relativeUri = String.format("relativeUriFor:%s", folder.getPath().asString());
+        final var path = folder.getPath().asString();
         log.trace(">>>> creating SiteNode for {}", path);
-        final SiteNode siteNode = createMockSiteNode(site);
+        final var siteNode = createMockSiteNode(site);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of(relativeUri));
         when(siteNode.toString()).thenReturn(String.format("Node(path=%s)", path));
 
-        final ResourceProperties properties = createMockProperties();
+        final var properties = createMockProperties();
         when(siteNode.getProperties()).thenReturn(properties);
 
         // FIXME: drop this - instead find the required SiteNode and stub its properties; see comments of MockContentSiteFinder
-        for (final Map.Entry<String, Object> e : resourceProperties.entrySet())
+        for (final var e : resourceProperties.entrySet())
           {
             if (e.getKey().startsWith(path + "."))
               {
-                final String propertyName = e.getKey().substring(path.length() + 1);
+                final var propertyName = e.getKey().substring(path.length() + 1);
                 log.trace(">>>>>>>> setting property {} = {}", propertyName, e.getValue());
                 // ResourceProperties index by key name, not (name, type)
                 // FIXME This mocking got too complex
@@ -181,7 +181,7 @@ public class MockModelFactory extends ModelFactorySupport
     @Nonnull
     public static ResourceProperties createMockProperties()
       {
-        final ResourceProperties properties = mock(ResourceProperties.class);
+        final var properties = mock(ResourceProperties.class);
         when(properties.getProperty(any(Key.class))).thenReturn(Optional.empty()); // default
         when(properties.getProperty(any(List.class))).thenCallRealMethod();
         return properties;
@@ -193,7 +193,7 @@ public class MockModelFactory extends ModelFactorySupport
     @Nonnull
     public static Resource createMockResource()
       {
-        final Resource resource = mock(Resource.class);
+        final var resource = mock(Resource.class);
         when(resource.getProperty(any(Key.class))).thenCallRealMethod();
         when(resource.getProperty(any(List.class))).thenCallRealMethod();
         return resource;
@@ -205,7 +205,7 @@ public class MockModelFactory extends ModelFactorySupport
     @Nonnull
     public static Content createMockContent()
       {
-        final Content content = mock(Content.class);
+        final var content = mock(Content.class);
         when(content.getProperty(any(Key.class))).thenCallRealMethod();
         when(content.getProperty(any(List.class))).thenCallRealMethod();
         return content;
@@ -217,7 +217,7 @@ public class MockModelFactory extends ModelFactorySupport
     @Nonnull
     public static SiteNode createMockSiteNode (@Nonnull final Site site)
       {
-        final SiteNode siteNode = mock(SiteNode.class);
+        final var siteNode = mock(SiteNode.class);
         when(siteNode.getSite()).thenReturn(site);
         when(siteNode.getProperty(any(Key.class))).thenCallRealMethod();
         when(siteNode.getProperty(any(List.class))).thenCallRealMethod();
@@ -236,7 +236,7 @@ public class MockModelFactory extends ModelFactorySupport
     @Nonnull
     public static Site createMockSite()
       {
-        final Site site = mock(Site.class);
+        final var site = mock(Site.class);
         when(site.createLink(any(ResourcePath.class))).thenAnswer(i ->
           {
             final ResourcePath path = i.getArgument(0);
@@ -283,7 +283,7 @@ public class MockModelFactory extends ModelFactorySupport
                                              @Nonnull final Key<T> propertyKey,
                                              @Nonnull final Optional<T> propertyValue)
       {
-        ResourceProperties properties = siteNode.getPropertyGroup(viewId);
+        var properties = siteNode.getPropertyGroup(viewId);
 
         if (properties == null) // in the real world can't happen, now it means not mocked yet
           {

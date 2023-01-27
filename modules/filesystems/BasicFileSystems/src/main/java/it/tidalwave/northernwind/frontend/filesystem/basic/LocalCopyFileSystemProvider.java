@@ -30,15 +30,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.IOException;
-import java.io.File;
 import java.time.ZonedDateTime;
+import java.io.File;
+import java.io.IOException;
+import it.tidalwave.messagebus.MessageBus;
+import it.tidalwave.messagebus.MessageBus.Listener;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemChangedEvent;
 import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
-import it.tidalwave.messagebus.MessageBus;
-import it.tidalwave.messagebus.MessageBus.Listener;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -135,8 +135,8 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
         // FIXME: shouldn't be needed, but otherwise after a second call to this method won't find files
         targetProvider = new LocalFileSystemProvider();
         targetProvider.setRootPath(rootPath);
-        final ResourceFile targetRoot = targetProvider.getFileSystem().getRoot();
-        final String path = targetRoot.toFile().getAbsolutePath();
+        final var targetRoot = targetProvider.getFileSystem().getRoot();
+        final var path = targetRoot.toFile().getAbsolutePath();
         log.info(">>>> scratching {} ...", path);
         emptyFolder(targetRoot);
         log.info(">>>> copying files to {} ...", path);
@@ -153,7 +153,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
       {
         log.trace("emptyFolder({}", folder);
 
-        for (final ResourceFile child : folder.findChildren().results())
+        for (final var child : folder.findChildren().results())
           {
             child.delete();
           }
@@ -168,7 +168,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
       {
         log.trace("copyFolder({}, {}", sourceFolder, targetFolder);
 
-        for (final ResourceFile sourceChild : sourceFolder.findChildren().results())
+        for (final var sourceChild : sourceFolder.findChildren().results())
           {
             if (!sourceChild.isFolder())
               {
@@ -177,7 +177,7 @@ public class LocalCopyFileSystemProvider implements ResourceFileSystemProvider
               }
           }
 
-        for (final ResourceFile sourceChild : sourceFolder.findChildren().results())
+        for (final var sourceChild : sourceFolder.findChildren().results())
           {
             if (sourceChild.isFolder())
               {

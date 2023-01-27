@@ -168,7 +168,7 @@ public interface Site
      ******************************************************************************************************************/
     @Nonnull
     public Template getTemplate (@Nonnull Class<?> clazz,
-                                 @Nonnull Optional<ResourcePath> templatePath,
+                                 @Nonnull Optional<? extends ResourcePath> templatePath,
                                  @Nonnull String embeddedResourceName);
 
     /*******************************************************************************************************************

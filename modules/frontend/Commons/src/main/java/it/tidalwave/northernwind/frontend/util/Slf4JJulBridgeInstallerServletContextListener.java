@@ -27,11 +27,9 @@
 package it.tidalwave.northernwind.frontend.util;
 
 import javax.annotation.Nonnull;
+import java.util.logging.LogManager;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.logging.Handler;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,10 +51,10 @@ public class Slf4JJulBridgeInstallerServletContextListener implements ServletCon
     @Override
     public void contextInitialized (@Nonnull final ServletContextEvent event)
       {
-        final Logger rootLogger = LogManager.getLogManager().getLogger("");
-        final Handler[] handlers = rootLogger.getHandlers();
+        final var rootLogger = LogManager.getLogManager().getLogger("");
+        final var handlers = rootLogger.getHandlers();
 
-        for (final Handler handler : handlers)
+        for (final var handler : handlers)
           {
             rootLogger.removeHandler(handler);
           }

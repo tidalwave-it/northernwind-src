@@ -79,7 +79,7 @@ public class DefaultSiteViewController implements SiteViewController
             resetRequestResettables();
             requestHolder.set(request);
 
-            for (final RequestProcessor requestProcessor : requestProcessors)
+            for (final var requestProcessor : requestProcessors)
               {
                 log.debug(">>>> trying {} ...", requestProcessor);
 
@@ -123,7 +123,7 @@ public class DefaultSiteViewController implements SiteViewController
      ******************************************************************************************************************/
     private void resetRequestResettables()
       {
-        for (final RequestResettable requestResettable : requestResettables)
+        for (final var requestResettable : requestResettables)
           {
             log.debug(">>>> resetting {} ...", requestResettable);
             requestResettable.requestReset();

@@ -26,33 +26,28 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.gallery.spi.loader;
 
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
 import java.io.StringReader;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.springframework.beans.factory.BeanFactory;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.springframework.beans.factory.BeanFactory;
+import org.xml.sax.SAXException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
-import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.DOMException;
-import org.xml.sax.SAXException;
 
 /***********************************************************************************************************************
  *
@@ -81,20 +76,20 @@ public class SlideShowProPlayerGalleryLoader extends GalleryLoaderSupport
 
         try
           {
-            final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); // FIXME: inject
-            final DocumentBuilder db = dbf.newDocumentBuilder(); // FIXME: inject
-            final XPathFactory xPathFactory = XPathFactory.newInstance(); // FIXME: inject
+            final var dbf = DocumentBuilderFactory.newInstance(); // FIXME: inject
+            final var db = dbf.newDocumentBuilder(); // FIXME: inject
+            final var xPathFactory = XPathFactory.newInstance(); // FIXME: inject
 
-            final String s = siteNode.getProperty(P_IMAGES).orElseThrow(NotFoundException::new); // FIXME
-            final Document document = db.parse(new InputSource(new StringReader(s)));
-            final XPath xPath = xPathFactory.newXPath();
-            final XPathExpression jx1 = xPath.compile(XPATH_IMG);
-            final NodeList nodes = (NodeList)jx1.evaluate(document, XPathConstants.NODESET);
+            final var s = siteNode.getProperty(P_IMAGES).orElseThrow(NotFoundException::new); // FIXME
+            final var document = db.parse(new InputSource(new StringReader(s)));
+            final var xPath = xPathFactory.newXPath();
+            final var jx1 = xPath.compile(XPATH_IMG);
+            final var nodes = (NodeList)jx1.evaluate(document, XPathConstants.NODESET);
 
-            for (int i = 0; i < nodes.getLength(); i++)
+            for (var i = 0; i < nodes.getLength(); i++)
               {
-                final Node node = nodes.item(i);
-                final String src = node.getAttributes().getNamedItem("src").getNodeValue().replaceAll("_", "-").replaceAll("\\.jpg$", "");
+                final var node = nodes.item(i);
+                final var src = node.getAttributes().getNamedItem("src").getNodeValue().replaceAll("_", "-").replaceAll("\\.jpg$", "");
                 items.add(createItem(new Id(src)));
               }
           }

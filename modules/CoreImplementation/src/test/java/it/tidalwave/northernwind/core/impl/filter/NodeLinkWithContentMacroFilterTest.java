@@ -26,17 +26,17 @@
  */
 package it.tidalwave.northernwind.core.impl.filter;
 
-import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Consumer;
+import org.springframework.context.support.GenericApplicationContext;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.springframework.context.support.GenericApplicationContext;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class NodeLinkWithContentMacroFilterFixture extends NodeLinkWithContentMacroFilter
   {
@@ -67,11 +67,11 @@ public class NodeLinkWithContentMacroFilterTest extends NorthernWindTestSupport
                                                @Nonnull final List<String> expectedMatches)
       {
         // given
-        final NodeLinkWithContentMacroFilterFixture underTest = new NodeLinkWithContentMacroFilterFixture();
+        final var underTest = new NodeLinkWithContentMacroFilterFixture();
         // when
         underTest.filter(text, "text/html");
         // then
-        final List<List<String>> matches = underTest.getHelper().getMatches();
+        final var matches = underTest.getHelper().getMatches();
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(expectedMatches));
       }
@@ -86,9 +86,9 @@ public class NodeLinkWithContentMacroFilterTest extends NorthernWindTestSupport
       {
         // given
         setupContext(config);
-        final NodeLinkWithContentMacroFilter underTest = context.getBean(NodeLinkWithContentMacroFilter.class);
+        final var underTest = context.getBean(NodeLinkWithContentMacroFilter.class);
         // when
-        final String filtered = underTest.filter(text, "text/html");
+        final var filtered = underTest.filter(text, "text/html");
         // then
         assertThat(filtered, is(expected));
       }

@@ -32,10 +32,9 @@ import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import org.openide.filesystems.FileObject;
 import org.openide.filesystems.LocalFileSystem;
-import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.frontend.filesystem.impl.ResourceFileSystemNetBeansPlatform;
 import lombok.Getter;
 import lombok.Setter;
@@ -76,7 +75,7 @@ public class LocalFileSystemProvider implements ResourceFileSystemProvider
                 fileSystemDelegate = new LocalFileSystem();
                 fileSystemDelegate.setRootDirectory(new File(rootPath));
 
-                final FileObject rootFolder = fileSystemDelegate.getRoot();
+                final var rootFolder = fileSystemDelegate.getRoot();
 
                 if (rootFolder == null)
                   {

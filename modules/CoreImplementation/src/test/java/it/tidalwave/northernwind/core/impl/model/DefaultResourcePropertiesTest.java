@@ -26,12 +26,12 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.util.Key;
-import java.time.ZonedDateTime;
-import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 import javax.annotation.Nonnull;
+import java.time.ZonedDateTime;
+import it.tidalwave.util.Key;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -46,7 +46,7 @@ public class DefaultResourcePropertiesTest
     public void testConvertValue (@Nonnull final Key<?> key, @Nonnull final Object value, @Nonnull final Object expectedValue)
       {
         // when
-        final Object actualValue = DefaultResourceProperties.convertValue(key, value);
+        final var actualValue = DefaultResourceProperties.convertValue(key, value);
         // then
         assertThat(actualValue, is(expectedValue));
       }

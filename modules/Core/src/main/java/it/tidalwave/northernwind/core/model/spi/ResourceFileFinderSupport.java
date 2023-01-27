@@ -50,7 +50,7 @@ public final class ResourceFileFinderSupport extends HierarchicFinderSupport<Res
   {
     private static final long serialVersionUID = -1393470412002725841L;
 
-    private final transient Function<Finder, List<ResourceFile>> resultComputer;
+    private final transient Function<? super Finder, ? extends List<ResourceFile>> resultComputer;
 
     @Getter
     private final boolean recursive;
@@ -85,7 +85,7 @@ public final class ResourceFileFinderSupport extends HierarchicFinderSupport<Res
      *
      ******************************************************************************************************************/
     public static Finder withComputeResults (@Nonnull final String finderName,
-                                             final Function<Finder, List<ResourceFile>> resultComputer)
+                                             final Function<Finder, ? extends List<ResourceFile>> resultComputer)
       {
         return new ResourceFileFinderSupport(finderName, resultComputer);
       }
@@ -96,7 +96,7 @@ public final class ResourceFileFinderSupport extends HierarchicFinderSupport<Res
      *
      ******************************************************************************************************************/
     private ResourceFileFinderSupport (@Nonnull final String finderName,
-                                       final Function<Finder, List<ResourceFile>> resultComputer)
+                                       final Function<? super Finder, ? extends List<ResourceFile>> resultComputer)
       {
         super(finderName);
         this.resultComputer = resultComputer;
@@ -116,7 +116,7 @@ public final class ResourceFileFinderSupport extends HierarchicFinderSupport<Res
     public ResourceFileFinderSupport (@Nonnull final ResourceFileFinderSupport other, @Nonnull final Object override)
       {
         super(other, override);
-        final ResourceFileFinderSupport source = getSource(ResourceFileFinderSupport.class, other, override);
+        final var source = getSource(ResourceFileFinderSupport.class, other, override);
         this.resultComputer = source.resultComputer;
         this.recursive = source.recursive;
         this.name = source.name;

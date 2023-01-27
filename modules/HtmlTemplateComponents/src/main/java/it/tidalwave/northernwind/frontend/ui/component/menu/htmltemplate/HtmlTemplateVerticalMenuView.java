@@ -30,10 +30,10 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import it.tidalwave.northernwind.frontend.ui.component.menu.DefaultMenuViewController;
-import lombok.experimental.Delegate;
+import it.tidalwave.northernwind.frontend.ui.component.menu.MenuView;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *

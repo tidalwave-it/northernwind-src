@@ -26,15 +26,14 @@
  */
 package it.tidalwave.northernwind.frontend.util;
 
-import java.util.Collections;
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import javax.naming.Binding;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -57,14 +56,14 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
       {
         log.info("**************** System properties:");
 
-        for (final Entry<Object, Object> entry : new TreeMap<>(System.getProperties()).entrySet())
+        for (final var entry : new TreeMap<>(System.getProperties()).entrySet())
           {
             log.info("{} = {}", entry.getKey(), entry.getValue());
           }
 
         try
           {
-            final InitialContext context = new InitialContext();
+            final var context = new InitialContext();
             log.info("**************** JNDI Environment:");
 
             for (final Entry<?, ?> entry : new TreeMap<>(context.getEnvironment()).entrySet())
@@ -74,7 +73,7 @@ public class SystemConfigurationLoggerServletContextListener implements ServletC
 
             log.info("**************** JNDI Bindings:");
 
-            for (final Binding binding : Collections.list(context.listBindings("")))
+            for (final var binding : Collections.list(context.listBindings("")))
               {
                 log.info("{} = {}", binding.getNameInNamespace(), binding.getObject());
               }

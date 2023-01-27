@@ -60,7 +60,7 @@ public abstract class MetadataInterpolatorSupport implements MetadataInterpolato
     @Nonnull
     protected static String lookup (@Nonnull final Map<String, String> map, @CheckForNull final String string)
       {
-        final String value = map.get(string);
+        final var value = map.get(string);
         return formatted((value != null) ? value : string);
       }
   }

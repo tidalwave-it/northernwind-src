@@ -26,17 +26,17 @@
  */
 package it.tidalwave.northernwind.core.impl.test;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 import it.tidalwave.northernwind.core.model.Site;
-import javax.annotation.Nonnull;
-import org.hamcrest.Matcher;
-import org.mockito.ArgumentMatcher;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.With;
+import org.mockito.ArgumentMatcher;
+import org.hamcrest.Matcher;
 
 /***********************************************************************************************************************
  *

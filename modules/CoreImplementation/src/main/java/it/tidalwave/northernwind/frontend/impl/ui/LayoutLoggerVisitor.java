@@ -28,9 +28,9 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import org.slf4j.Logger;
 import it.tidalwave.role.Composite;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import org.slf4j.Logger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

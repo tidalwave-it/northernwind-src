@@ -38,12 +38,11 @@ import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
-import static org.springframework.core.Ordered.*;
-import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 
 /***********************************************************************************************************************
  *
@@ -76,9 +75,9 @@ public class DefaultContentRequestProcessor implements RequestProcessor
       {
         try
           {
-            final String relativeUri = request.getRelativeUri();
-            final Site site = siteProvider.get().getSite();
-            final SiteNode node = site.find(_SiteNode_).withRelativeUri(relativeUri).result();
+            final var relativeUri = request.getRelativeUri();
+            final var site = siteProvider.get().getSite();
+            final var node = site.find(_SiteNode_).withRelativeUri(relativeUri).result();
             requestContext.setNode(node);
             siteView.renderSiteNode(request, node);
             //
@@ -102,7 +101,7 @@ public class DefaultContentRequestProcessor implements RequestProcessor
     private void enforceTrailingSlash (@Nonnull final String relativeUri, @Nonnull final Site site)
       throws HttpStatusException
       {
-        final String originalRelativeUri = requestHolder.get().getOriginalRelativeUri();
+        final var originalRelativeUri = requestHolder.get().getOriginalRelativeUri();
 
         if (!relativeUri.contains(".") && !originalRelativeUri.endsWith("/"))
           {

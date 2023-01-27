@@ -28,18 +28,18 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.IntStream;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
 import it.tidalwave.util.TimeProvider;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
@@ -142,9 +142,9 @@ public abstract class DefaultCalendarViewController implements CalendarViewContr
     public void prepareRendering (@Nonnull final RenderContext context)
       throws HttpStatusException
       {
-        final int requestedYear = getRequestedYear(context.getPathParams(siteNode));
-        final ResourceProperties siteNodeProperties = siteNode.getProperties();
-        final ResourceProperties viewProperties = getViewProperties();
+        final var requestedYear = getRequestedYear(context.getPathParams(siteNode));
+        final var siteNodeProperties = siteNode.getProperties();
+        final var viewProperties = getViewProperties();
 
         year      = viewProperties.getProperty(P_SELECTED_YEAR).orElse(requestedYear);
         firstYear = viewProperties.getProperty(P_FIRST_YEAR).orElse(Math.min(year, requestedYear));

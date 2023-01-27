@@ -31,9 +31,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.time.Duration;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
@@ -43,7 +42,7 @@ import it.tidalwave.northernwind.core.impl.model.FilterSetExpander;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import static org.springframework.core.Ordered.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************
@@ -74,13 +73,13 @@ public class DefaultLibraryRequestProcessor implements RequestProcessor
     @Override @Nonnull
     public Status process (@Nonnull final Request request)
       {
-        final String relativePath = request.getRelativeUri();
+        final var relativePath = request.getRelativeUri();
 
         try
           {
-            final Resource resource = siteProvider.get().getSite().find(Resource.class).withRelativePath(relativePath).result();
-            final ResourceFile file = resource.getFile();
-            final String mimeType = file.getMimeType();
+            final var resource = siteProvider.get().getSite().find(Resource.class).withRelativePath(relativePath).result();
+            final var file = resource.getFile();
+            final var mimeType = file.getMimeType();
             final Object content = mimeType.startsWith("text/") ? macroExpander.get().filter(file.asText("UTF-8"), mimeType)
                                                                 : file.asBytes();
             responseHolder.response().forRequest(request)

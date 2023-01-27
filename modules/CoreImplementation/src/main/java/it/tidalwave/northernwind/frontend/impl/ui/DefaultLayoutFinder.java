@@ -85,7 +85,7 @@ public class DefaultLayoutFinder extends HierarchicFinderSupport<Layout, LayoutF
     public DefaultLayoutFinder (@Nonnull final DefaultLayoutFinder other, @Nonnull final Object override)
       {
         super(other, override);
-        final DefaultLayoutFinder source = getSource(DefaultLayoutFinder.class, other, override);
+        final var source = getSource(DefaultLayoutFinder.class, other, override);
         this.children = source.children;
         this.childrenMapById = source.childrenMapById;
         this.id = source.id;
@@ -110,11 +110,11 @@ public class DefaultLayoutFinder extends HierarchicFinderSupport<Layout, LayoutF
     @Override @Nonnull
     protected List<Layout> computeNeededResults()
       {
-        final ArrayList<Layout> result = new ArrayList<>();
+        final var result = new ArrayList<Layout>();
 
         if (id != null)
           {
-            final Layout child = childrenMapById.get(id);
+            final var child = childrenMapById.get(id);
 
             if (child != null)
               {

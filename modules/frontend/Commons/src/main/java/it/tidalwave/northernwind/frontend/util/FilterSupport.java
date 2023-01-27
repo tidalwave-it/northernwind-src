@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
-import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderListener.*;
+import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderListener.ATTRIBUTE_BOOT_THROWABLE;
 
 /***********************************************************************************************************************
  *

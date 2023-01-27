@@ -26,34 +26,31 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.time.Instant;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarView;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarDao;
-import it.tidalwave.northernwind.util.test.FileTestHelper;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController.*;
 import static org.mockito.Mockito.*;
-import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *
@@ -81,16 +78,16 @@ public class HtmlTemplateCalendarViewControllerTest
     private void setup()
       throws Exception
       {
-        final Site site = createMockSite();
+        final var site = createMockSite();
 
         view = new HtmlTemplateCalendarView(viewId, site); // this is an integration test
 
-        final SiteNode siteNode = createMockSiteNode(site);
+        final var siteNode = createMockSiteNode(site);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("diary"));
-        final ResourceProperties siteNodeProperties = createMockProperties();
+        final var siteNodeProperties = createMockProperties();
 
-        final Path path = fileTestHelper.resolve("entries.xml");
-        final String entries = Files.readString(path);
+        final var path = fileTestHelper.resolve("entries.xml");
+        final var entries = Files.readString(path);
         when(siteNodeProperties.getProperty(eq(P_ENTRIES))).thenReturn(Optional.of(entries));
 
         viewProperties = createMockProperties();
@@ -98,16 +95,16 @@ public class HtmlTemplateCalendarViewControllerTest
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
-        final RequestLocaleManager requestLocaleManager = mock(RequestLocaleManager.class);
+        final var requestLocaleManager = mock(RequestLocaleManager.class);
         when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
-        final Request request = mock(Request.class);
-        final RequestContext requestContext = mock(RequestContext.class);
+        final var request = mock(Request.class);
+        final var requestContext = mock(RequestContext.class);
         context = new DefaultRenderContext(request, requestContext);
 
         when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.EMPTY);
 
-        final Instant mockTime = Instant.ofEpochSecond(1502150400); // 2017/08/08
+        final var mockTime = Instant.ofEpochSecond(1502150400); // 2017/08/08
         final CalendarDao dao = new XmlCalendarDao();
 
         underTest = new HtmlTemplateCalendarViewController(view, siteNode, requestLocaleManager, dao, () -> mockTime);

@@ -33,13 +33,12 @@ import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.spi.HierarchicFinderSupport;
-import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import it.tidalwave.northernwind.core.model.SiteFinder;
+import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -99,7 +98,7 @@ public class DefaultSiteFinder<T> extends HierarchicFinderSupport<T, SiteFinder<
                                                     @CheckForNull final String relativeUri)
       {
         Objects.requireNonNull(mapByRelativePath, "Searching for a relativePath, but no map");
-        return new DefaultSiteFinder(mapByRelativePath, mapByRelativeUri, relativePath, relativeUri);
+        return new DefaultSiteFinder<>(mapByRelativePath, mapByRelativeUri, relativePath, relativeUri);
       }
 
     /*******************************************************************************************************************
@@ -158,7 +157,7 @@ public class DefaultSiteFinder<T> extends HierarchicFinderSupport<T, SiteFinder<
           }
         catch (NotFoundException e)
           {
-            String message = "????";
+            var message = "????";
 
             if (relativePath != null)
               {
@@ -213,13 +212,13 @@ public class DefaultSiteFinder<T> extends HierarchicFinderSupport<T, SiteFinder<
      *
      *
      ******************************************************************************************************************/
-    private static <Type> void addResults (@Nonnull final List<Type> results,
+    private static <Type> void addResults (@Nonnull final List<? super Type> results,
                                            @Nonnull final Map<String, Type> map,
                                            @Nonnull final String relativePath)
       {
         if (!relativePath.contains("*")) // FIXME: better way to guess a regexp?
           {
-            final Type result = map.get(relativePath);
+            final var result = map.get(relativePath);
 
             if (result != null)
               {
@@ -229,9 +228,9 @@ public class DefaultSiteFinder<T> extends HierarchicFinderSupport<T, SiteFinder<
 
         else
           {
-            final Pattern pattern = Pattern.compile(relativePath);
+            final var pattern = Pattern.compile(relativePath);
 
-            for (final Entry<String, Type> entry : map.entrySet())
+            for (final var entry : map.entrySet())
               {
                 if (pattern.matcher(entry.getKey()).matches())
                   {

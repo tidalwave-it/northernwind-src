@@ -29,6 +29,7 @@ package it.tidalwave.northernwind.core.impl.model;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.ModelFactory;
@@ -37,7 +38,6 @@ import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Configurable;
 
 /***********************************************************************************************************************
  *
@@ -118,7 +118,7 @@ public class DefaultRequestContext implements RequestContext
     @Override
     public <Type> void setDynamicNodeProperty (@Nonnull final Key<Type> key, @Nonnull final Type value)
       {
-        final ResourceProperties properties = dynamicNodePropertiesHolder.get();
+        final var properties = dynamicNodePropertiesHolder.get();
         dynamicNodePropertiesHolder.set(properties.withProperty(key, value));
       }
 

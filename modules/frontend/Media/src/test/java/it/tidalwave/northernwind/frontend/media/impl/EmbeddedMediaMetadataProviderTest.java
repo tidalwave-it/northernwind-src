@@ -27,18 +27,18 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import java.io.IOException;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import org.springframework.context.ApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.createMockProperties;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -81,11 +81,11 @@ public class EmbeddedMediaMetadataProviderTest
       throws Exception
       {
         // given
-        final Metadata metadata = mock(Metadata.class);
+        final var metadata = mock(Metadata.class);
         when(metadata.interpolateString(anyString(), same(siteNodeProperties))).thenReturn("result");
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties))).thenReturn(metadata);
         // when
-        final String result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
+        final var result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
         // then
         assertThat(result, is("result"));
       }
@@ -101,7 +101,7 @@ public class EmbeddedMediaMetadataProviderTest
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
                 .thenThrow(new NotFoundException("Media not found"));
         // when
-        final String result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
+        final var result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
         // then
         assertThat(result, is(""));
       }
@@ -117,7 +117,7 @@ public class EmbeddedMediaMetadataProviderTest
         when(metadataCache.findMetadataById(eq(mediaId), same(siteNodeProperties)))
                 .thenThrow(new IOException("Cannot open file"));
         // when
-        final String result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
+        final var result = underTest.getMetadataString(mediaId, "template", siteNodeProperties);
         // then
         assertThat(result, is(""));
       }

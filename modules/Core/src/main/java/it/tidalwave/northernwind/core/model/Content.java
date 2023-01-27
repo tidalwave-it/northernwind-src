@@ -27,9 +27,9 @@
 package it.tidalwave.northernwind.core.model;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
-import java.util.List;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.role.SimpleComposite;
 import lombok.AccessLevel;

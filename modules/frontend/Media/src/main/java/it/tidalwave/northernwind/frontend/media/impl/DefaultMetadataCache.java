@@ -29,15 +29,14 @@ package it.tidalwave.northernwind.frontend.media.impl;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.function.Supplier;
-import java.util.HashMap;
-import java.util.Map;
 import java.time.Clock;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 import java.io.IOException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -108,7 +107,7 @@ public class DefaultMetadataCache implements MetadataCache
       throws NotFoundException, IOException
       {
         log.debug("findMetadataById({}, ...)", mediaId);
-        ExpirableMetadata metadata = metadataMapById.get(mediaId);
+        var metadata = metadataMapById.get(mediaId);
 
         if ((metadata != null) && metadata.getExpirationTime().isAfter(ZonedDateTime.now(clock.get())))
           {
@@ -116,12 +115,12 @@ public class DefaultMetadataCache implements MetadataCache
             return metadata.getMetadata();
           }
 
-        final ResourceFile file = metadataLoader.findMediaResourceFile(siteNodeProperties, mediaId);
+        final var file = metadataLoader.findMediaResourceFile(siteNodeProperties, mediaId);
 
         if (metadata != null)
           {
-            final ZonedDateTime fileLatestModificationTime = file.getLatestModificationTime();
-            final ZonedDateTime metadataCreationTime = metadata.getCreationTime();
+            final var fileLatestModificationTime = file.getLatestModificationTime();
+            final var metadataCreationTime = metadata.getCreationTime();
 
             if (fileLatestModificationTime.isAfter(metadataCreationTime))
               {

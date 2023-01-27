@@ -26,16 +26,16 @@
  */
 package it.tidalwave.northernwind.core.model;
 
-import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.io.Serializable;
+import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.io.Serializable;
 import it.tidalwave.northernwind.util.UrlEncoding;
 import lombok.EqualsAndHashCode;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
-import static it.tidalwave.northernwind.util.CollectionFunctions.concat;
+import static it.tidalwave.util.CollectionUtils.concatAll;
 
 /***********************************************************************************************************************
  *
@@ -192,7 +192,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     public String getExtension()
       {
-        final String trailing = getTrailing();
+        final var trailing = getTrailing();
         return !trailing.contains(".") ? "" : trailing.replaceAll("^.*\\.", "");
       }
 
@@ -275,7 +275,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     public ResourcePath prependedWith (@Nonnull final ResourcePath path)
       {
-        return ResourcePath.of(concat(path.segments, this.segments));
+        return ResourcePath.of(concatAll(path.segments, this.segments));
       }
 
     /*******************************************************************************************************************
@@ -305,7 +305,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     public ResourcePath appendedWith (@Nonnull final ResourcePath path)
       {
-        return ResourcePath.of(concat(this.segments, path.segments));
+        return ResourcePath.of(concatAll(this.segments, path.segments));
       }
 
     /*******************************************************************************************************************
@@ -347,7 +347,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     public String asString()
       {
-        final String string = segments.stream().collect(joining("/", "/", ""));
+        final var string = segments.stream().collect(joining("/", "/", ""));
 
         // FIXME: this check is probably redundant now that there are safety tests
         if (string.contains("//"))
@@ -389,7 +389,7 @@ public class ResourcePath implements Serializable
             throw new IllegalArgumentException("ResourcePath can't hold a URL");
           }
 
-        final int start = path.startsWith("/") ? 1 : 0;
+        final var start = path.startsWith("/") ? 1 : 0;
         return path.substring(start);
       }
 
@@ -401,7 +401,7 @@ public class ResourcePath implements Serializable
     @Nonnull
     private static List<String> validated (@Nonnull final List<String> segments)
       {
-        for (final String segment : segments)
+        for (final var segment : segments)
           {
             if ("".equals(segment))
               {

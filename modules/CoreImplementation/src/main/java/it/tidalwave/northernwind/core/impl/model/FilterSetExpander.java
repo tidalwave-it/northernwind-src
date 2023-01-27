@@ -59,9 +59,9 @@ public class FilterSetExpander implements Filter
 //        final STGroup g = new STGroupString("",
 //                "mediaLink(relativeUri) ::= " + c + "/media/$relativeUri$\n" +
 //                "nodeLink(relativeUri)  ::= " + c + "$relativeUri$\n", '$', '$');
-        String result = text;
+        var result = text;
 
-        for (final Filter filter : filters)
+        for (final var filter : filters)
           {
             log.debug(">>>> filtering with {}", filter);
             result = filter.filter(result, mimeType);

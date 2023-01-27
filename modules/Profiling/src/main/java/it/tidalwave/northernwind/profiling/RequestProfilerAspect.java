@@ -50,9 +50,9 @@ public class RequestProfilerAspect
     public Object advice (@Nonnull final ProceedingJoinPoint pjp)
       throws Throwable
       {
-        final Request request = (Request)pjp.getArgs()[0];
+        final var request = (Request)pjp.getArgs()[0];
         statisticsCollector.onRequestBegin(request);
-        final Object result = pjp.proceed();
+        final var result = pjp.proceed();
         statisticsCollector.onRequestEnd(request);
 
         return result;

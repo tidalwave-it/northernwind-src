@@ -46,10 +46,6 @@
 
     <aop:aspectj-autoproxy/>
 
-    <!-- DCI role injector -->
-    <bean id="roleManager"
-          class="it.tidalwave.role.spring.spi.AnnotationSpringRoleManager" />
-
     <!-- Generic task executor -->
     <bean id="taskExecutor"
           class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">

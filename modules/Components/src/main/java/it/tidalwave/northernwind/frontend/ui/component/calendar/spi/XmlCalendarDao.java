@@ -28,31 +28,27 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar.spi;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.text.DateFormatSymbols;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.IntStream;
-import java.text.DateFormatSymbols;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Optional;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.DefaultCalendarViewController.Entry;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *
@@ -77,16 +73,16 @@ public class XmlCalendarDao implements CalendarDao
         try
           {
             // TODO: have them injected
-            final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder db = dbf.newDocumentBuilder();
-            final Document document = db.parse(new InputSource(new StringReader(entries)));
-            final XPathFactory xPathFactory = XPathFactory.newInstance();
-            final XPath xPath = xPathFactory.newXPath();
+            final var dbf = DocumentBuilderFactory.newInstance();
+            final var db = dbf.newDocumentBuilder();
+            final var document = db.parse(new InputSource(new StringReader(entries)));
+            final var xPathFactory = XPathFactory.newInstance();
+            final var xPath = xPathFactory.newXPath();
 
-            final String queryTemplate = "/calendar/year[@id='%d']/month[@id='%s']/item";
-            final String queryString = String.format(queryTemplate, year, SHORT_MONTH_NAMES[month - 1].toLowerCase());
-            final XPathExpression query = xPath.compile(queryString);
-            final NodeList nodes = (NodeList)query.evaluate(document, XPathConstants.NODESET);
+            final var queryTemplate = "/calendar/year[@id='%d']/month[@id='%s']/item";
+            final var queryString = String.format(queryTemplate, year, SHORT_MONTH_NAMES[month - 1].toLowerCase());
+            final var query = xPath.compile(queryString);
+            final var nodes = (NodeList)query.evaluate(document, XPathConstants.NODESET);
             return IntStream.range(0, nodes.getLength()).mapToObj(i -> toEntry(site, nodes.item(i), month)).collect(toList());
           }
         catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException e)
@@ -101,10 +97,10 @@ public class XmlCalendarDao implements CalendarDao
     @Nonnull
     private static Entry toEntry (@Nonnull final Site site, @Nonnull final Node node, final int month)
       {
-        final String uri = node.getAttributes().getNamedItem("link").getNodeValue();
-        final Optional<String> type = Optional.ofNullable(node.getAttributes().getNamedItem("type")).map(Node::getNodeValue);
-        final String link = site.createLink(ResourcePath.of(uri));
-        final String name = node.getAttributes().getNamedItem("name").getNodeValue();
+        final var uri = node.getAttributes().getNamedItem("link").getNodeValue();
+        final var type = Optional.ofNullable(node.getAttributes().getNamedItem("type")).map(Node::getNodeValue);
+        final var link = site.createLink(ResourcePath.of(uri));
+        final var name = node.getAttributes().getNamedItem("name").getNodeValue();
 
         return new DefaultCalendarViewController.Entry(month, name, link, type);
       }

@@ -27,16 +27,16 @@
 package it.tidalwave.northernwind.core.impl.model.mock;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.io.File;
 import java.io.InputStream;
 import it.tidalwave.util.As;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import lombok.experimental.Delegate;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *
@@ -68,7 +68,7 @@ public final class MockResourceFile implements ResourceFile
     @Nonnull
     public static ResourceFile folder (@Nonnull final ResourceFile parent, @Nonnull final String fileName)
       {
-        final ResourcePath parentPath = parent.getPath();
+        final var parentPath = parent.getPath();
         return new MockResourceFile(parent, parentPath.appendedWith(fileName), true);
       }
 
@@ -96,7 +96,7 @@ public final class MockResourceFile implements ResourceFile
             return false;
           }
 
-        final MockResourceFile other = (MockResourceFile) object;
+        final var other = (MockResourceFile) object;
 
         return (this.directory == other.directory) && Objects.equals(this.path, other.path);
       }
@@ -104,7 +104,7 @@ public final class MockResourceFile implements ResourceFile
     @Override
     public int hashCode()
       {
-        int hash = 3;
+        var hash = 3;
         hash = 89 * hash + (this.directory ? 1 : 0);
         hash = 89 * hash + Objects.hashCode(this.path);
         return hash;

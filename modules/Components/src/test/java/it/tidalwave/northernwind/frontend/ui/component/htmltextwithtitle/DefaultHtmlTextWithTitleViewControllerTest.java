@@ -31,7 +31,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.*;
+import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.RequestContext;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import org.testng.annotations.BeforeMethod;
@@ -54,7 +58,7 @@ public class DefaultHtmlTextWithTitleViewControllerTest
   {
     static class UnderTest extends DefaultHtmlTextWithTitleViewController
       {
-        public List<TextWithTitle> contents;
+        public List<? extends TextWithTitle> contents;
 
         public UnderTest(final HtmlTextWithTitleView arg0, final SiteNode arg1)
           {
@@ -62,7 +66,7 @@ public class DefaultHtmlTextWithTitleViewControllerTest
           }
 
         @Override
-        protected void render (@Nonnull final List<TextWithTitle> contents)
+        protected void render (@Nonnull final List<? extends TextWithTitle> contents)
           {
             this.contents = contents;
           }
@@ -92,18 +96,18 @@ public class DefaultHtmlTextWithTitleViewControllerTest
 
         siteNode = createMockSiteNode(site);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("uri"));
-        final ResourceProperties siteNodeProperties = createMockProperties();
+        final var siteNodeProperties = createMockProperties();
 
-        final ResourceProperties viewProperties = createMockProperties();
+        final var viewProperties = createMockProperties();
 
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
-        final Request request = mock(Request.class);
-        final RequestContext requestContext = mock(RequestContext.class);
+        final var request = mock(Request.class);
+        final var requestContext = mock(RequestContext.class);
         renderContext = new DefaultRenderContext(request, requestContext);
 
-        final HtmlTextWithTitleView view = mock(HtmlTextWithTitleView.class);
+        final var view = mock(HtmlTextWithTitleView.class);
         when(view.getId()).thenReturn(viewId);
 
         underTest = new UnderTest(view, siteNode);
@@ -119,12 +123,12 @@ public class DefaultHtmlTextWithTitleViewControllerTest
       throws Exception
       {
         // given
-        final List<String> paths = IntStream.range(0, 10).mapToObj(i -> "/path/content-" + i).collect(toList());
+        final var paths = IntStream.range(0, 10).mapToObj(i -> "/path/content-" + i).collect(toList());
         mockViewProperty(siteNode, viewId, P_CONTENT_PATHS, Optional.of(paths));
 
-        for (int i = 0; i < paths.size(); i++)
+        for (var i = 0; i < paths.size(); i++)
           {
-            final ResourceProperties properties =
+            final var properties =
                     site.find(_Content_).withRelativePath(paths.get(i)).result().getProperties();
             when(properties.getProperty(P_TITLE)).thenReturn(Optional.of("Title #" + i));
             when(properties.getProperty(P_FULL_TEXT)).thenReturn(Optional.of(String.format("Full text #%d", i)));
@@ -133,10 +137,10 @@ public class DefaultHtmlTextWithTitleViewControllerTest
         // when
         underTest.renderView(renderContext);
         // then
-        final String text = underTest.contents.stream()
-                                              .map(twt -> String.format("%2d %-20s %-20s",
+        final var text = underTest.contents.stream()
+                                           .map(twt -> String.format("%2d %-20s %-20s",
                                                                         twt.level, twt.title.orElse(""), twt.text.orElse("")))
-                                              .collect(joining("\n"));
+                                           .collect(joining("\n"));
         fileTestHelper.assertFileContents(text.getBytes(UTF_8), "text_with_title.txt");
       }
   }

@@ -31,19 +31,18 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Optional;
 import java.io.IOException;
-import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.image.EditableImage;
-import it.tidalwave.image.op.ReadOp;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.image.EditableImage;
+import it.tidalwave.image.op.ReadOp;
 import it.tidalwave.northernwind.core.model.Media;
+import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.*;
 import static it.tidalwave.image.op.ReadOp.Type.METADATA;
+import static java.util.Collections.emptyList;
 import static it.tidalwave.northernwind.core.model.Media._Media_;
 import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
 
@@ -70,7 +69,7 @@ public class DefaultMetadataLoader implements MetadataLoader
                                                @Nonnull final Id mediaId)
       throws NotFoundException
       {
-        final ResourceProperties properties = siteNodeProperties.getGroup(P_GROUP_ID);
+        final var properties = siteNodeProperties.getGroup(P_GROUP_ID);
         return findMedia(mediaId, properties).map(Resource::getFile).orElseThrow(NotFoundException::new); // FIXME
       }
 
@@ -84,7 +83,7 @@ public class DefaultMetadataLoader implements MetadataLoader
       throws IOException
       {
         log.debug("loadMetadata({})", file.getPath());
-        final EditableImage image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
+        final var image = EditableImage.create(new ReadOp(file.toFile(), METADATA));
         return new DefaultMetadata(file.getName(), image);
       }
 
@@ -100,7 +99,7 @@ public class DefaultMetadataLoader implements MetadataLoader
     @Nonnull
     private Optional<Media> findMedia (@Nonnull final Id mediaId, @Nonnull final ResourceProperties properties)
       {
-        final Site site = siteProvider.get().getSite();
+        final var site = siteProvider.get().getSite();
 
         return properties.getProperty(P_MEDIA_PATHS).orElse(emptyList())
                 .stream()

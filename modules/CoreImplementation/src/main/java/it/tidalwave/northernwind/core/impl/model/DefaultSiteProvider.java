@@ -34,22 +34,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import java.io.File;
 import java.io.IOException;
 import javax.servlet.ServletContext;
 import org.springframework.core.task.TaskExecutor;
 import it.tidalwave.util.BundleUtilities;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.util.NotFoundException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *
@@ -196,7 +196,7 @@ public class DefaultSiteProvider implements SiteProvider
             log.info(ASTERISKS);
             log.info("SITE INITIALIZATION STARTED");
             log.info(ASTERISKS);
-            final long time = System.currentTimeMillis();
+            final var time = System.currentTimeMillis();
             site.initialize();
             siteAvailable.set(true);
             log.info(ASTERISKS);

@@ -64,18 +64,13 @@ public class ResourceFileSystemChangedEventMatcher implements ArgumentMatcher<Re
             return false;
           }
 
-        if ((latestModificationTime != null) && (!latestModificationTime.equals(event.getLatestModificationTime())))
-          {
-            return false;
-          }
-
-        return true;
+        return (latestModificationTime == null) || (latestModificationTime.equals(event.getLatestModificationTime()));
       }
 
     @Override @Nonnull
     public String toString()
       {
-        final ResourceFileSystemChangedEvent event =
+        final var event =
                 new ResourceFileSystemChangedEvent(resourceFileSystemProvider, latestModificationTime);
         return event.toString();
       }

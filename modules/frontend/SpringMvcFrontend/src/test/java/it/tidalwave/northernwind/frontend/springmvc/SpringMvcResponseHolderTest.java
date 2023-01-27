@@ -30,11 +30,9 @@ import javax.annotation.Nonnull;
 import java.util.Map.Entry;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilder;
 import it.tidalwave.northernwind.core.model.spi.ResponseBuilderTest;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
 
 /***********************************************************************************************************************
  *
@@ -58,12 +56,12 @@ public class SpringMvcResponseHolderTest extends ResponseBuilderTest
     protected void assertContents (@Nonnull final ResponseBuilder<?> builder, final String fileName)
       throws Exception
       {
-        final SpringTestHelper.TestResource tr = helper.testResourceFor(fileName);
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final ResponseEntity<byte[]> responseEntity = (ResponseEntity<byte[]>)builder.build();
-        final HttpHeaders headers = responseEntity.getHeaders();
+        final var tr = helper.testResourceFor(fileName);
+        final var baos = new ByteArrayOutputStream();
+        final var responseEntity = (ResponseEntity<byte[]>)builder.build();
+        final var headers = responseEntity.getHeaders();
 
-        try (final PrintWriter pw = new PrintWriter(baos)) // FIXME: charset?
+        try (final var pw = new PrintWriter(baos)) // FIXME: charset?
           {
             pw.printf("HTTP/1.1 %d%n", responseEntity.getStatusCode().value());
             headers.entrySet().stream()

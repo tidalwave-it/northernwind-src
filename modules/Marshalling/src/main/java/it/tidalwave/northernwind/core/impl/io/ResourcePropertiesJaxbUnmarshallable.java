@@ -33,18 +33,16 @@ import java.io.InputStream;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.io.Unmarshallable;
+import it.tidalwave.dci.annotation.DciRole;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
-import it.tidalwave.northernwind.core.impl.io.jaxb.PropertyJaxb;
-import it.tidalwave.northernwind.core.impl.io.jaxb.ValuesJaxb;
-import it.tidalwave.northernwind.core.model.ModelFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
@@ -74,7 +72,7 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
       {
         try
           {
-            final PropertiesJaxb propertiesJaxb = ((JAXBElement<PropertiesJaxb>)unmarshaller.unmarshal(is)).getValue();
+            final var propertiesJaxb = ((JAXBElement<PropertiesJaxb>)unmarshaller.unmarshal(is)).getValue();
 
             if (!"1.0".equals(propertiesJaxb.getVersion()))
               {
@@ -96,17 +94,17 @@ public class ResourcePropertiesJaxbUnmarshallable implements Unmarshallable
     @Nonnull
     private ResourceProperties unmarshal (@Nonnull final PropertiesJaxb propertiesJaxb)
       {
-        final Id id = new Id((propertiesJaxb.getId() != null) ? propertiesJaxb.getId() : "");
-        ResourceProperties properties = modelFactory.createProperties().withId(id).build();
+        final var id = new Id((propertiesJaxb.getId() != null) ? propertiesJaxb.getId() : "");
+        var properties = modelFactory.createProperties().withId(id).build();
 
-        for (final PropertyJaxb propertyJaxb : propertiesJaxb.getProperty())
+        for (final var propertyJaxb : propertiesJaxb.getProperty())
           {
-            final ValuesJaxb values = propertyJaxb.getValues();
+            final var values = propertyJaxb.getValues();
             properties = properties.withProperty(Key.of(propertyJaxb.getName()),
                                                  (values != null) ? values.getValue() : propertyJaxb.getValue());
           }
 
-        for (final PropertiesJaxb propertiesJaxb2 : propertiesJaxb.getProperties())
+        for (final var propertiesJaxb2 : propertiesJaxb.getProperties())
           {
             properties = properties.withProperties(unmarshal(propertiesJaxb2));
           }

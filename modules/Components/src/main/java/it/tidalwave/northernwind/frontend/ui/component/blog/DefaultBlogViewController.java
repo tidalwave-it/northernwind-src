@@ -27,6 +27,11 @@
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
 import javax.annotation.Nonnull;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -36,11 +41,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.spi.HierarchicFinderSupport;
@@ -58,16 +58,17 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.With;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.reverseOrder;
 import static java.util.Collections.*;
-import static java.util.Comparator.comparing;
+import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
 import static javax.servlet.http.HttpServletResponse.*;
+import static it.tidalwave.util.CollectionUtils.split;
 import static it.tidalwave.util.LocalizedDateTimeFormatters.getDateTimeFormatterFor;
-import static it.tidalwave.northernwind.util.CollectionFunctions.*;
-import static it.tidalwave.northernwind.util.UrlEncoding.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
+import static it.tidalwave.northernwind.util.UrlEncoding.encodedUtf8;
 import static lombok.AccessLevel.PUBLIC;
 
 /***********************************************************************************************************************
@@ -198,7 +199,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         public VirtualSiteNodeFinder (@Nonnull final VirtualSiteNodeFinder other, @Nonnull final Object override)
           {
             super(other, override);
-            final VirtualSiteNodeFinder source = getSource(VirtualSiteNodeFinder.class, other, override);
+            final var source = getSource(VirtualSiteNodeFinder.class, other, override);
             this.controller = source.controller;
           }
 
@@ -215,7 +216,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
         @Nonnull
         private Optional<VirtualSiteNode> createVirtualNode (@Nonnull final Content post)
           {
-            final SiteNode siteNode = controller.siteNode;
+            final var siteNode = controller.siteNode;
             return post.getExposedUri().map(uri -> new VirtualSiteNode(siteNode,
                                                                        siteNode.getRelativeUri().appendedWith(uri),
                                                                        post.getProperties()));
@@ -285,9 +286,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
       {
         log.info("prepareRendering(RenderContext) for {}", siteNode);
 
-        final ResourceProperties viewProperties = getViewProperties();
+        final var viewProperties = getViewProperties();
         indexMode  = viewProperties.getProperty(P_INDEX).orElse(false);
-        ResourcePath pathParams = context.getPathParams(siteNode);
+        var pathParams = context.getPathParams(siteNode);
         tagCloudMode = viewProperties.getProperty(P_TAG_CLOUD).orElse(false);
 
         if (pathParams.equals(TAG_CLOUD))
@@ -375,9 +376,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @SuppressWarnings("squid:S00112")
-    protected abstract void renderPosts (@Nonnull List<Content> fullPosts,
-                                         @Nonnull List<Content> leadinPosts,
-                                         @Nonnull List<Content> linkedPosts)
+    protected abstract void renderPosts (@Nonnull List<? extends Content> fullPosts,
+                                         @Nonnull List<? extends Content> leadinPosts,
+                                         @Nonnull List<? extends Content> linkedPosts)
       throws Exception;
 
     /*******************************************************************************************************************
@@ -388,7 +389,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @SuppressWarnings("squid:S00112")
-    protected abstract void renderTagCloud (@Nonnull Collection<TagAndCount> tagsAndCount);
+    protected abstract void renderTagCloud (@Nonnull Collection<? extends TagAndCount> tagsAndCount);
 
     /*******************************************************************************************************************
      *
@@ -416,8 +417,8 @@ public abstract class DefaultBlogViewController implements BlogViewController
     protected final String createTagLink (final String tag)
       {
         // TODO: shouldn't ResourcePath always encode incoming strings?
-        String link = siteNode.getSite().createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
-                                                                             .appendedWith(encodedUtf8(tag)));
+        var link = siteNode.getSite().createLink(siteNode.getRelativeUri().appendedWith(TAG_PREFIX)
+                                                         .appendedWith(encodedUtf8(tag)));
 
         // TODO: Workaround because createLink() doesn't append trailing / if the link contains a dot.
         // Refactor by passing a parameter to createLink that overrides the default behaviour.
@@ -465,14 +466,14 @@ public abstract class DefaultBlogViewController implements BlogViewController
     protected final void prepareBlogPosts (@Nonnull final RenderContext context, @Nonnull final ResourceProperties properties)
       throws HttpStatusException
       {
-        final int maxFullItems   = indexMode ? 0        : properties.getProperty(P_MAX_FULL_ITEMS).orElse(NO_LIMIT);
-        final int maxLeadinItems = indexMode ? 0        : properties.getProperty(P_MAX_LEADIN_ITEMS).orElse(NO_LIMIT);
-        final int maxItems       = indexMode ? NO_LIMIT : properties.getProperty(P_MAX_ITEMS).orElse(NO_LIMIT);
+        final var maxFullItems   = indexMode ? 0        : properties.getProperty(P_MAX_FULL_ITEMS).orElse(NO_LIMIT);
+        final var maxLeadinItems = indexMode ? 0        : properties.getProperty(P_MAX_LEADIN_ITEMS).orElse(NO_LIMIT);
+        final var maxItems       = indexMode ? NO_LIMIT : properties.getProperty(P_MAX_ITEMS).orElse(NO_LIMIT);
 
         log.debug(">>>> preparing blog posts for {}: maxFullItems: {}, maxLeadinItems: {}, maxItems: {} (index: {}, tag: {}, uri: {})",
                   view.getId(), maxFullItems, maxLeadinItems, maxItems, indexMode, tag.orElse(""), uriOrCategory.orElse(""));
 
-        final List<Content> posts = findPosts(context, properties)
+        final var posts = findPosts(context, properties)
                 .stream()
                 .filter(post -> post.getProperty(P_TITLE).isPresent())
                 .sorted(REVERSE_DATE_COMPARATOR)
@@ -483,7 +484,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
             throw new HttpStatusException(SC_NOT_FOUND);
           }
 
-        final List<List<Content>> split = split(posts, 0, maxFullItems, maxFullItems + maxLeadinItems, maxItems);
+        final var split = split(posts, 0, maxFullItems, maxFullItems + maxLeadinItems, maxItems);
         fullPosts.addAll(split.get(0));
         leadInPosts.addAll(split.get(1));
         linkedPosts.addAll(split.get(2));
@@ -496,7 +497,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      ******************************************************************************************************************/
     private void renderTagCloud()
       {
-        final Collection<TagAndCount> tagsAndCount = findAllPosts(getViewProperties())
+        final var tagsAndCount = findAllPosts(getViewProperties())
                 .stream()
                 .flatMap(post -> post.getProperty(P_TAGS).stream().flatMap(Collection::stream))
                 .collect(toMap(t -> t, TagAndCount::new, TagAndCount::reduced))
@@ -516,10 +517,10 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private List<Content> findPosts (@Nonnull final RenderContext context, @Nonnull final ResourceProperties properties)
       {
-        final ResourcePath pathParams = context.getPathParams(siteNode);
-        final boolean filtering  = tag.isPresent() || uriOrCategory.isPresent();
-        final List<Content> allPosts = findAllPosts(properties);
-        final List<Content> posts = new ArrayList<>();
+        final var pathParams = context.getPathParams(siteNode);
+        final var filtering  = tag.isPresent() || uriOrCategory.isPresent();
+        final var allPosts = findAllPosts(properties);
+        final var posts = new ArrayList<Content>();
         //
         // The thing works differently in function of pathParams:
         //      when no pathParams, return all the posts;
@@ -579,16 +580,16 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private DateTimeFormatter findDateTimeFormatter()
       {
-        final Locale locale = requestLocaleManager.getLocales().get(0);
-        final ResourceProperties viewProperties = getViewProperties();
-        final DateTimeFormatter dtf = viewProperties.getProperty(P_DATE_FORMAT)
-            .map(s -> s.replaceAll("EEEEE+", "EEEE"))
-            .map(s -> s.replaceAll("MMMMM+", "MMMM"))
-            .map(p -> (((p.length() == 2) ? DATETIME_FORMATTER_MAP_BY_STYLE.get(p).apply(locale)
+        final var locale = requestLocaleManager.getLocales().get(0);
+        final var viewProperties = getViewProperties();
+        final var dtf = viewProperties.getProperty(P_DATE_FORMAT)
+                                      .map(s -> s.replaceAll("EEEEE+", "EEEE"))
+                                      .map(s -> s.replaceAll("MMMMM+", "MMMM"))
+                                      .map(p -> (((p.length() == 2) ? DATETIME_FORMATTER_MAP_BY_STYLE.get(p).apply(locale)
                                           : DateTimeFormatter.ofPattern(p)).withLocale(locale)))
-            .orElse(requestLocaleManager.getDateTimeFormatter());
+                                      .orElse(requestLocaleManager.getDateTimeFormatter());
 
-        final String zoneId = viewProperties.getProperty(P_TIME_ZONE).orElse(DEFAULT_TIMEZONE);
+        final var zoneId = viewProperties.getProperty(P_TIME_ZONE).orElse(DEFAULT_TIMEZONE);
         return dtf.withZone(ZoneId.of(zoneId));
       }
 
@@ -641,9 +642,9 @@ public abstract class DefaultBlogViewController implements BlogViewController
     @Nonnull
     private String computeTitle (@Nonnull final Content post)
       {
-        final String prefix    = siteNode.getProperty(P_TITLE).orElse("");
-        final String title     = post.getProperty(P_TITLE).orElse("");
-        final String separator = "".equals(prefix) || "".equals(title) ? "" : " - ";
+        final var prefix    = siteNode.getProperty(P_TITLE).orElse("");
+        final var title     = post.getProperty(P_TITLE).orElse("");
+        final var separator = "".equals(prefix) || "".equals(title) ? "" : " - ";
 
         return prefix + separator + title;
       }
@@ -653,16 +654,14 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<TagAndCount> withRanks (@Nonnull final Collection<TagAndCount> tagsAndCount)
+    private static List<TagAndCount> withRanks (@Nonnull final Collection<? extends TagAndCount> tagsAndCount)
       {
-        final List<Integer> counts = tagsAndCount.stream()
-                                                 .map(TagAndCount::getCount)
-                                                 .distinct()
-                                                 .sorted(reverseOrder())
-                                                 .collect(toList());
-        return tagsAndCount.stream()
-                           .map(tac -> tac.withRank(rankOf(tac.count, counts)))
-                           .collect(toList());
+        final var counts = tagsAndCount.stream()
+                                       .map(TagAndCount::getCount)
+                                       .distinct()
+                                       .sorted(reverseOrder())
+                                       .collect(toList());
+        return tagsAndCount.stream().map(tac -> tac.withRank(rankOf(tac.count, counts))).collect(toList());
       }
 
     /*******************************************************************************************************************
@@ -675,7 +674,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<Content> filteredByCategory (@Nonnull final List<Content> posts,
+    private static List<Content> filteredByCategory (@Nonnull final List<? extends Content> posts,
                                                      @Nonnull final Optional<String> category)
       {
         return posts.stream().filter(post -> hasCategory(post, category)).collect(toList());
@@ -692,7 +691,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
      *
      ******************************************************************************************************************/
     @Nonnull
-    private static List<Content> filteredByTag (@Nonnull final List<Content> posts, @Nonnull final String tag)
+    private static List<Content> filteredByTag (@Nonnull final List<? extends Content> posts, @Nonnull final String tag)
       {
         return posts.stream().filter(post -> hasTag(post, tag)).collect(toList());
       }
@@ -716,7 +715,7 @@ public abstract class DefaultBlogViewController implements BlogViewController
     private static String rankOf (final int count, final List<Integer> counts)
       {
         assert counts.contains(count);
-        final int rank = counts.indexOf(count) + 1;
+        final var rank = counts.indexOf(count) + 1;
         return (rank <= 10) ? Integer.toString(rank) : "Others";
       }
 

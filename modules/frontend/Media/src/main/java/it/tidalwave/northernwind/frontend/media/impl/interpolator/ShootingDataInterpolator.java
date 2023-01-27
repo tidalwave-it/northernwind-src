@@ -26,9 +26,8 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
-import java.text.DecimalFormat;
 import javax.annotation.Nonnull;
-import java.util.Map;
+import java.text.DecimalFormat;
 import java.util.Optional;
 import it.tidalwave.image.metadata.EXIF;
 import it.tidalwave.image.metadata.TIFF;
@@ -49,44 +48,44 @@ public class ShootingDataInterpolator extends MetadataInterpolatorSupport
     @Override @Nonnull
     public String interpolate (@Nonnull final String template, @Nonnull final Context context)
       {
-        final TIFF tiff = context.getMetadata().getDirectory(TIFF.class);
-        final EXIF exif = context.getMetadata().getDirectory(EXIF.class);
-        final XMP xmp = context.getMetadata().getDirectory(XMP.class);
-        final Map<String, String> xmpProperties = xmp.getXmpProperties();
-        final Map<String, String> modelMap = context.getModelMap();
-        final Map<String, String> lensMap = context.getLensMap();
+        final var tiff = context.getMetadata().getDirectory(TIFF.class);
+        final var exif = context.getMetadata().getDirectory(EXIF.class);
+        final var xmp = context.getMetadata().getDirectory(XMP.class);
+        final var xmpProperties = xmp.getXmpProperties();
+        final var modelMap = context.getModelMap();
+        final var lensMap = context.getLensMap();
 
-        final StringBuilder builder = new StringBuilder();
-        String cameraMake = tiff.getMake()
-                                .or(() -> exif.getMake())
-                                .or(() -> Optional.ofNullable(xmpProperties.get("tiff:Make")))
-                                .orElse("");
-        String cameraModel = tiff.getModel()
-                                 .or(() -> exif.getModel())
-                                 .or(() -> Optional.ofNullable(xmpProperties.get("tiff:Model")))
-                                 .orElse("");
+        final var builder = new StringBuilder();
+        final var cameraMake = tiff.getMake()
+                                   .or(exif::getMake)
+                                   .or(() -> Optional.ofNullable(xmpProperties.get("tiff:Make")))
+                                   .orElse("");
+        final var cameraModel = tiff.getModel()
+                                    .or(exif::getModel)
+                                    .or(() -> Optional.ofNullable(xmpProperties.get("tiff:Model")))
+                                    .orElse("");
 
-        String camera = (cameraMake + ((!cameraModel.isBlank() && !cameraMake.isBlank()) ? " " : "") + cameraModel).trim();
+        var camera = (cameraMake + ((!cameraModel.isBlank() && !cameraMake.isBlank()) ? " " : "") + cameraModel).trim();
         camera = modelMap.getOrDefault(camera, camera);
         builder.append(camera);
         builder.append(" + ");
 
-        String lensMake = exif.getLensMake()
-                              .or(() -> Optional.ofNullable(xmpProperties.get("exif:LensMake")))
-                              .orElse("");
-        String lensModel = exif.getLensModel()
-                               .or(() -> Optional.ofNullable(xmpProperties.get("aux:Lens")))
-                               .or(() -> Optional.ofNullable(xmpProperties.get("aux:LensID")))
-                               .orElse("");
+        final var lensMake = exif.getLensMake()
+                                 .or(() -> Optional.ofNullable(xmpProperties.get("exif:LensMake")))
+                                 .orElse("");
+        final var lensModel = exif.getLensModel()
+                                  .or(() -> Optional.ofNullable(xmpProperties.get("aux:Lens")))
+                                  .or(() -> Optional.ofNullable(xmpProperties.get("aux:LensID")))
+                                  .orElse("");
 
-        String lens = (lensMake + ((!lensModel.isBlank() && !lensMake.isBlank()) ? " " : "") + lensModel).trim();
+        var lens = (lensMake + ((!lensModel.isBlank() && !lensMake.isBlank()) ? " " : "") + lensModel).trim();
         lens = lensMap.getOrDefault(lens, lens);
 
         builder.append(lens);
         builder.append(" @ ");
         exif.getFocalLength().ifPresent(fl -> builder.append(fl.intValue()).append(" mm, "));
         // FIXME: eventually teleconverter
-        exif.getExposureTime().ifPresent(t -> builder.append(t).append(" sec @ \u0192/"));
+        exif.getExposureTime().ifPresent(t -> builder.append(t).append(" sec @ ƒ/"));
         exif.getFNumber().map(f -> new DecimalFormat("0.#").format(f.floatValue())).ifPresent(builder::append);
 
         exif.getExposureBiasValue().ifPresent(exposureBiasValue ->

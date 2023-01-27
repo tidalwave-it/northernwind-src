@@ -37,7 +37,6 @@ import it.tidalwave.role.io.Marshallable;
 import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentJaxb;
-import it.tidalwave.northernwind.core.impl.io.jaxb.ComponentsJaxb;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import lombok.extern.slf4j.Slf4j;
 
@@ -79,7 +78,7 @@ public class LayoutJaxbMarshallable implements Marshallable
       {
         try
           {
-            final ComponentsJaxb componentsJaxb = objectFactory.createComponentsJaxb();
+            final var componentsJaxb = objectFactory.createComponentsJaxb();
             componentsJaxb.setVersion("1.0");
             componentsJaxb.setComponent(marshal(ownerLayout));
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // FIXME: set in Spring
@@ -98,11 +97,11 @@ public class LayoutJaxbMarshallable implements Marshallable
     @Nonnull
     private ComponentJaxb marshal (@Nonnull final Layout layout)
       {
-        final ComponentJaxb componentJaxb = objectFactory.createComponentJaxb();
+        final var componentJaxb = objectFactory.createComponentJaxb();
         componentJaxb.setId(layout.getId().stringValue());
         componentJaxb.setType(layout.getTypeUri());
 
-        for (final Layout child : layout.findChildren().results())
+        for (final var child : layout.findChildren().results())
           {
             componentJaxb.getComponent().add(marshal(child));
           }

@@ -36,8 +36,8 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Composite;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import it.tidalwave.northernwind.frontend.ui.ViewController;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
+import it.tidalwave.northernwind.frontend.ui.ViewController;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +78,7 @@ public class ViewAndControllerLayoutBuilder implements Composite.Visitor<Layout,
       {
         try
           {
-            final ViewAndController vac = createComponent(layout);
+            final var vac = createComponent(layout);
             vac.getController().prepareRendering(renderContext);
             viewAndControllerMapByLayout.put(layout, vac);
           }

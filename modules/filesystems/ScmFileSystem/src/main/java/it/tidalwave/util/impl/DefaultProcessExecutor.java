@@ -31,10 +31,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.File;
@@ -43,8 +41,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Path;
-import it.tidalwave.util.ProcessExecutorException;
 import it.tidalwave.util.ProcessExecutor;
+import it.tidalwave.util.ProcessExecutorException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -146,12 +144,12 @@ public final class DefaultProcessExecutor implements ProcessExecutor
         @Override @Nonnull
         public List<String> filteredBy (@Nonnull final String filterRegexp)
           {
-            final Pattern p = Pattern.compile(filterRegexp);
+            final var p = Pattern.compile(filterRegexp);
             final List<String> result = new ArrayList<>();
 
-            for (final String s : new ArrayList<>(content))
+            for (final var s : new ArrayList<>(content))
               {
-                final Matcher m = p.matcher(s);
+                final var m = p.matcher(s);
 
                 if (m.matches())
                   {
@@ -177,7 +175,7 @@ public final class DefaultProcessExecutor implements ProcessExecutor
               {
                 try
                   {
-                    final int exitValue = process.exitValue();
+                    final var exitValue = process.exitValue();
                     throw new IOException(PROCESS_EXITED_WITH + exitValue);
                   }
                 catch (IllegalThreadStateException e) // ok, process not terminated yet
@@ -212,11 +210,11 @@ public final class DefaultProcessExecutor implements ProcessExecutor
         public void read()
               throws IOException
           {
-            try (final BufferedReader br = new BufferedReader(new InputStreamReader(input)))
+            try (final var br = new BufferedReader(new InputStreamReader(input)))
               {
                 for (; ; )
                   {
-                    final String s = br.readLine();
+                    final var s = br.readLine();
 
                     if (s == null)
                       {
@@ -258,7 +256,7 @@ public final class DefaultProcessExecutor implements ProcessExecutor
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    public DefaultProcessExecutor (@Nonnull String executable)
+    public DefaultProcessExecutor (@Nonnull final String executable)
             throws IOException
       {
         arguments.add(DefaultProcessExecutor.findPathFor(executable));
@@ -344,7 +342,7 @@ public final class DefaultProcessExecutor implements ProcessExecutor
           {
             final List<String> environment = new ArrayList<>();
 
-            for (final Entry<String, String> e : System.getenv().entrySet())
+            for (final var e : System.getenv().entrySet())
               {
                 environment.add(String.format("%s=%s, ", e.getKey(), e.getValue()));
               }
@@ -390,11 +388,11 @@ public final class DefaultProcessExecutor implements ProcessExecutor
     private static String findPathFor (@Nonnull final String executable)
             throws IOException
       {
-        final String pathEnv = System.getenv("PATH") + File.pathSeparator + "/usr/local/bin";
+        final var pathEnv = System.getenv("PATH") + File.pathSeparator + "/usr/local/bin";
 
-        for (final String path : pathEnv.split(File.pathSeparator))
+        for (final var path : pathEnv.split(File.pathSeparator))
           {
-            final File file = new File(new File(path), executable);
+            final var file = new File(new File(path), executable);
 
             if (file.canExecute())
               {
@@ -415,7 +413,7 @@ public final class DefaultProcessExecutor implements ProcessExecutor
      ******************************************************************************************************************/
     private static void log (@Nonnull final String prefix, @Nonnull final DefaultConsoleOutput consoleOutput)
       {
-        for (final String line : consoleOutput.getContent())
+        for (final var line : consoleOutput.getContent())
           {
             log.error("{}: {}", prefix, line);
           }

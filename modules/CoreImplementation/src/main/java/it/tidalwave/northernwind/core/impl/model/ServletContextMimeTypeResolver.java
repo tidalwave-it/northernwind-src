@@ -49,7 +49,7 @@ public class ServletContextMimeTypeResolver implements MimeTypeResolver
     @Override @Nonnull
     public String getMimeType (@Nonnull final String fileName)
       {
-        String mimeType = servletContext.get().getMimeType(fileName);
+        var mimeType = servletContext.get().getMimeType(fileName);
 
         if ((mimeType == null) && fileName.endsWith(".mp4")) // FIXME: workaround a missing config with Jetty
           {

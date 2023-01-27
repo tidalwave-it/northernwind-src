@@ -65,10 +65,4 @@
           class="javax.xml.transform.TransformerFactory"
           factory-method="newInstance" />
 
-    <bean id="contextManager"
-          class="it.tidalwave.role.spi.DefaultContextManager" />
-
-    <bean id="contextManagerProvider"
-          class="it.tidalwave.role.spring.spi.SpringContextManagerProvider" />
-
 </beans>

@@ -39,12 +39,11 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
-import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
 
@@ -151,13 +150,13 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     @Override @Nonnull
     public String getInlinedScript()
       {
-        final String link = site.createLink(siteNode.getRelativeUri().appendedWith("images.xml"));
-        final ResourceProperties properties = bluetteConfiguration.withProperty(P_CATALOG_URL, "'" + link + "'");
+        final var link = site.createLink(siteNode.getRelativeUri().appendedWith("images.xml"));
+        final var properties = bluetteConfiguration.withProperty(P_CATALOG_URL, "'" + link + "'");
         // FIXME: since key doesn't have dynamic type, we can't properly escape strings.
-        final Aggregates variables = properties.getKeys().stream()
-               .filter(k -> k.getName().startsWith("bluette") || "logging".equals(k.getName()))
-               .flatMap(k -> toAggregate(properties, k).stream())
-               .collect(toAggregates("entries"));
+        final var variables = properties.getKeys().stream()
+                                        .filter(k -> k.getName().startsWith("bluette") || "logging".equals(k.getName()))
+                                        .flatMap(k -> toAggregate(properties, k).stream())
+                                        .collect(toAggregates("entries"));
 
         return variablesTemplate.render(variables) + "\n" + redirectScriptTemplate.render();
       }
@@ -168,9 +167,9 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareCatalog (@Nonnull final List<GalleryItem> items)
+    public void prepareCatalog (@Nonnull final List<? extends GalleryItem> items)
       {
-        final Aggregates entries = items.stream().map(this::toAggregate).collect(toAggregates("entries"));
+        final var entries = items.stream().map(this::toAggregate).collect(toAggregates("entries"));
         rendered = catalogTemplate.render(entries);
         catalog = true;
       }
@@ -182,7 +181,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      ******************************************************************************************************************/
     // TODO: Could we manage #! params here and select the proper item?
     @Override
-    public void prepareGallery (@Nonnull final GalleryItem item, @Nonnull final List<GalleryItem> items)
+    public void prepareGallery (@Nonnull final GalleryItem item, @Nonnull final List<? extends GalleryItem> items)
       {
         prepare(item, items, defaultTemplate);
         rendered = defaultTemplate.render();
@@ -194,7 +193,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareFallbackGallery (@Nonnull final GalleryItem item, @Nonnull final List<GalleryItem> items)
+    public void prepareFallbackGallery (@Nonnull final GalleryItem item, @Nonnull final List<? extends GalleryItem> items)
       {
         prepare(item, items, fallbackTemplate);
         rendered = fallbackTemplate.render();
@@ -206,10 +205,10 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      *
      ******************************************************************************************************************/
     @Override
-    public void prepareFallbackLightbox (@Nonnull final List<GalleryItem> items)
+    public void prepareFallbackLightbox (@Nonnull final List<? extends GalleryItem> items)
       {
-        final Aggregates entries = items.stream().map(this::toAggregate).collect(toAggregates("entries"));
-        final String redirectUrl = site.createLink(baseUrl.appendedWith("#!").appendedWith(lightboxSegmentUri)).replaceAll("/$", "");
+        final var entries = items.stream().map(this::toAggregate).collect(toAggregates("entries"));
+        final var redirectUrl = site.createLink(baseUrl.appendedWith("#!").appendedWith(lightboxSegmentUri)).replaceAll("/$", "");
         redirectScriptTemplate.addAttribute("redirectUrl", redirectUrl);
         lightboxFallbackTemplate.addAttribute("copyright", copyright);
         rendered = lightboxFallbackTemplate.render(entries);
@@ -223,7 +222,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     @Override
     public void render (@Nonnull final RenderContext context)
       {
-        final TextHolder textHolder = (TextHolder)view;
+        final var textHolder = (TextHolder)view;
 
         if (!catalog)
           {
@@ -243,21 +242,21 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
      ******************************************************************************************************************/
     private void prepare (// final @Nonnull RenderContext context,
                           @Nonnull final GalleryItem item,
-                          @Nonnull final List<GalleryItem> items,
+                          @Nonnull final List<? extends GalleryItem> items,
                           @Nonnull final Template template)
       {
-        final int count          = items.size();
-        final int index          = items.indexOf(item);
-        final int prevIndex      = (index - 1 + count) % count;
-        final int nextIndex      = (index + 1) % count;
+        final var count          = items.size();
+        final var index          = items.indexOf(item);
+        final var prevIndex      = (index - 1 + count) % count;
+        final var nextIndex      = (index + 1) % count;
 
-        final String imageId     = item.getId().stringValue();
-        final String imageUrl    = createImageLink(imageId, fallbackImageSize);
+        final var imageId     = item.getId().stringValue();
+        final var imageUrl    = createImageLink(imageId, fallbackImageSize);
 
-        final String redirectUrl = site.createLink(baseUrl.appendedWith("#!").appendedWith(imageId)).replaceAll("/$", "");
-        final String previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
-        final String nextUrl     = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
-        final String lightboxUrl = site.createLink(baseUrl.appendedWith(lightboxSegmentUri));
+        final var redirectUrl = site.createLink(baseUrl.appendedWith("#!").appendedWith(imageId)).replaceAll("/$", "");
+        final var previousUrl = site.createLink(baseUrl.appendedWith(items.get(prevIndex).getId().stringValue()));
+        final var nextUrl     = site.createLink(baseUrl.appendedWith(items.get(nextIndex).getId().stringValue()));
+        final var lightboxUrl = site.createLink(baseUrl.appendedWith(lightboxSegmentUri));
 
         template.addAttribute("caption",   item.getDescription())
                 .addAttribute("previous",  previousUrl)
@@ -276,7 +275,7 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
             // FIXME: these should be dynamic properties
     //        siteNodeProperties.getProperty().ifPresent(id -> view.addAttribute("imageId", id));
     //        siteNodeProperties.getProperty(PD_URL).ifPresent(id -> view.addAttribute("url", id));
-            final TextHolder textHolder = (TextHolder)view;
+            final var textHolder = (TextHolder)view;
             textHolder.addAttribute("description",    item.getDescription());
             textHolder.addAttribute("imageId",        imageId);
             textHolder.addAttribute("imageUrl",       imageUrl);
@@ -289,8 +288,8 @@ public class BluetteGalleryAdapter extends GalleryAdapterSupport
     @Nonnull
     private Aggregate toAggregate (@Nonnull final GalleryItem item)
       {
-        final String id   = item.getId().stringValue();
-        final String link = site.createLink(baseUrl.appendedWith(id));
+        final var id   = item.getId().stringValue();
+        final var link = site.createLink(baseUrl.appendedWith(id));
         return Aggregate.of("id",    id)
                       .with("link",  link)
                       .with("url",   createImageLink(id, fallbackThumbnailSize))

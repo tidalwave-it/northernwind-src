@@ -32,14 +32,10 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.io.InputStream;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.Id;
-import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.Resource;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.spi.ResourceSupport;
 import lombok.Cleanup;
@@ -100,14 +96,14 @@ import static it.tidalwave.role.io.Unmarshallable._Unmarshallable_;
     /* package */ void loadProperties()
       throws IOException
       {
-        final ResourceFile file = getFile();
+        final var file = getFile();
         log.debug("loadProperties() for {}", file.getPath().asString());
 
-        boolean tmpPlaceHolder = true;
+        var tmpPlaceHolder = true;
 
-        for (final Locale locale : localeRequestManager.getLocales())
+        for (final var locale : localeRequestManager.getLocales())
           {
-            ResourceProperties properties = modelFactory.createProperties().withPropertyResolver(propertyResolver).build();
+            var properties = modelFactory.createProperties().withPropertyResolver(propertyResolver).build();
 
             if (file.isData())
               {
@@ -115,10 +111,10 @@ import static it.tidalwave.role.io.Unmarshallable._Unmarshallable_;
               }
             else
               {
-                for (final ResourceFile propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, locale, "Properties"))
+                for (final var propertyFile : inheritanceHelper.getInheritedPropertyFiles(file, locale, "Properties"))
                   {
                     log.trace(">>>> reading properties from {} ({})...", propertyFile.getPath().asString(), locale);
-                    @Cleanup final InputStream is = propertyFile.getInputStream();
+                    @Cleanup final var is = propertyFile.getInputStream();
                     final ResourceProperties tempProperties =
                         modelFactory.createProperties().build().as(_Unmarshallable_).unmarshal(is);
         //                modelFactory.createProperties().withPropertyResolver(propertyResolver).build().as(_Unmarshallable_).unmarshal(is);
@@ -150,14 +146,14 @@ import static it.tidalwave.role.io.Unmarshallable._Unmarshallable_;
       {
         log.debug("{} property items:", indent);
 
-        for (final Key<?> key : properties.getKeys())
+        for (final var key : properties.getKeys())
           {
             log.debug("{}>>>> {} = {}", indent, key, properties.getProperty(key));
           }
 
         log.debug("{} property groups: {}", indent, properties.getGroupIds());
 
-        for (final Id groupId : properties.getGroupIds())
+        for (final var groupId : properties.getGroupIds())
           {
             log.debug("{}>>>> group: {}", indent, groupId);
             logProperties(indent + ">>>>", properties.getGroup(groupId));

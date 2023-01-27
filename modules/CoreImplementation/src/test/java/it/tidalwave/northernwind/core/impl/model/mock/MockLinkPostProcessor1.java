@@ -26,8 +26,8 @@
  */
 package it.tidalwave.northernwind.core.impl.model.mock;
 
-import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.spi.LinkPostProcessor;
 
 /***********************************************************************************************************************
  *

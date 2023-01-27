@@ -1,7 +1,6 @@
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
-            xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" 
-            jaxb:version="1.0" 
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+            jaxb:version="1.0"
             jaxb:extensionBindingPrefixes="xjc">
 
     <xsd:element name="properties" type="PropertiesJaxb"/>

@@ -27,19 +27,17 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import it.tidalwave.image.Rational;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.With;
-import it.tidalwave.image.EditableImage;
 import it.tidalwave.image.metadata.EXIF;
 import it.tidalwave.image.metadata.IPTC;
 import it.tidalwave.image.metadata.TIFF;
 import it.tidalwave.image.metadata.XMP;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.With;
 
 /***********************************************************************************************************************
  *
@@ -85,14 +83,14 @@ class MetadataTestBuilder
     public Metadata build()
       throws Exception
       {
-        final TIFF tiff = new TIFF();
-        final EXIF exif = new EXIF();
-        final IPTC iptc = new IPTC();
-        final XMP xmp = new XMP();
+        final var tiff = new TIFF();
+        final var exif = new EXIF();
+        final var iptc = new IPTC();
+        final var xmp = new XMP();
         final Map<String, String> xmpProperties = new HashMap<>();
         xmpProperties.put("dc:title[1]", xmpDcTitle);
         xmpProperties.put("aux:LensID", xmpAuxLensId);
-        final Method method = xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
+        final var method = xmp.getClass().getDeclaredMethod("_setProperties", Map.class);
         method.setAccessible(true);
         method.invoke(xmp, xmpProperties);
         tiff.setMake(exifMake);
@@ -102,11 +100,11 @@ class MetadataTestBuilder
         exif.setFNumber(exifFNumber);
         exif.setExposureBiasValue(exifExposureBiasValue);
         exif.setISOSpeedRatings(exifIsoSpeedRatings);
-        final EditableImage image = new ImageTestBuilder().withTiff(tiff)
-                                                          .withExif(exif)
-                                                          .withIptc(iptc)
-                                                          .withXmp(xmp)
-                                                          .build();
+        final var image = new ImageTestBuilder().withTiff(tiff)
+                                                .withExif(exif)
+                                                .withIptc(iptc)
+                                                .withXmp(xmp)
+                                                .build();
 //        final DefaultMetadataInterpolatorFactory interpolatorFactory = new DefaultMetadataInterpolatorFactory();
 //        interpolatorFactory.initialize();
         return new DefaultMetadata("test", image);

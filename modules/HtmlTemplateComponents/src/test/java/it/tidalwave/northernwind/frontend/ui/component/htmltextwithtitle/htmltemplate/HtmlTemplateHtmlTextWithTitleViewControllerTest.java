@@ -26,19 +26,20 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.htmltemplate;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.*;
+import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.core.model.RequestContext;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.DefaultHtmlTextWithTitleViewController.TextWithTitle;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.util.test.FileTestHelper;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static org.mockito.Mockito.*;
@@ -65,19 +66,19 @@ public class HtmlTemplateHtmlTextWithTitleViewControllerTest
     private void setup()
       throws Exception
       {
-        final Site site = createMockSite();
+        final var site = createMockSite();
 
-        final SiteNode siteNode = createMockSiteNode(site);
+        final var siteNode = createMockSiteNode(site);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("uri"));
-        final ResourceProperties siteNodeProperties = createMockProperties();
+        final var siteNodeProperties = createMockProperties();
 
-        final ResourceProperties viewProperties = createMockProperties();
+        final var viewProperties = createMockProperties();
 
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
-        final Request request = mock(Request.class);
-        final RequestContext requestContext = mock(RequestContext.class);
+        final var request = mock(Request.class);
+        final var requestContext = mock(RequestContext.class);
         final RenderContext renderContext = new DefaultRenderContext(request, requestContext);
 
         view = new HtmlTemplateHtmlTextWithTitleView(viewId, site);
@@ -95,12 +96,12 @@ public class HtmlTemplateHtmlTextWithTitleViewControllerTest
       throws Exception
       {
         // given
-        final Random rnd = new Random(43);
-        final List<TextWithTitle> twts = IntStream.rangeClosed(1, 10)
-                .mapToObj(i -> new TextWithTitle(rnd.nextDouble() < 0.3 ? Optional.empty() : Optional.of("Title #" + i),
+        final var rnd = new Random(43);
+        final var twts = IntStream.rangeClosed(1, 10)
+                                  .mapToObj(i -> new TextWithTitle(rnd.nextDouble() < 0.3 ? Optional.empty() : Optional.of("Title #" + i),
                                                  Optional.of("<p>text " + i + "</p>"),
                                                  i))
-                .collect(toList());
+                                  .collect(toList());
         // when
         underTest.render(twts);
         // then

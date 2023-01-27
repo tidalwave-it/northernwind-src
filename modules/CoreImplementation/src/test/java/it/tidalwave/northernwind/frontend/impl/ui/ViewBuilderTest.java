@@ -26,23 +26,22 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
-import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
-import org.springframework.context.ApplicationContext;
+import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1;
+import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService2;
+import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import lombok.RequiredArgsConstructor;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService2;
-import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.mockito.Mockito.*;
+import it.tidalwave.util.test.SpringTestHelper;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -94,7 +93,7 @@ public class ViewBuilderTest
       {
         site = createMockSite();
         context = helper.createSpringContext();
-        final SiteProvider siteProvider = context.getBean(SiteProvider.class);
+        final var siteProvider = context.getBean(SiteProvider.class);
         service1 = context.getBean(MockService1.class);
         service2 = context.getBean(MockService2.class);
 
@@ -114,18 +113,18 @@ public class ViewBuilderTest
       throws Exception
       {
         // when
-        final ViewAndController viewAndController = underTest.createViewAndController(id, siteNode);
+        final var viewAndController = underTest.createViewAndController(id, siteNode);
         // then
-        final ViewController oController = viewAndController.getController();
-        final Object oView = viewAndController.getView();
+        final var oController = viewAndController.getController();
+        final var oView = viewAndController.getView();
 
         assertThat(oController, is(not(nullValue())));
         assertThat(oView, is(not(nullValue())));
         assertThat(oController, is(instanceOf(MockController.class)));
         assertThat(oView, is(instanceOf(MockView.class)));
 
-        final MockController controller = (MockController)oController;
-        final MockView view = (MockView)oView;
+        final var controller = (MockController)oController;
+        final var view = (MockView)oView;
 
         assertThat(controller.view, is(sameInstance(view)));
         assertThat(controller.siteNode, is(sameInstance(siteNode)));

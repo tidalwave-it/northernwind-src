@@ -26,15 +26,15 @@
  */
 package it.tidalwave.northernwind.core.impl.filter;
 
-import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
 import javax.annotation.Nonnull;
 import java.util.List;
-import lombok.experimental.Delegate;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class NodeLinkMacroExpanderFixture extends NodeLinkMacroFilter
   {
@@ -56,11 +56,11 @@ public class NodeLinkMacroFilterTest extends NorthernWindTestSupport
     public void must_find_the_correct_matches()
       {
         // given
-        final NodeLinkMacroExpanderFixture underTest = new NodeLinkMacroExpanderFixture();
-        final String text = "href=\"$nodeLink(relativePath='/Blog')$\">1</a>";
+        final var underTest = new NodeLinkMacroExpanderFixture();
+        final var text = "href=\"$nodeLink(relativePath='/Blog')$\">1</a>";
         // when
         underTest.filter(text, "text/html");
-        final List<List<String>> matches = underTest.getHelper().getMatches();
+        final var matches = underTest.getHelper().getMatches();
         // then
         assertThat(matches.size(), is(1));
         assertThat(matches.get(0), is(List.of("/Blog")));
@@ -73,9 +73,9 @@ public class NodeLinkMacroFilterTest extends NorthernWindTestSupport
     public void must_perform_the_proper_substitutions (@Nonnull final String text, @Nonnull final String expected)
       {
         // given
-        final NodeLinkMacroFilter underTest = context.getBean(NodeLinkMacroFilter.class);
+        final var underTest = context.getBean(NodeLinkMacroFilter.class);
         // when
-        final String filtered = underTest.filter(text, "text/html");
+        final var filtered = underTest.filter(text, "text/html");
         // then
         assertThat(filtered, is(expected));
       }

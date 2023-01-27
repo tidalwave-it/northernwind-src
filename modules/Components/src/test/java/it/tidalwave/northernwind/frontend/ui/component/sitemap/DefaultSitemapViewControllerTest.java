@@ -31,14 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.util.test.FileTestHelper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
 import static java.util.stream.Collectors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
@@ -62,7 +60,7 @@ public class DefaultSitemapViewControllerTest
           }
 
         @Override
-        protected void render (@Nonnull final Set<Entry> entries)
+        protected void render (@Nonnull final Set<? extends Entry> entries)
           {
             this.entries.addAll(entries);
           }
@@ -83,21 +81,21 @@ public class DefaultSitemapViewControllerTest
     private void setup()
       throws Exception
       {
-        final Site site = createMockSite();
+        final var site = createMockSite();
 
-        final MockNodesForSitemap mockSiteNodes = new MockNodesForSitemap(site);
-        final List<SiteNode> nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%02d");
+        final var mockSiteNodes = new MockNodesForSitemap(site);
+        final var nodes = mockSiteNodes.createMockNodes(65, 20, "/path-%02d");
 
         final SiteFinder<SiteNode> finder = createMockSiteFinder();
-        when(finder.results()).thenReturn((List)nodes);
+        when(finder.results()).thenReturn(nodes);
         when(site.find(eq(SiteNode.class))).thenReturn(finder);
 
-        final SitemapView view = mock(SitemapView.class);
+        final var view = mock(SitemapView.class);
         when(view.getId()).thenReturn(viewId);
 
-        final SiteNode siteNode = createMockSiteNode(site);
-        final ResourceProperties siteNodeProperties = createMockProperties();
-        final ResourceProperties viewProperties = createMockProperties();
+        final var siteNode = createMockSiteNode(site);
+        final var siteNodeProperties = createMockProperties();
+        final var viewProperties = createMockProperties();
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
@@ -117,12 +115,12 @@ public class DefaultSitemapViewControllerTest
         // when
         underTest.renderView(context);
         // then
-        final String s = underTest.entries.stream().map(e -> String.format("%-34s %20s %10s %6s",
-                                                                           e.getLocation(),
-                                                                           e.getLastModification(),
-                                                                           e.getChangeFrequency(),
-                                                                           e.getPriority()))
-                                          .collect(joining("\n"));
+        final var s = underTest.entries.stream().map(e -> String.format("%-34s %20s %10s %6s",
+                                                                        e.getLocation(),
+                                                                        e.getLastModification(),
+                                                                        e.getChangeFrequency(),
+                                                                        e.getPriority()))
+                                       .collect(joining("\n"));
         fileTestHelper.assertFileContents(s.getBytes(UTF_8), "sitemap.txt");
       }
   }

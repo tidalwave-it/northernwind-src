@@ -31,11 +31,10 @@ import java.util.Optional;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.Template;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapView;
 
 /***********************************************************************************************************************
@@ -77,7 +76,7 @@ public class HtmlTemplateSitemapView extends HtmlTemplateHtmlFragmentView implem
      ******************************************************************************************************************/
     public void render (@Nonnull final Optional<ResourcePath> templatePath, @Nonnull final Aggregates entries)
       {
-        final Template template = site.getTemplate(getClass(), templatePath, "Sitemap.st");
+        final var template = site.getTemplate(getClass(), templatePath, "Sitemap.st");
         addComponent(new HtmlHolder(template.render(entries)));
       }
   }

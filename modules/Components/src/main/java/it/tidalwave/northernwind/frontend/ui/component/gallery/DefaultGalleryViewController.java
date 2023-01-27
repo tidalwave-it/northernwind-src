@@ -72,14 +72,14 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
         public VirtualSiteNodeFinder (@Nonnull final VirtualSiteNodeFinder other, @Nonnull final Object override)
           {
             super(other, override);
-            final VirtualSiteNodeFinder source = getSource(VirtualSiteNodeFinder.class, other, override);
+            final var source = getSource(VirtualSiteNodeFinder.class, other, override);
             this.controller = source.controller;
           }
 
         @Override @Nonnull
         protected List<SiteNode> computeResults()
           {
-            final SiteNode siteNode = controller.siteNode;
+            final var siteNode = controller.siteNode;
             final List<SiteNode> result = controller.itemMapById.values().stream()
                     .map(gallery -> createVirtualNode(siteNode, gallery.getId().stringValue()))
                     .collect(toList());
@@ -134,7 +134,7 @@ public class DefaultGalleryViewController extends DefaultNodeContainerViewContro
       {
         super.initialize();
         log.info("initialize() - {}", siteNode.getRelativeUri());
-        final long time = System.currentTimeMillis();
+        final var time = System.currentTimeMillis();
         final GalleryLoader loader = new SlideShowProPlayerGalleryLoader(beanFactory, siteNode.getProperties()); // FIXME: make it configurable
         items.addAll(loader.loadGallery(siteNode));
         itemMapById.putAll(items.stream().collect(toMap(GalleryItem::getId, i -> i)));

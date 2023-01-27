@@ -26,18 +26,16 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
-import java.util.Collection;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.IPTCTitleInterpolator;
-import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolator;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.ShootingDataInterpolator;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.XmpDcTitleInterpolator;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import static org.hamcrest.MatcherAssert.*;
+import it.tidalwave.util.test.SpringTestHelper;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 /***********************************************************************************************************************
@@ -71,7 +69,7 @@ public class ScanningMetadataInterpolatorFactoryTest
     public void must_find_all_the_interpolators()
       {
         // when
-        final Collection<MetadataInterpolator> interpolators = underTest.getInterpolators();
+        final var interpolators = underTest.getInterpolators();
         // then
         assertThat(interpolators, hasSize(3));
         assertThat(interpolators, hasItem(isA(ShootingDataInterpolator.class)));

@@ -33,8 +33,8 @@ import org.openide.filesystems.FileSystem;
 import it.tidalwave.util.As;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
-import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *
@@ -72,7 +72,7 @@ public class ResourceFileSystemNetBeansPlatform implements ResourceFileSystem
             return null;
           }
 
-        ResourceFile decorator = delegateLightWeightMap.get(fileObject);
+        var decorator = delegateLightWeightMap.get(fileObject);
 
         if (decorator == null)
           {

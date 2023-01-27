@@ -29,23 +29,19 @@ package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import it.tidalwave.messagebus.MessageBus;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import org.springframework.context.ApplicationContext;
+import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import lombok.RequiredArgsConstructor;
+import it.tidalwave.util.test.SpringTestHelper;
+import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmPreparer.*;
+import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ResourceFileSystemChangedEventMatcher.*;
+import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
-import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmPreparer.*;
-import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ResourceFileSystemChangedEventMatcher.*;
 
 /***********************************************************************************************************************
  *
@@ -54,7 +50,7 @@ import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ResourceFile
  * @author Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor
+@SuppressWarnings("NewClassNamingConvention") @RequiredArgsConstructor
 public class ScmFileSystemProviderTestSupport
   {
     @Nonnull
@@ -76,12 +72,11 @@ public class ScmFileSystemProviderTestSupport
     public void setup()
             throws Exception
       {
-        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: try to get rid of this
         scmPreparer.prepareAtTag(TAG_PUBLISHED_0_8);
         final Map<String, Object> properties = new HashMap<>();
         properties.put("test.repositoryUrl", REPOSITORY_FOLDER.toUri().toString());
         properties.put("test.workAreaFolder", Files.createTempDirectory("working-dir").toFile().getAbsolutePath());
-        final ApplicationContext context = springHelper.createSpringContext(properties);
+        final var context = springHelper.createSpringContext(properties);
         underTest = context.getBean(classUnderTest);
         messageBus = context.getBean(MessageBus.class);
       }
@@ -113,12 +108,12 @@ public class ScmFileSystemProviderTestSupport
       {
         // given
         populateWorkingDirectory(underTest.exposedWorkingDirectory.getFolder(), new Tag("published-0.8"));
-        final int previousSwapCounter = underTest.swapCounter;
+        final var previousSwapCounter = underTest.swapCounter;
         // when
         underTest.checkForUpdates();
         // then
         assertInvariantPostConditions();
-        final Optional<Tag> currentTag = underTest.exposedWorkingDirectory.getCurrentTag();
+        final var currentTag = underTest.exposedWorkingDirectory.getCurrentTag();
         assertThat("Tag not present", currentTag.isPresent(), is(true));
         assertThat("Wrong tag: ", currentTag.get().getName(), is("published-0.8"));
         assertThat("Wrong swap counter", underTest.swapCounter, is(previousSwapCounter));
@@ -134,7 +129,7 @@ public class ScmFileSystemProviderTestSupport
       {
         // given
         populateWorkingDirectory(underTest.exposedWorkingDirectory.getFolder(), new Tag("published-0.8"));
-        final int previousSwapCounter = underTest.swapCounter;
+        final var previousSwapCounter = underTest.swapCounter;
         scmPreparer.prepareAtTag(TAG_PUBLISHED_0_9);
         //final ZonedDateTime now = ZonedDateTime.now();
         //DateTimeUtils.setCurrentMillisFixed(now.getMillis());
@@ -142,7 +137,7 @@ public class ScmFileSystemProviderTestSupport
         underTest.checkForUpdates();
         // then
         assertInvariantPostConditions();
-        final Optional<Tag> currentTag = underTest.exposedWorkingDirectory.getCurrentTag();
+        final var currentTag = underTest.exposedWorkingDirectory.getCurrentTag();
         assertThat("Tag not present", currentTag.isPresent(), is(true));
         assertThat("Wrong tag: ", currentTag.get().getName(), is("published-0.9"));
         assertThat("Wrong swap counter", underTest.swapCounter, is(previousSwapCounter + 1));
@@ -175,7 +170,7 @@ public class ScmFileSystemProviderTestSupport
     private static void assertThatHasNoCurrentTag (@Nonnull final ScmWorkingDirectory workingDirectory)
             throws Exception
       {
-        final Optional<Tag> tag = workingDirectory.getCurrentTag();
+        final var tag = workingDirectory.getCurrentTag();
         assertThat("Repository should have not current tag, it has " + tag, tag.isPresent(), is(false));
       }
   }

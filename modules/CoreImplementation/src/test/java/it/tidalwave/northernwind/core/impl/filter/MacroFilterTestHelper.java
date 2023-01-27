@@ -49,7 +49,7 @@ public class MacroFilterTestHelper
       {
         final List<String> match = new ArrayList<>();
 
-        for (int i = 1; i <= matcher.groupCount(); i++)
+        for (var i = 1; i <= matcher.groupCount(); i++)
           {
             match.add(matcher.group(i));
           }

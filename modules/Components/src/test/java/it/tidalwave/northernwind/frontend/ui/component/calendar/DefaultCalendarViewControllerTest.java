@@ -27,16 +27,15 @@
 package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
 import javax.annotation.Nonnull;
-import java.util.Locale;
+import java.time.Instant;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.stream.IntStream;
-import java.time.Instant;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.TimeProvider;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
@@ -45,16 +44,15 @@ import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarDao;
-import it.tidalwave.northernwind.util.test.FileTestHelper;
-import org.testng.annotations.DataProvider;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
 import static java.util.stream.Collectors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
@@ -114,17 +112,17 @@ public class DefaultCalendarViewControllerTest
     private void setup()
       throws Exception
       {
-        final Site site = createMockSite();
+        final var site = createMockSite();
 
-        final CalendarView view = mock(CalendarView.class);
+        final var view = mock(CalendarView.class);
         when(view.getId()).thenReturn(viewId);
 
         siteNode = createMockSiteNode(site);
         when(siteNode.getRelativeUri()).thenReturn(ResourcePath.of("diary"));
-        final ResourceProperties siteNodeProperties = createMockProperties();
+        final var siteNodeProperties = createMockProperties();
 
-        final Path path = fileTestHelper.resolve("entries.xml");
-        final String entries = Files.readString(path);
+        final var path = fileTestHelper.resolve("entries.xml");
+        final var entries = Files.readString(path);
         when(siteNodeProperties.getProperty(eq(P_ENTRIES))).thenReturn(Optional.of(entries));
 
         viewProperties = createMockProperties();
@@ -132,16 +130,16 @@ public class DefaultCalendarViewControllerTest
         when(siteNode.getProperties()).thenReturn(siteNodeProperties);
         when(siteNode.getPropertyGroup(eq(viewId))).thenReturn(viewProperties);
 
-        final RequestLocaleManager requestLocaleManager = mock(RequestLocaleManager.class);
+        final var requestLocaleManager = mock(RequestLocaleManager.class);
         when(requestLocaleManager.getLocales()).thenReturn(List.of(Locale.ENGLISH));
 
         request = mock(Request.class);
-        final RequestContext requestContext = mock(RequestContext.class);
+        final var requestContext = mock(RequestContext.class);
         context = new DefaultRenderContext(request, requestContext);
 
         when(request.getPathParams(same(siteNode))).thenReturn(ResourcePath.EMPTY);
 
-        final Instant mockTime = Instant.ofEpochSecond(1502150400); // 2017/08/08
+        final var mockTime = Instant.ofEpochSecond(1502150400); // 2017/08/08
         final CalendarDao dao = new XmlCalendarDao();
 
         underTest = new UnderTest(view, siteNode, requestLocaleManager, dao, () -> mockTime);
@@ -163,7 +161,7 @@ public class DefaultCalendarViewControllerTest
         // when
         underTest.renderView(context);
         // then
-        final String fileName = String.format("diary-%d-%d_%d.txt", firstYear, lastYear, selectedYear);
+        final var fileName = String.format("diary-%d-%d_%d.txt", firstYear, lastYear, selectedYear);
         assertFileContents(fileName);
       }
 
@@ -217,10 +215,10 @@ public class DefaultCalendarViewControllerTest
     private void assertFileContents (@Nonnull final String fileName)
       throws IOException
       {
-        final String s = underTest.byMonth.entrySet().stream().flatMap(e ->
+        final var s = underTest.byMonth.entrySet().stream().flatMap(e ->
                 e.getValue().stream().map(i -> String.format("%2d: %2d %-80s %30s %10s",
                                                              e.getKey(), i.month, i.name, i.link, i.type.orElse(""))))
-                            .collect(joining("\n"));
+                                       .collect(joining("\n"));
 
         fileTestHelper.assertFileContents(s.getBytes(UTF_8), fileName);
       }

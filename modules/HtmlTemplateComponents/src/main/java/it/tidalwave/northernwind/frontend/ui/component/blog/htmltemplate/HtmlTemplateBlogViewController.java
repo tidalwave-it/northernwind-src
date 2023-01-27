@@ -29,7 +29,6 @@ package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
-import java.time.ZonedDateTime;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
@@ -40,7 +39,7 @@ import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
@@ -131,9 +130,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderPosts (@Nonnull final List<Content> fullPosts,
-                                @Nonnull final List<Content> leadinPosts,
-                                @Nonnull final List<Content> linkedPosts)
+    protected void renderPosts (@Nonnull final List<? extends Content> fullPosts,
+                                @Nonnull final List<? extends Content> leadinPosts,
+                                @Nonnull final List<? extends Content> linkedPosts)
       {
         view.renderPosts(getViewProperties().getProperty(P_TEMPLATE_POSTS_PATH),
                          fullPosts  .stream().map(p -> toAggregate(p, P_FULL_TEXT)).collect(toAggregates("fullPosts")),
@@ -147,7 +146,7 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
      *
      ******************************************************************************************************************/
     @Override
-    protected void renderTagCloud (@Nonnull final Collection<TagAndCount> tagsAndCount)
+    protected void renderTagCloud (@Nonnull final Collection<? extends TagAndCount> tagsAndCount)
       {
         view.renderTagCloud(getViewProperties().getProperty(P_TEMPLATE_TAG_CLOUD_PATH),
                             tagsAndCount.stream().map(this::toAggregate).collect(toAggregates("tags")));
@@ -166,9 +165,9 @@ public class HtmlTemplateBlogViewController extends DefaultBlogViewController
     private Aggregate toAggregate (@Nonnull final Content post, @Nonnull final Key<String> textProperty)
       {
         @SuppressWarnings("squid:S3655")
-        final ZonedDateTime dateTime = post.getProperty(DATE_KEYS).get();
-        final String id = String.format("nw-%s-blogpost-%s", view.getId(), dateTime.toInstant().toEpochMilli());
-        final List<String> tags = post.getProperty(P_TAGS).orElse(emptyList());
+        final var dateTime = post.getProperty(DATE_KEYS).get();
+        final var id = String.format("nw-%s-blogpost-%s", view.getId(), dateTime.toInstant().toEpochMilli());
+        final var tags = post.getProperty(P_TAGS).orElse(emptyList());
 
         return Aggregate.of(  "title",        post.getProperty(P_TITLE))
                         .with("text" ,        post.getProperty(textProperty))

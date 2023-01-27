@@ -29,28 +29,28 @@ package it.tidalwave.northernwind.frontend.filesystem.impl;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.io.File;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
+import it.tidalwave.northernwind.core.model.MimeTypeResolver;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import it.tidalwave.northernwind.core.model.MimeTypeResolver;
 import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
-import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -126,14 +126,14 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
       {
         return ResourceFileFinderSupport.withComputeResults(getClass().getSimpleName(), f ->
           {
-            final String name = f.getName();
-            final boolean recursive = f.isRecursive();
+            final var name = f.getName();
+            final var recursive = f.isRecursive();
 
             final List<ResourceFile> result = new ArrayList<>();
 
             if (name != null)
               {
-                final FileObject child = delegate.getFileObject(name);
+                final var child = delegate.getFileObject(name);
 
                 if (child != null)
                   {
@@ -162,9 +162,9 @@ public class ResourceFileNetBeansPlatform implements ResourceFile
     public ZonedDateTime getLatestModificationTime()
       {
         // See NW-154
-        final File file = toFile();
+        final var file = toFile();
 
-        final long millis = (file != null) ? file.lastModified() : delegate.lastModified().getTime();
+        final var millis = (file != null) ? file.lastModified() : delegate.lastModified().getTime();
         return Instant.ofEpochMilli(millis).atZone(ZoneId.of("GMT"));
       }
 

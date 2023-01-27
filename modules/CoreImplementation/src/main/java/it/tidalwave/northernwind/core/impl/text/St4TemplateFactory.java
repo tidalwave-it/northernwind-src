@@ -31,15 +31,15 @@ import java.util.Optional;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import org.stringtemplate.v4.ST;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.stringtemplate.v4.ST;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.Template;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.*;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
  *
@@ -63,13 +63,13 @@ public class St4TemplateFactory
      *
      ******************************************************************************************************************/
     @Nonnull
-    public Template getTemplate (@Nonnull final Optional<ResourcePath> templatePath,
+    public Template getTemplate (@Nonnull final Optional<? extends ResourcePath> templatePath,
                                  @Nonnull final String embeddedResourceName)
       {
         log.debug("getTemplate({}, {})", templatePath, embeddedResourceName);
-        final String text = templatePath.flatMap(this::getTemplate)
-                                        .orElseGet(() -> getEmbeddedTemplate(embeddedResourceName));
-        final char delimiter = embeddedResourceName.endsWith(".xslt") ? '%' : '$';
+        final var text = templatePath.flatMap(this::getTemplate)
+                                     .orElseGet(() -> getEmbeddedTemplate(embeddedResourceName));
+        final var delimiter = embeddedResourceName.endsWith(".xslt") ? '%' : '$';
         // TODO: use a cache. Implement it on Site (as a generic cache), so it gets resetted when the Site is reset.
         return new St4Template(text, delimiter);
       }
@@ -99,12 +99,12 @@ public class St4TemplateFactory
     @Nonnull
     /* visible for testing */ String getEmbeddedTemplate (@Nonnull final String fileName)
       {
-        final String packagePath = clazz.getPackage().getName().replace('.', '/');
+        final var packagePath = clazz.getPackage().getName().replace('.', '/');
         final Resource resource = new ClassPathResource("/" + packagePath + "/" + fileName);
 
         try (final Reader r = new InputStreamReader(resource.getInputStream()))
           {
-            final char[] buffer = new char[(int)resource.contentLength()];
+            final var buffer = new char[(int)resource.contentLength()];
             r.read(buffer);
             return new String(buffer);
           }

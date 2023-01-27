@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ResourceFile;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -69,7 +69,7 @@ public class DefaultInheritanceHelper implements InheritanceHelper
         suffixes.add("_" + locale.getLanguage());
         final List<ResourceFile> files = new ArrayList<>();
 
-        for (final ResourceFile parentFolder : getHierarchyFolders(folder))
+        for (final var parentFolder : getHierarchyFolders(folder))
           {
             files.addAll(getFiles("", propertyFileName, parentFolder, suffixes));
           }
@@ -91,9 +91,9 @@ public class DefaultInheritanceHelper implements InheritanceHelper
       {
         final List<ResourceFile> files = new ArrayList<>();
 
-        for (final String localeSuffix : suffixes)
+        for (final var localeSuffix : suffixes)
           {
-            final String fileName = prefix + propertyFileName + localeSuffix + ".xml";
+            final var fileName = prefix + propertyFileName + localeSuffix + ".xml";
             log.trace(">>>> probing {} ...", folder.getPath().asString() + "/" + fileName);
 
             try
@@ -117,7 +117,7 @@ public class DefaultInheritanceHelper implements InheritanceHelper
       {
         final List<ResourceFile> folders = new ArrayList<>();
 
-        for (ResourceFile parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion?
+        for (var parent = folder; parent.getParent() != null; parent = parent.getParent()) // TODO: refactor with recursion?
           {
             folders.add(parent);
           }

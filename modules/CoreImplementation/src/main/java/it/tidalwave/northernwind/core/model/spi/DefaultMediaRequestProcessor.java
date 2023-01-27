@@ -29,20 +29,18 @@ package it.tidalwave.northernwind.core.model.spi;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.io.IOException;
 import java.time.Duration;
+import java.io.IOException;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
-import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import static org.springframework.core.Ordered.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.Media._Media_;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
@@ -70,7 +68,7 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
     public Status process (@Nonnull final Request request)
       throws NotFoundException, IOException
       {
-        ResourcePath mediaUri = ResourcePath.of(request.getRelativeUri());
+        var mediaUri = ResourcePath.of(request.getRelativeUri());
 
         if (!mediaUri.startsWith(uriPrefix))
           {
@@ -96,34 +94,34 @@ public class DefaultMediaRequestProcessor<ResponseType> implements RequestProces
             //
             if (mediaUri.getSegmentCount() == 3)
               {
-                final String extension = mediaUri.getExtension();
-                final String fileName = mediaUri.getTrailing(); // 20120802-0010.jpg
+                final var extension = mediaUri.getExtension();
+                final var fileName = mediaUri.getTrailing(); // 20120802-0010.jpg
                 mediaUri = mediaUri.withoutTrailing();
-                final String size = mediaUri.getTrailing();     // 1920
+                final var size = mediaUri.getTrailing();     // 1920
                 mediaUri = mediaUri.withoutTrailing();
                 mediaUri = mediaUri.appendedWith(fileName.replaceAll("\\..*$", ""))
                                    .appendedWith("" + size)
                                    .appendedWith("image." + extension);
                 mediaUri = mediaUri.prependedWith(uriPrefix);
-                final String redirect = mediaUri.asString();
+                final var redirect = mediaUri.asString();
                 log.info(">>>> permanently redirecting to {}", redirect);
                 responseHolder.response().permanentRedirect(redirect).put();
                 return BREAK;
               }
             // END TODO
 
-            final String extension = mediaUri.getExtension(); // jpg
+            final var extension = mediaUri.getExtension(); // jpg
 //            final String fileName = mediaUri.getTrailing();   // image.jpg
             mediaUri = mediaUri.withoutTrailing();
-            final String size = mediaUri.getTrailing();       // 1920
+            final var size = mediaUri.getTrailing();       // 1920
             mediaUri = mediaUri.withoutTrailing();
-            final String mediaId = mediaUri.getTrailing();    // 20120802-0010
+            final var mediaId = mediaUri.getTrailing();    // 20120802-0010
             mediaUri = mediaUri.withoutTrailing();
             mediaUri = mediaUri.appendedWith(size).appendedWith(mediaId + "." + extension);
           }
 
-        final Media media = siteProvider.get().getSite().find(_Media_).withRelativePath(mediaUri).result();
-        final ResourceFile file = media.getFile();
+        final var media = siteProvider.get().getSite().find(_Media_).withRelativePath(mediaUri).result();
+        final var file = media.getFile();
         log.info(">>>> serving contents of {} ...", file.getPath().asString());
 
         responseHolder.response().fromFile(file)

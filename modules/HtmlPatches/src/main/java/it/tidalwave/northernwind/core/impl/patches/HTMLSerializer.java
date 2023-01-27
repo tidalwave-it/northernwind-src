@@ -32,20 +32,18 @@
 
 package it.tidalwave.northernwind.core.impl.patches;
 
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 import com.sun.org.apache.xerces.internal.dom.DOMMessageFormatter;
 import com.sun.org.apache.xml.internal.serialize.BaseMarkupSerializer;
 import com.sun.org.apache.xml.internal.serialize.ElementState;
 import com.sun.org.apache.xml.internal.serialize.Method;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.Serializer;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Locale;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

@@ -94,7 +94,7 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
     @Nonnull
     private MediaMetadataProvider findMediaMetadataProvider()
       {
-        final String metadataProviderName = properties.getProperty(P_MEDIA_METADATA_PROVIDER).orElse("");
+        final var metadataProviderName = properties.getProperty(P_MEDIA_METADATA_PROVIDER).orElse("");
 
         try
           {

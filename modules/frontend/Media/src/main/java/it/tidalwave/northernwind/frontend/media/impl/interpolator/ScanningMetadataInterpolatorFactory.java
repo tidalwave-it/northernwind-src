@@ -53,16 +53,16 @@ public class ScanningMetadataInterpolatorFactory implements MetadataInterpolator
         log.info("Scanning for metadata interpolators...");
 
         // FIXME: doesn't check through the whole hierarchy
-        final ClassScanner scanner = new ClassScanner().withIncludeFilter((metadataReader, metadataReaderFactory) ->
+        final var scanner = new ClassScanner().withIncludeFilter((metadataReader, metadataReaderFactory) ->
           {
-            final List<String> interfaceNames = List.of(metadataReader.getClassMetadata().getInterfaceNames());
-            final String superClassName = metadataReader.getClassMetadata().getSuperClassName();
+            final var interfaceNames = List.of(metadataReader.getClassMetadata().getInterfaceNames());
+            final var superClassName = metadataReader.getClassMetadata().getSuperClassName();
 
             return interfaceNames.contains(MetadataInterpolator.class.getName()) ||
                    ((superClassName != null) && superClassName.equals(MetadataInterpolatorSupport.class.getName()));
           });
 
-        for (final Class<?> clazz : scanner.findClasses())
+        for (final var clazz : scanner.findClasses())
           {
             try
               {

@@ -26,10 +26,10 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.BeanCreationException;
@@ -98,10 +98,10 @@ import lombok.extern.slf4j.Slf4j;
 
         try
           {
-            final Site site = siteNode.getSite();
-            final Object view = viewConstructor.newInstance(
+            final var site = siteNode.getSite();
+            final var view = viewConstructor.newInstance(
                     computeConstructorArguments(site, viewConstructor, id, siteNode));
-            final ViewController controller = viewControllerConstructor.newInstance(
+            final var controller = viewControllerConstructor.newInstance(
                     computeConstructorArguments(site, viewControllerConstructor, id, siteNode, view));
             controller.initialize();
             return new ViewAndController(view, controller);
@@ -140,9 +140,9 @@ import lombok.extern.slf4j.Slf4j;
       {
         final List<Object> result = new ArrayList<>();
 
-        x: for (final Class<?> argumentType : constructor.getParameterTypes())
+        x: for (final var argumentType : constructor.getParameterTypes())
           {
-            for (final Object overridingArg : overridingArgs)
+            for (final var overridingArg : overridingArgs)
               {
                 if (argumentType.isAssignableFrom(overridingArg.getClass()))
                   {

@@ -29,9 +29,9 @@ package it.tidalwave.northernwind.frontend.ui.component.breadcrumb.htmltemplate;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
+import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.breadcrumb.BreadCrumbView;
 import it.tidalwave.northernwind.frontend.ui.component.breadcrumb.DefaultBreadCrumbViewController;
-import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import lombok.Getter;
 
 /***********************************************************************************************************************

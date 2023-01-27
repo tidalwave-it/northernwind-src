@@ -33,7 +33,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
@@ -45,7 +44,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TIME0;
@@ -115,7 +114,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
 
         siteNode.getSite().find(_SiteNode_).stream().forEach(node ->
           {
-            final Layout layout = node.getLayout();
+            final var layout = node.getLayout();
 
             // Prevents infinite recursion
             if (!layout.getTypeUri().startsWith("http://northernwind.tidalwave.it/component/Sitemap/"))
@@ -165,7 +164,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
      *
      *
      ******************************************************************************************************************/
-    protected abstract void render (@Nonnull Set<Entry> entries);
+    protected abstract void render (@Nonnull Set<? extends Entry> entries);
 
     /*******************************************************************************************************************
      *
@@ -185,12 +184,12 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
     private static Optional<Entry> newEntry (@Nonnull final SiteNode siteNode,
                                              @CheckForNull final SiteNode childSiteNode)
       {
-        final SiteNode node = (childSiteNode != null) ? childSiteNode : siteNode;
-        final ResourceProperties properties = node.getProperties();
+        final var node = (childSiteNode != null) ? childSiteNode : siteNode;
+        final var properties = node.getProperties();
         //
         // FIXME: if you put the sitemap property straightly into the child site node, you can simplify a lot,
         // just using a single property and only peeking into a single node
-        final Key<Float> priorityKey = (childSiteNode == null) ? P_SITEMAP_PRIORITY : P_SITEMAP_CHILDREN_PRIORITY;
+        final var priorityKey = (childSiteNode == null) ? P_SITEMAP_PRIORITY : P_SITEMAP_CHILDREN_PRIORITY;
         final float sitemapPriority = siteNode.getProperty(priorityKey).orElse(0.5f);
 
         return (sitemapPriority == 0)
@@ -208,7 +207,7 @@ public abstract class DefaultSitemapViewController implements SitemapViewControl
     @Nonnull
     private static Throwable rootCause (@Nonnull final Throwable t)
       {
-        final Throwable cause = t.getCause();
+        final var cause = t.getCause();
         return (cause != null) ? rootCause(cause) : t;
       }
   }

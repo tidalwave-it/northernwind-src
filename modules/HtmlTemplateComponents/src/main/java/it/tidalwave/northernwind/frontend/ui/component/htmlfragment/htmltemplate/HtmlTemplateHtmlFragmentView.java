@@ -30,8 +30,8 @@ import javax.annotation.Nonnull;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
-import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.HtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.DefaultHtmlFragmentViewController;
+import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.HtmlFragmentView;
 import lombok.Getter;
 
 /***********************************************************************************************************************

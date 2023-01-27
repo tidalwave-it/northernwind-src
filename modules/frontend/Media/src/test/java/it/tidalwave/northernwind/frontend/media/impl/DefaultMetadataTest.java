@@ -32,26 +32,26 @@ import java.util.Optional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.image.EditableImage;
 import it.tidalwave.image.Rational;
 import it.tidalwave.image.metadata.MetadataTestUtils;
 import it.tidalwave.image.op.ReadOp;
-import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
-import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
+import org.testng.annotations.Test;
+import it.tidalwave.util.test.SpringTestHelper;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.createMockProperties;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -87,7 +87,7 @@ public class DefaultMetadataTest
     public void setup()
       {
         properties = createMockProperties();
-        final ResourceProperties resourceProperties = createMockProperties();
+        final var resourceProperties = createMockProperties();
         when(resourceProperties.getProperty(P_CAMERA_IDS)).thenReturn(Optional.of(List.of(
               "SONY ILCE-6000:Sony α6000",
               "SONY ILCE-6300:Sony α6300",
@@ -154,9 +154,9 @@ public class DefaultMetadataTest
       throws Exception
       {
         // given
-        final Metadata underTest = metadataBuilder.build();
+        final var underTest = metadataBuilder.build();
         // when
-        final String result = underTest.interpolateString(template, properties);
+        final var result = underTest.interpolateString(template, properties);
         // then
         assertThat(result, is(expectedResult));
       }
@@ -169,12 +169,12 @@ public class DefaultMetadataTest
             throws IOException
       {
         // given
-        final Path file = helper.resourceFileFor("20230112-0076.jpg");
-        final EditableImage image = EditableImage.create(new ReadOp(file, ReadOp.Type.METADATA));
+        final var file = helper.resourceFileFor("20230112-0076.jpg");
+        final var image = EditableImage.create(new ReadOp(file, ReadOp.Type.METADATA));
         final Metadata underTest = new DefaultMetadata("test", image);
-        final String template = "SHOOTING DATA $shootingData$ - TITLE: $IPTC.IIM.title$";
+        final var template = "SHOOTING DATA $shootingData$ - TITLE: $IPTC.IIM.title$";
         // when
-        final String result = underTest.interpolateString(template, properties);
+        final var result = underTest.interpolateString(template, properties);
         // then
         assertThat(result,
         is("SHOOTING DATA Sony α6600 + Sony FE 70-200mm F4 G OSS @ 168 mm, 1/160 sec @ ƒ/8, -0.30 EV, ISO 125 " +
@@ -185,15 +185,15 @@ public class DefaultMetadataTest
      *
      ******************************************************************************************************************/
     @Test(dataProvider = "testSet_StoppingDown_100_20230116")
-    public void must_properly_interpolate_metadata_from_StoppingDown_test_set (final @Nonnull Path file)
+    public void must_properly_interpolate_metadata_from_StoppingDown_test_set (@Nonnull final Path file)
             throws IOException
       {
         // given
-        final EditableImage image = EditableImage.create(new ReadOp(file, ReadOp.Type.METADATA));
+        final var image = EditableImage.create(new ReadOp(file, ReadOp.Type.METADATA));
         final Metadata underTest = new DefaultMetadata("test", image);
-        final String template = "SHOOTING DATA: $shootingData$\nTITLE: $IPTC.IIM.title$\n";
+        final var template = "SHOOTING DATA: $shootingData$\nTITLE: $IPTC.IIM.title$\n";
         // when
-        final String result = underTest.interpolateString(template, properties);
+        final var result = underTest.interpolateString(template, properties);
         // then
         log.info(result);
         final var resourceName = file.getFileName().toString().replaceAll("\\.jpg$", ".txt");
@@ -237,7 +237,7 @@ public class DefaultMetadataTest
                                          .withExifIsoSpeedRatings(100)
                                          .withXmpAuxLensId("11"),
                 "Foo bar $shootingData$ foo bar $XMP.dc.title$ bar foo",
-                "Foo bar Nikon D100 + Nikkor 180mm ƒ/2.8N ED-IF AF @ 180 mm, 1/640 sec @ \u0192/11, -0.67 EV, ISO" +
+                "Foo bar Nikon D100 + Nikkor 180mm ƒ/2.8N ED-IF AF @ 180 mm, 1/640 sec @ ƒ/11, -0.67 EV, ISO" +
                 " 100 foo bar The title 1 bar foo"
               },
               {
@@ -251,7 +251,7 @@ public class DefaultMetadataTest
                                          .withExifIsoSpeedRatings(200)
                                          .withXmpAuxLensId("74"),
                 "Foo bar $shootingData$ foo bar $XMP.dc.title$ bar foo",
-                "Foo bar Nikon D200 + Samyang 8mm ƒ/3.5 II fish-eye @ 8 mm, 1/20 sec @ \u0192/8, +0.33 EV, ISO 200 " +
+                "Foo bar Nikon D200 + Samyang 8mm ƒ/3.5 II fish-eye @ 8 mm, 1/20 sec @ ƒ/8, +0.33 EV, ISO 200 " +
                 "foo bar The title 2 bar foo"
               }
           };

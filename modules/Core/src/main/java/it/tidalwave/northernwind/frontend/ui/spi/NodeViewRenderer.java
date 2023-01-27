@@ -31,12 +31,12 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.BiConsumer;
+import it.tidalwave.role.Composite;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
-import it.tidalwave.role.Composite;
 import lombok.Getter;
 
 /***********************************************************************************************************************
@@ -55,7 +55,7 @@ public class NodeViewRenderer<T> implements Composite.Visitor<Layout, T>
     private final ViewAndControllerLayoutBuilder vacLayoutBuilder;
 
     @Nonnull
-    private final BiConsumer<T, T> attacher;
+    private final BiConsumer<? super T, ? super T> attacher;
 
     @Nonnull
     private final RenderContext renderContext;
@@ -71,7 +71,7 @@ public class NodeViewRenderer<T> implements Composite.Visitor<Layout, T>
     public NodeViewRenderer (@Nonnull final Request request,
                              @Nonnull final RequestContext requestContext,
                              @Nonnull final ViewAndControllerLayoutBuilder vacLayoutBuilder,
-                             @Nonnull final BiConsumer<T, T> attacher)
+                             @Nonnull final BiConsumer<? super T, ? super T> attacher)
       {
         this.vacLayoutBuilder = vacLayoutBuilder;
         this.attacher         = attacher;
@@ -86,8 +86,8 @@ public class NodeViewRenderer<T> implements Composite.Visitor<Layout, T>
     @Override
     public void preVisit (@Nonnull final Layout layout)
       {
-        final ViewAndController vac = vacLayoutBuilder.getViewAndControllerFor(layout).get();
-        final T component = renderView(vac, layout);
+        final var vac = vacLayoutBuilder.getViewAndControllerFor(layout).get();
+        final var component = renderView(vac, layout);
 
         if (rootComponent == null)
           {

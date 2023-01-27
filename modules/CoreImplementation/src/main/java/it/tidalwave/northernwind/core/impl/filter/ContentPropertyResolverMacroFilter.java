@@ -35,7 +35,7 @@ import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import lombok.extern.slf4j.Slf4j;
-import static org.springframework.core.Ordered.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 /***********************************************************************************************************************
  *
@@ -56,7 +56,7 @@ public class ContentPropertyResolverMacroFilter extends MacroFilter
     @Override @Nonnull
     protected String filter (@Nonnull final Matcher matcher)
       {
-        final Key<String> key = Key.of(matcher.group(1), String.class);
+        final var key = Key.of(matcher.group(1), String.class);
         return requestContext.get().getContentProperties().getProperty(key).orElse("");
       }
   }

@@ -50,7 +50,7 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_CONTENT_PATHS;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController.*;
 import static org.mockito.Mockito.*;
 
@@ -93,8 +93,8 @@ public class MockPosts
         posts = createMockPosts(100, dates, categories, tags, seed);
 
         // Distribute all the posts to different folders
-        final List<String> paths = List.of("/blog", "/blog/folder1", "/blog/folder2");
-        final Random rnd = new Random(seed);
+        final var paths = List.of("/blog", "/blog/folder1", "/blog/folder2");
+        final var rnd = new Random(seed);
 
         if (viewProperties != null)
           {
@@ -102,8 +102,8 @@ public class MockPosts
                  .collect(groupingBy(__ -> paths.get(rnd.nextInt(paths.size()))))
                  .forEach((key, value) ->
                     {
-                      final Content blogFolder = site.find(_Content_).withRelativePath(key).optionalResult().get();
-                      when(blogFolder.findChildren()).thenReturn((Finder)Finder.ofCloned(value));
+                      final var blogFolder = site.find(_Content_).withRelativePath(key).optionalResult().get();
+                      when(blogFolder.findChildren()).thenReturn(Finder.ofCloned(value));
                     });
 
             when(viewProperties.getProperty(eq(P_CONTENT_PATHS))).thenReturn(Optional.of(paths));
@@ -124,12 +124,12 @@ public class MockPosts
     @Nonnull
     public static List<ZonedDateTime> createMockDateTimes (@Nonnegative final int count, final int seed)
       {
-        final ZonedDateTime base = ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneId.of("GMT"));
-        final List<ZonedDateTime> dates = new Random(seed).ints(count, 0, 10 * 365 * 24 * 60)
-                                                          .mapToObj(base::plusMinutes)
-                                                          .collect(toList());
-        final ZonedDateTime max = dates.stream().max(ZonedDateTime::compareTo).get();
-        final ZonedDateTime min = dates.stream().min(ZonedDateTime::compareTo).get();
+        final var base = ZonedDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneId.of("GMT"));
+        final var dates = new Random(seed).ints(count, 0, 10 * 365 * 24 * 60)
+                                          .mapToObj(base::plusMinutes)
+                                          .collect(toList());
+        final var max = dates.stream().max(ZonedDateTime::compareTo).get();
+        final var min = dates.stream().min(ZonedDateTime::compareTo).get();
         assert Duration.between(min, max).getSeconds() > 9 * 365 * 24 * 60 : "No timespan";
         return dates;
       }
@@ -171,15 +171,15 @@ public class MockPosts
                                                  final int seed)
       {
         final List<Content> posts = new ArrayList<>();
-        final Random categoryRnd = new Random(seed);
-        final Random tagRnd      = new Random(seed);
-        final Random imageIdRnd  = new Random(seed);
+        final var categoryRnd = new Random(seed);
+        final var tagRnd      = new Random(seed);
+        final var imageIdRnd  = new Random(seed);
 
-        for (int i = 0; i< count; i++)
+        for (var i = 0; i < count; i++)
           {
-            final ZonedDateTime dateTime = dateTimes.get(i);
-            final Content post = createMockContent();
-            final ResourceProperties properties = createMockProperties();
+            final var dateTime = dateTimes.get(i);
+            final var post = createMockContent();
+            final var properties = createMockProperties();
             when(post.toString()).thenAnswer(invocation -> toString((Content)invocation.getMock()));
             when(post.getProperties()).thenReturn(properties);
             when(post.getExposedUri()).thenReturn(Optional.of(ResourcePath.of(String.format("post-%d", i))));
@@ -195,11 +195,11 @@ public class MockPosts
               }
 
             // Assign category
-            final Optional<String> category = Optional.ofNullable(categories.get(categoryRnd.nextInt(categories.size())));
+            final var category = Optional.ofNullable(categories.get(categoryRnd.nextInt(categories.size())));
             when(post.getProperties().getProperty(P_CATEGORY)).thenReturn(category);
 
             // Assign tag
-            final List<String> t2 = tags.stream().filter(__ -> tagRnd.nextDouble() > 0.5).collect(toList());
+            final var t2 = tags.stream().filter(__ -> tagRnd.nextDouble() > 0.5).collect(toList());
 
             if (!t2.isEmpty())
               {
@@ -218,11 +218,11 @@ public class MockPosts
     @Nonnull
     private static String toString (@Nonnull final Content post)
       {
-        final String title        = post.getProperty(P_TITLE).orElse("???");
-        final String exposedUri   = post.getExposedUri().map(ResourcePath::asString).orElse("???");
-        final String dateTime     = post.getProperty(P_PUBLISHING_DATE).map(ZonedDateTime::toString).orElse("???");
-        final String imageId      = post.getProperty(P_IMAGE_ID).orElse("");
-        final String category     = post.getProperty(P_CATEGORY).orElse("");
+        final var title        = post.getProperty(P_TITLE).orElse("???");
+        final var exposedUri   = post.getExposedUri().map(ResourcePath::asString).orElse("???");
+        final var dateTime     = post.getProperty(P_PUBLISHING_DATE).map(ZonedDateTime::toString).orElse("???");
+        final var imageId      = post.getProperty(P_IMAGE_ID).orElse("");
+        final var category     = post.getProperty(P_CATEGORY).orElse("");
         final Object tags         = post.getProperty(P_TAGS).orElse(emptyList());
         return String.format("Content(%s - %-10s - %s - %-10s - %-10s - %s)", title, exposedUri, dateTime, imageId, category, tags);
       }

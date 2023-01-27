@@ -28,16 +28,15 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -160,7 +159,7 @@ import static lombok.AccessLevel.PRIVATE;
     @Override @Nonnull
     public ResourcePath getPathParams (@Nonnull final SiteNode siteNode)
       {
-        final String siteNodeRelativeUri = siteNode.getRelativeUri().asString();
+        final var siteNodeRelativeUri = siteNode.getRelativeUri().asString();
         return (relativeUri.length() <= siteNodeRelativeUri.length())
                 ? ResourcePath.EMPTY
                 : ResourcePath.of(relativeUri.substring(siteNodeRelativeUri.length()));
@@ -175,7 +174,7 @@ import static lombok.AccessLevel.PRIVATE;
       {
         final Map<String, List<String>> parameterMap = new HashMap<>();
 
-        for (final Entry<String, String[]> entry : httpParameterMap.entrySet())
+        for (final var entry : httpParameterMap.entrySet())
           {
             parameterMap.put(entry.getKey(), List.of(entry.getValue()));
           }

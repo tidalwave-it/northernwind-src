@@ -31,10 +31,10 @@ import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import it.tidalwave.northernwind.util.test.SpringTestHelper;
+import it.tidalwave.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -56,7 +56,7 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
     public void setup()
       {
         context = helper.createSpringContext();
-        final ParameterLanguageOverrideRequestProcessor plorp =
+        final var plorp =
                 context.getBean(ParameterLanguageOverrideRequestProcessor.class);
         when(plorp.getParameterName()).thenReturn("lang");
         underTest = context.getBean(ParameterLanguageOverrideLinkPostProcessor.class);
@@ -71,7 +71,7 @@ public class ParameterLanguageOverrideLinkPostProcessorTest
                                            @Nonnull final String expectedResult)
       {
         // when
-        final String result = underTest.postProcess(link, parameterValue);
+        final var result = underTest.postProcess(link, parameterValue);
         // then
         assertThat(result, is(expectedResult));
       }
