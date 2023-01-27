@@ -26,15 +26,15 @@
  */
 package it.tidalwave.northernwind.core.impl.filter;
 
-import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
 import javax.annotation.Nonnull;
 import java.util.List;
-import lombok.experimental.Delegate;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class NodeLinkMacroExpanderFixture extends NodeLinkMacroFilter
   {

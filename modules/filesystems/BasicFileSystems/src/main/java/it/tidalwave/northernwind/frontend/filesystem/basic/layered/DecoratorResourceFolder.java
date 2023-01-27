@@ -38,8 +38,8 @@ import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSupport;
 import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
-import lombok.experimental.Delegate;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 

@@ -26,7 +26,6 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import javax.annotation.Nonnull;
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -34,20 +33,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 import java.io.IOException;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
-import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
-import static java.time.format.DateTimeFormatter.*;
-import static java.util.stream.Collectors.toList;
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *

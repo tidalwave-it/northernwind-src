@@ -26,12 +26,10 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import it.tidalwave.image.EditableImage;
 import it.tidalwave.image.metadata.Directory;
 import it.tidalwave.image.metadata.EXIF;
@@ -39,6 +37,8 @@ import it.tidalwave.image.metadata.IPTC;
 import it.tidalwave.image.metadata.TIFF;
 import it.tidalwave.image.metadata.XMP;
 import it.tidalwave.image.op.CreateOp;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.With;
 
 /***********************************************************************************************************************

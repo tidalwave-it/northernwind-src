@@ -26,18 +26,18 @@
  */
 package it.tidalwave.northernwind.core.model.spi;
 
+import java.time.Clock;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor.Status;
-import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import java.time.Clock;
+import it.tidalwave.northernwind.util.test.NorthernWindTestSupport;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

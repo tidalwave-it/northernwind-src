@@ -26,9 +26,9 @@
  */
 package it.tidalwave.northernwind.frontend.util;
 
+import javax.annotation.Nonnull;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************

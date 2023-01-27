@@ -31,8 +31,8 @@ import it.tidalwave.util.As;
 import it.tidalwave.northernwind.core.model.Media;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.Resource;
-import lombok.experimental.Delegate;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *

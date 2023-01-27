@@ -28,15 +28,15 @@ package it.tidalwave.northernwind.util.test;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
-import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
-import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
-import it.tidalwave.util.test.SpringTestHelper;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteProvider;
 import org.testng.annotations.BeforeMethod;
+import it.tidalwave.util.test.SpringTestHelper;
+import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
+import it.tidalwave.northernwind.core.impl.model.mock.MockSiteNodeSiteFinder;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************

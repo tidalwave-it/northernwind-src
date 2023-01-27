@@ -27,10 +27,10 @@
 package it.tidalwave.northernwind.frontend.util;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import javax.annotation.Nullable;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.DispatcherServlet;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderListener.*;
+import static it.tidalwave.northernwind.frontend.util.NorthernWindContextLoaderListener.ATTRIBUTE_BOOT_THROWABLE;
 
 /***********************************************************************************************************************
  *

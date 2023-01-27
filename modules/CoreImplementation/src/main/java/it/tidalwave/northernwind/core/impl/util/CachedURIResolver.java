@@ -40,7 +40,7 @@ import org.apache.commons.io.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.util.UrlEncoding.*;
+import static it.tidalwave.northernwind.util.UrlEncoding.encodedUtf8;
 
 /***********************************************************************************************************************
  *

@@ -29,9 +29,9 @@ package it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.text.DateFormatSymbols;
-import java.util.Optional;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.util.Pair.*;
-import static it.tidalwave.northernwind.core.model.Template.Aggregates.*;
+import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
 
 /***********************************************************************************************************************

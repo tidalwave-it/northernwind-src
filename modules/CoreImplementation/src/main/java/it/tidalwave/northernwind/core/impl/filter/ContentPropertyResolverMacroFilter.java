@@ -35,7 +35,7 @@ import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.RequestContext;
 import lombok.extern.slf4j.Slf4j;
-import static org.springframework.core.Ordered.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 /***********************************************************************************************************************
  *

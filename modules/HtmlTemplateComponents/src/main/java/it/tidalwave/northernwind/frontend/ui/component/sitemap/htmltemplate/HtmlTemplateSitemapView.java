@@ -33,8 +33,8 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
 import it.tidalwave.northernwind.frontend.ui.component.sitemap.SitemapView;
 
 /***********************************************************************************************************************

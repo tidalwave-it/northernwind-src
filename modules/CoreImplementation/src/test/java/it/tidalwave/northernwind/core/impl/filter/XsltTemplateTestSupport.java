@@ -33,15 +33,15 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import it.tidalwave.util.spi.HierarchicFinderSupport;
-import it.tidalwave.util.test.FileComparisonUtils;
-import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFileSystemProvider;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import it.tidalwave.northernwind.core.impl.util.CachedURIResolver;
 import it.tidalwave.northernwind.frontend.filesystem.basic.LocalFileSystemProvider;
+import it.tidalwave.northernwind.core.impl.util.CachedURIResolver;
 import org.testng.annotations.BeforeMethod;
+import it.tidalwave.util.test.FileComparisonUtils;
 import it.tidalwave.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
 

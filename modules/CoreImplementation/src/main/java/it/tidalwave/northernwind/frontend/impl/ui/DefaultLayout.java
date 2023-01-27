@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Id;
@@ -45,8 +45,8 @@ import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.ui.LayoutFinder;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
-import lombok.experimental.Delegate;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *

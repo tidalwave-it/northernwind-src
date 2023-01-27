@@ -39,7 +39,7 @@ import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.component.blog.BlogViewController;
 import it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;

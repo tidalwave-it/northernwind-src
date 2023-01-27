@@ -26,8 +26,8 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
-import java.util.Collection;
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /***********************************************************************************************************************
  *

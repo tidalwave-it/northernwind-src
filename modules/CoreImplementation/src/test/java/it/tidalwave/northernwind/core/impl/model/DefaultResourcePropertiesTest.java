@@ -26,12 +26,12 @@
  */
 package it.tidalwave.northernwind.core.impl.model;
 
-import it.tidalwave.util.Key;
-import java.time.ZonedDateTime;
-import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 import javax.annotation.Nonnull;
+import java.time.ZonedDateTime;
+import it.tidalwave.util.Key;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

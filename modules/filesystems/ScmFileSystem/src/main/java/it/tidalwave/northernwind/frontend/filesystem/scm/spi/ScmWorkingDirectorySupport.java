@@ -27,13 +27,15 @@
 package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.io.IOException;
 import java.nio.file.Path;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *

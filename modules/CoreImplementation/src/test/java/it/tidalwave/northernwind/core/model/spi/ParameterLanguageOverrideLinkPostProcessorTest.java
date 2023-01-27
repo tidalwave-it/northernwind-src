@@ -33,8 +33,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import it.tidalwave.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

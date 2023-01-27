@@ -40,8 +40,8 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourceFile;
-import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.SiteNodeSupport;
 import it.tidalwave.northernwind.frontend.ui.Layout;
 import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
@@ -51,7 +51,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.io.Unmarshallable._Unmarshallable_;
-import static it.tidalwave.northernwind.util.UrlEncoding.*;
+import static it.tidalwave.northernwind.util.UrlEncoding.decodedUtf8;
 
 /***********************************************************************************************************************
  *

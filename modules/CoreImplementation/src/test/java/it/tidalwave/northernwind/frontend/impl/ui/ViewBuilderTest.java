@@ -26,22 +26,22 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
-import org.springframework.context.ApplicationContext;
+import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1;
+import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService2;
+import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import lombok.RequiredArgsConstructor;
 import it.tidalwave.util.test.SpringTestHelper;
-import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService2;
-import it.tidalwave.northernwind.frontend.impl.ui.mock.MockService1;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.mockito.Mockito.*;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

@@ -44,7 +44,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.DefaultBlogViewController.TIME0;

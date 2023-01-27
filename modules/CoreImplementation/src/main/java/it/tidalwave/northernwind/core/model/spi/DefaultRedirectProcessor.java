@@ -42,7 +42,7 @@ import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 

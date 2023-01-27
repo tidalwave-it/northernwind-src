@@ -27,11 +27,10 @@
 package it.tidalwave.northernwind.core.impl.text;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import org.stringtemplate.v4.ST;
 import it.tidalwave.northernwind.core.model.Template;
-import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import lombok.extern.slf4j.Slf4j;
-import java.util.List;
 
 /******************************************************************************************************************************
  *

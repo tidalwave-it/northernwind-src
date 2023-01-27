@@ -42,8 +42,8 @@ import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.spi.ModelFactorySupport;
-import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import it.tidalwave.northernwind.frontend.ui.Layout;
+import it.tidalwave.northernwind.frontend.impl.ui.DefaultLayout;
 import lombok.ToString;
 
 /***********************************************************************************************************************

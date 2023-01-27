@@ -42,7 +42,7 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *

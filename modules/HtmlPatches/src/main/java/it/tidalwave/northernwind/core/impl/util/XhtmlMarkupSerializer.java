@@ -27,10 +27,10 @@
 package it.tidalwave.northernwind.core.impl.util;
 
 import java.util.Arrays;
-import java.io.Writer;
 import java.io.IOException;
-import org.xml.sax.SAXException;
+import java.io.Writer;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import org.xml.sax.SAXException;
 import it.tidalwave.northernwind.core.impl.patches.XHTMLSerializer;
 
 /***********************************************************************************************************************

@@ -31,26 +31,25 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Resource;
 import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.Layout;
-import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 import it.tidalwave.util.test.SpringTestHelper;
 import it.tidalwave.northernwind.core.impl.model.mock.MockResourceFile;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.sameInstance;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
-import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

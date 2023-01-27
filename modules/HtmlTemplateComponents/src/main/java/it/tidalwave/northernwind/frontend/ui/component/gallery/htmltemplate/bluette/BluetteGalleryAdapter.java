@@ -42,8 +42,8 @@ import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.TextHolder;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryView;
-import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
+import it.tidalwave.northernwind.frontend.ui.component.gallery.spi.GalleryAdapterSupport;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
 

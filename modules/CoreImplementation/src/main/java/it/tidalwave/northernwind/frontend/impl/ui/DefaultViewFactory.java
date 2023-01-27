@@ -38,11 +38,11 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewFactory;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
-import static it.tidalwave.util.NotFoundException.*;
+import static it.tidalwave.util.NotFoundException.throwWhenNull;
 
 /***********************************************************************************************************************
  *

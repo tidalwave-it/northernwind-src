@@ -26,28 +26,28 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.gallery.spi.loader;
 
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
 import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.springframework.beans.factory.BeanFactory;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.springframework.beans.factory.BeanFactory;
+import org.xml.sax.SAXException;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
+import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.gallery.GalleryViewController.GalleryItem;
-import it.tidalwave.util.NotFoundException;
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.DOMException;
-import org.xml.sax.SAXException;
 
 /***********************************************************************************************************************
  *

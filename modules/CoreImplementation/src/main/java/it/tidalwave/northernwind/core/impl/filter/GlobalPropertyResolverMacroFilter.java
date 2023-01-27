@@ -35,7 +35,7 @@ import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.SiteProvider;
-import static org.springframework.core.Ordered.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 
 /***********************************************************************************************************************

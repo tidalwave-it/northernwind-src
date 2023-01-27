@@ -33,16 +33,16 @@ import java.io.InputStream;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import it.tidalwave.util.Key;
-import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.io.Unmarshallable;
+import it.tidalwave.dci.annotation.DciRole;
+import it.tidalwave.northernwind.core.model.ModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
-import it.tidalwave.northernwind.core.model.ModelFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *

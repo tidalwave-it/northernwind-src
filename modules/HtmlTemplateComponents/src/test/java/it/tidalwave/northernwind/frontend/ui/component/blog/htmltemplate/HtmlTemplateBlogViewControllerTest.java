@@ -26,27 +26,32 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate;
 
+import java.time.ZoneId;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
-import java.time.ZoneId;
-import java.time.format.FormatStyle;
-import it.tidalwave.util.LocalizedDateTimeFormatters;
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.*;
+import it.tidalwave.util.LocalizedDateTimeFormatters;
+import it.tidalwave.northernwind.core.model.Content;
+import it.tidalwave.northernwind.core.model.RequestLocaleManager;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.Site;
+import it.tidalwave.northernwind.core.model.SiteFinder;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.component.blog.MockPosts;
-import it.tidalwave.northernwind.util.test.FileTestHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
+import static java.util.stream.Collectors.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static it.tidalwave.util.CollectionUtils.split;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.blog.htmltemplate.HtmlTemplateBlogViewController.*;
-import static it.tidalwave.util.CollectionUtils.split;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************

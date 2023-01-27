@@ -26,14 +26,14 @@
  */
 package it.tidalwave.northernwind.core.model;
 
-import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.io.Serializable;
+import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.io.Serializable;
 import it.tidalwave.northernwind.util.UrlEncoding;
 import lombok.EqualsAndHashCode;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.util.CollectionUtils.concatAll;
 

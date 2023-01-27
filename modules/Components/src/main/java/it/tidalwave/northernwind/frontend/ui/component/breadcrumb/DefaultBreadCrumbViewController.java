@@ -26,8 +26,8 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.breadcrumb;
 
-import it.tidalwave.northernwind.core.model.SiteNode;
 import javax.annotation.Nonnull;
+import it.tidalwave.northernwind.core.model.SiteNode;
 
 /***********************************************************************************************************************
  *

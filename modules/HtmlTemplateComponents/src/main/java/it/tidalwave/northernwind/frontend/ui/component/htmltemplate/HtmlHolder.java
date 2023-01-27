@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Id;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.northernwind.frontend.ui.SiteView.*;
+import static it.tidalwave.northernwind.frontend.ui.SiteView.NW;
 
 /***********************************************************************************************************************
  *

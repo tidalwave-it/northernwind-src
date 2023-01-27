@@ -28,6 +28,7 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +37,6 @@ import java.util.Optional;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteNode;
-import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

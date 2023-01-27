@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.annotation.Order;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.RequestContext;
-import static org.springframework.core.Ordered.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 /***********************************************************************************************************************
  *

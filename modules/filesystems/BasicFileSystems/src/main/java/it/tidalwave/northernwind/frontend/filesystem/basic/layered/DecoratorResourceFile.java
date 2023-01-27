@@ -29,8 +29,8 @@ package it.tidalwave.northernwind.frontend.filesystem.basic.layered;
 import javax.annotation.Nonnull;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.spi.DecoratedResourceFileSupport;
-import lombok.experimental.Delegate;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *

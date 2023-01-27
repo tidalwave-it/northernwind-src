@@ -39,7 +39,7 @@ import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarView;
 import it.tidalwave.northernwind.frontend.ui.component.htmlfragment.htmltemplate.HtmlTemplateHtmlFragmentView;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *

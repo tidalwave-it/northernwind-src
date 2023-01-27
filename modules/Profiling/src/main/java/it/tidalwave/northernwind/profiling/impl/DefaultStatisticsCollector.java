@@ -26,12 +26,12 @@
  */
 package it.tidalwave.northernwind.profiling.impl;
 
-import javax.annotation.Nonnull;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
+import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.northernwind.profiling.StatisticsCollector;
 import it.tidalwave.northernwind.core.model.Request;
+import it.tidalwave.northernwind.profiling.StatisticsCollector;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

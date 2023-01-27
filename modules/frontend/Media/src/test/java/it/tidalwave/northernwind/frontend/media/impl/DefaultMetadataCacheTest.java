@@ -31,13 +31,13 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import org.springframework.context.ApplicationContext;
+import it.tidalwave.util.Id;
 import it.tidalwave.image.EditableImage;
 import it.tidalwave.image.metadata.EXIF;
 import it.tidalwave.image.metadata.IPTC;
 import it.tidalwave.image.metadata.TIFF;
 import it.tidalwave.image.metadata.XMP;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +45,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.mockito.stubbing.Answer;
 import it.tidalwave.util.test.SpringTestHelper;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.createMockProperties;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
-import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

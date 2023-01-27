@@ -26,8 +26,8 @@
  */
 package it.tidalwave.northernwind.frontend.media.impl.interpolator;
 
-import java.text.DecimalFormat;
 import javax.annotation.Nonnull;
+import java.text.DecimalFormat;
 import java.util.Optional;
 import it.tidalwave.image.metadata.EXIF;
 import it.tidalwave.image.metadata.TIFF;

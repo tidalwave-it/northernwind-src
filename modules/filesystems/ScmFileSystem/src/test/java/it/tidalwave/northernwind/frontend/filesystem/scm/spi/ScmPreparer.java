@@ -35,9 +35,9 @@ import java.nio.file.Path;
 import org.apache.commons.io.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
-import static org.hamcrest.MatcherAssert.*;
+import static java.util.stream.Collectors.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
 
 /***********************************************************************************************************************
  *

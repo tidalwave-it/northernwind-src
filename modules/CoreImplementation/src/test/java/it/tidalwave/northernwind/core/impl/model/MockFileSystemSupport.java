@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFile.Finder;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
@@ -39,12 +38,10 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.spi.ResourceFileFinderSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
+import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************

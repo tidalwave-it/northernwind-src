@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.frontend.ui.spi;
 
 import javax.annotation.Nonnull;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.HttpStatusException;
 import it.tidalwave.northernwind.core.model.Request;
@@ -41,16 +42,15 @@ import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor4;
 import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestProcessor5;
 import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable1;
 import it.tidalwave.northernwind.frontend.ui.spi.mock.MockRequestResettable2;
-import org.springframework.context.ApplicationContext;
-import org.mockito.InOrder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.mockito.InOrder;
 import it.tidalwave.util.test.SpringTestHelper;
 import static javax.servlet.http.HttpServletResponse.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

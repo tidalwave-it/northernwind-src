@@ -27,19 +27,19 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import it.tidalwave.image.EditableImage;
 import it.tidalwave.image.Rational;
-import it.tidalwave.image.metadata.TIFF;
-import it.tidalwave.image.metadata.XMP;
 import it.tidalwave.image.metadata.Directory;
 import it.tidalwave.image.metadata.EXIF;
 import it.tidalwave.image.metadata.IPTC;
+import it.tidalwave.image.metadata.TIFF;
+import it.tidalwave.image.metadata.XMP;
 import it.tidalwave.image.op.ReadOp;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;

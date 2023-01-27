@@ -31,20 +31,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
 import org.springframework.context.ApplicationContext;
-import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.Resource;
+import it.tidalwave.northernwind.core.model.ResourceFile;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.core.impl.model.DefaultSiteFinder;
 import it.tidalwave.northernwind.core.impl.util.RegexTreeMap;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import it.tidalwave.util.test.SpringTestHelper;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

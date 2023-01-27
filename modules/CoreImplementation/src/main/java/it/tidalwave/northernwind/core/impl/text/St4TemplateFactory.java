@@ -31,15 +31,15 @@ import java.util.Optional;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import org.stringtemplate.v4.ST;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.stringtemplate.v4.ST;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.Template;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.northernwind.core.model.Content.*;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 
 /***********************************************************************************************************************
  *

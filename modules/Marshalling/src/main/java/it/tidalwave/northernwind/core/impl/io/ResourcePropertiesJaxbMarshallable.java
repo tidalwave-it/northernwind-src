@@ -32,14 +32,14 @@ import java.util.Collection;
 import java.util.TreeSet;
 import java.io.IOException;
 import java.io.OutputStream;
+import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.io.Marshallable;
+import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.impl.io.jaxb.ObjectFactory;
 import it.tidalwave.northernwind.core.impl.io.jaxb.PropertiesJaxb;
-import jakarta.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************

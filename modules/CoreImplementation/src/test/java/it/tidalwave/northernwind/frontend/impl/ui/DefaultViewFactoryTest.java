@@ -28,19 +28,19 @@ package it.tidalwave.northernwind.frontend.impl.ui;
 
 import it.tidalwave.util.Id;
 import it.tidalwave.util.NotFoundException;
+import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController1;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController2;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockController3;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockView1;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockView2;
 import it.tidalwave.northernwind.frontend.impl.ui.mock.MockView3;
-import it.tidalwave.northernwind.frontend.ui.ViewFactory.ViewAndController;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

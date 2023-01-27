@@ -26,14 +26,14 @@
  */
 package it.tidalwave.northernwind.frontend.util;
 
-import java.util.Collections;
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************

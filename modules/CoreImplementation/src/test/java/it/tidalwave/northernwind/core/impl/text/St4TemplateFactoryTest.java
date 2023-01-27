@@ -30,13 +30,13 @@ import java.util.Optional;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
-import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

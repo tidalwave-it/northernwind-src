@@ -31,8 +31,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.time.Duration;
 import java.io.IOException;
-import org.springframework.core.annotation.Order;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.core.annotation.Order;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.northernwind.core.model.Request;
 import it.tidalwave.northernwind.core.model.RequestProcessor;
@@ -42,7 +42,7 @@ import it.tidalwave.northernwind.core.impl.model.FilterSetExpander;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import static org.springframework.core.Ordered.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************

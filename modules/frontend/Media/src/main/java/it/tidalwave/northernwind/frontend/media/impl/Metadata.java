@@ -27,8 +27,8 @@
 package it.tidalwave.northernwind.frontend.media.impl;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.image.metadata.Directory;
+import it.tidalwave.northernwind.core.model.ResourceProperties;
 
 /***********************************************************************************************************************
  *

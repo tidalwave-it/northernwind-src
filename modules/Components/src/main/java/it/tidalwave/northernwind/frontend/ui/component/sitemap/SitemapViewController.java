@@ -30,7 +30,6 @@ import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.ViewController;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
 
 /***********************************************************************************************************************
  *

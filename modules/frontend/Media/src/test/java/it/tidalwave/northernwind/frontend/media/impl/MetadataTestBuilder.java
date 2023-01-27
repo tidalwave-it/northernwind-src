@@ -30,14 +30,14 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import it.tidalwave.image.Rational;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.With;
 import it.tidalwave.image.metadata.EXIF;
 import it.tidalwave.image.metadata.IPTC;
 import it.tidalwave.image.metadata.TIFF;
 import it.tidalwave.image.metadata.XMP;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.With;
 
 /***********************************************************************************************************************
  *

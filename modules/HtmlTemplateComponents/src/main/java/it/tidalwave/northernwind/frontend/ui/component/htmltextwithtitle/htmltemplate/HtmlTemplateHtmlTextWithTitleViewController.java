@@ -31,8 +31,8 @@ import java.util.List;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
-import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleViewController;
 import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.DefaultHtmlTextWithTitleViewController;
+import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleViewController;
 import static it.tidalwave.northernwind.core.model.Template.Aggregates.toAggregates;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 

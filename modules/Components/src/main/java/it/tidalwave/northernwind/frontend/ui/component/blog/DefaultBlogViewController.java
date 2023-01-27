@@ -27,6 +27,11 @@
 package it.tidalwave.northernwind.frontend.ui.component.blog;
 
 import javax.annotation.Nonnull;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -36,11 +41,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.spi.HierarchicFinderSupport;
@@ -58,16 +58,17 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.With;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.reverseOrder;
 import static java.util.Collections.*;
-import static java.util.Comparator.comparing;
+import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
 import static javax.servlet.http.HttpServletResponse.*;
+import static it.tidalwave.util.CollectionUtils.split;
 import static it.tidalwave.util.LocalizedDateTimeFormatters.getDateTimeFormatterFor;
-import static it.tidalwave.util.CollectionUtils.*;
-import static it.tidalwave.northernwind.util.UrlEncoding.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
 import static it.tidalwave.northernwind.frontend.ui.component.nodecontainer.NodeContainerViewController.*;
+import static it.tidalwave.northernwind.util.UrlEncoding.encodedUtf8;
 import static lombok.AccessLevel.PUBLIC;
 
 /***********************************************************************************************************************

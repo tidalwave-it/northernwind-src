@@ -38,11 +38,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import it.tidalwave.northernwind.core.impl.test.SiteBuilderMatcher;
 import it.tidalwave.northernwind.core.impl.test.TaskExecutorMock;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

@@ -28,21 +28,21 @@ package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import java.text.Normalizer;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.Finder;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.Content;
-import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.RequestContext;
+import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.core.model.spi.ContentSupport;
-import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 
 // FIXME: reimplement with an Aspect
@@ -57,7 +57,7 @@ class ResourcePropertiesDelegate implements ResourceProperties
 
     interface Exclusions
       {
-        public <T> Optional<T> getProperty (Key<T> key);
+        public <T> Optional<T> getProperty (Key<? extends T> key);
         public <T> Optional<T> getProperty (List<Key<? extends T>> keys);
       }
 

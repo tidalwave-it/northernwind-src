@@ -38,7 +38,7 @@ import it.tidalwave.northernwind.core.model.SiteProvider;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import static org.springframework.core.Ordered.*;
+import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
 
 /***********************************************************************************************************************

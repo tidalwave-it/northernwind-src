@@ -27,16 +27,16 @@
 package it.tidalwave.northernwind.core.impl.model.mock;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 import java.io.File;
 import java.io.InputStream;
 import it.tidalwave.util.As;
 import it.tidalwave.northernwind.core.model.ResourceFile;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.ResourcePath;
-import lombok.experimental.Delegate;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *

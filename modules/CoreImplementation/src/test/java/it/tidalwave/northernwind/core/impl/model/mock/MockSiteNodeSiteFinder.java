@@ -39,9 +39,9 @@ import it.tidalwave.northernwind.core.model.SiteFinder;
 import it.tidalwave.northernwind.core.model.SiteNode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import static org.mockito.Mockito.*;
-import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
+import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *

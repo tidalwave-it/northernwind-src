@@ -32,26 +32,26 @@ import java.util.Optional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.springframework.context.ApplicationContext;
 import it.tidalwave.image.EditableImage;
 import it.tidalwave.image.Rational;
 import it.tidalwave.image.metadata.MetadataTestUtils;
 import it.tidalwave.image.op.ReadOp;
-import org.springframework.context.ApplicationContext;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.media.impl.interpolator.MetadataInterpolatorFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 import it.tidalwave.util.test.SpringTestHelper;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
-import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.util.test.FileComparisonUtils.assertSameContents;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.createMockProperties;
+import static it.tidalwave.northernwind.frontend.media.impl.EmbeddedMediaMetadataProvider.*;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *

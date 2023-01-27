@@ -32,16 +32,16 @@ import java.util.Map;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import it.tidalwave.messagebus.MessageBus;
-import it.tidalwave.util.test.SpringTestHelper;
+import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import lombok.RequiredArgsConstructor;
+import it.tidalwave.util.test.SpringTestHelper;
+import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmPreparer.*;
+import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ResourceFileSystemChangedEventMatcher.*;
+import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
-import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ScmPreparer.*;
-import static it.tidalwave.northernwind.frontend.filesystem.scm.spi.ResourceFileSystemChangedEventMatcher.*;
 
 /***********************************************************************************************************************
  *

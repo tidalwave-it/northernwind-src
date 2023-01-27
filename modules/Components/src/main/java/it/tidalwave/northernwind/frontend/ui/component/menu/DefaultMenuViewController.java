@@ -32,10 +32,10 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 import static it.tidalwave.northernwind.core.model.Content.P_TITLE;
 import static it.tidalwave.northernwind.core.model.SiteNode.*;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
 
 /***********************************************************************************************************************
  *

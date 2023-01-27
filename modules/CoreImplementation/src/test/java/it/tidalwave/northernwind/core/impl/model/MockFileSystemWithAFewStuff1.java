@@ -27,9 +27,9 @@
 package it.tidalwave.northernwind.core.impl.model;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import it.tidalwave.northernwind.core.model.ResourceFileSystem;
 import it.tidalwave.northernwind.core.model.SiteNode;
+import it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

@@ -26,10 +26,10 @@
  */
 package it.tidalwave.northernwind.frontend.ui.component.calendar;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.time.Instant;
 import java.nio.file.Files;
 import it.tidalwave.util.Id;
 import it.tidalwave.northernwind.core.model.Request;
@@ -38,19 +38,19 @@ import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
-import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarView;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.htmltemplate.HtmlTemplateCalendarViewController;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.CalendarDao;
 import it.tidalwave.northernwind.frontend.ui.component.calendar.spi.XmlCalendarDao;
-import it.tidalwave.northernwind.util.test.FileTestHelper;
+import it.tidalwave.northernwind.frontend.ui.spi.DefaultRenderContext;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static it.tidalwave.northernwind.frontend.ui.component.calendar.CalendarViewController.*;
 import static org.mockito.Mockito.*;
-import org.testng.annotations.DataProvider;
 
 /***********************************************************************************************************************
  *

@@ -40,8 +40,8 @@ import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteFinder;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import static it.tidalwave.northernwind.core.model.Content._Content_;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static it.tidalwave.northernwind.core.model.Content._Content_;
 import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************

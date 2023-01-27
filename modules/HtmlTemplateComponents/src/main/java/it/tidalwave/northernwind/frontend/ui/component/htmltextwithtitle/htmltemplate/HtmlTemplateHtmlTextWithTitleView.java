@@ -33,10 +33,10 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
 import it.tidalwave.northernwind.frontend.ui.annotation.ViewMetadata;
-import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleView;
 import it.tidalwave.northernwind.frontend.ui.component.htmltemplate.HtmlHolder;
+import it.tidalwave.northernwind.frontend.ui.component.htmltextwithtitle.HtmlTextWithTitleView;
 import lombok.Getter;
-import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *

@@ -27,12 +27,12 @@
 package it.tidalwave.northernwind.frontend.filesystem.scm.spi;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
-import java.net.URI;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.net.URI;
 import org.apache.commons.io.FileUtils;
 
 /***********************************************************************************************************************

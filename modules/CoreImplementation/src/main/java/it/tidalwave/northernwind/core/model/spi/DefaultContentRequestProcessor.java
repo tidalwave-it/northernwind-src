@@ -40,9 +40,9 @@ import it.tidalwave.northernwind.core.model.RequestProcessor;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.SiteProvider;
 import it.tidalwave.northernwind.frontend.ui.SiteView;
-import static org.springframework.core.Ordered.*;
-import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
+import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 import static it.tidalwave.northernwind.core.model.RequestProcessor.Status.*;
+import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
 
 /***********************************************************************************************************************
  *

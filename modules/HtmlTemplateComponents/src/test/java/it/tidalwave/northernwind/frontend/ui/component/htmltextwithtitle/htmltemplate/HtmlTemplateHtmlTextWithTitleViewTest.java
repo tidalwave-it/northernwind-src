@@ -33,17 +33,17 @@ import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.Site;
 import it.tidalwave.northernwind.core.model.Template.Aggregate;
 import it.tidalwave.northernwind.core.model.Template.Aggregates;
-import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import lombok.extern.slf4j.Slf4j;
 import it.tidalwave.northernwind.util.test.FileTestHelper;
+import it.tidalwave.northernwind.core.impl.model.mock.MockContentSiteFinder;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.createMockSite;
 import static it.tidalwave.northernwind.core.model.Content.*;
-import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
+import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *

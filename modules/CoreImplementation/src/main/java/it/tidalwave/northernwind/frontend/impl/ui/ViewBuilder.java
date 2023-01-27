@@ -26,10 +26,10 @@
  */
 package it.tidalwave.northernwind.frontend.impl.ui;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.BeanCreationException;

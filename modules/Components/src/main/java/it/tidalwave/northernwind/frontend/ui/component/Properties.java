@@ -30,7 +30,7 @@ import java.util.List;
 import it.tidalwave.util.Key;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import lombok.NoArgsConstructor;
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
  *

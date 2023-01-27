@@ -27,13 +27,15 @@
 package it.tidalwave.northernwind.frontend.ui.component.sitemap.htmltemplate;
 
 import it.tidalwave.util.Id;
-import it.tidalwave.northernwind.core.model.*;
+import it.tidalwave.northernwind.core.model.ResourcePath;
+import it.tidalwave.northernwind.core.model.SiteFinder;
+import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import it.tidalwave.northernwind.frontend.ui.component.sitemap.MockNodesForSitemap;
-import it.tidalwave.northernwind.util.test.FileTestHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import lombok.extern.slf4j.Slf4j;
+import it.tidalwave.northernwind.util.test.FileTestHelper;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static it.tidalwave.northernwind.core.impl.model.mock.MockModelFactory.*;
 import static org.mockito.Mockito.*;

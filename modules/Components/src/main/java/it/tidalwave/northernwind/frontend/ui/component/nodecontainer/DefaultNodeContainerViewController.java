@@ -28,9 +28,9 @@ package it.tidalwave.northernwind.frontend.ui.component.nodecontainer;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import it.tidalwave.util.Key;
-import java.util.Optional;
 import it.tidalwave.northernwind.core.model.RequestLocaleManager;
 import it.tidalwave.northernwind.core.model.ResourcePath;
 import it.tidalwave.northernwind.core.model.ResourceProperties;
@@ -38,11 +38,11 @@ import it.tidalwave.northernwind.core.model.SiteNode;
 import it.tidalwave.northernwind.frontend.ui.RenderContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 import static it.tidalwave.northernwind.core.model.Content.*;
 import static it.tidalwave.northernwind.core.model.SiteNode._SiteNode_;
-import static it.tidalwave.northernwind.frontend.ui.component.Properties.*;
+import static it.tidalwave.northernwind.frontend.ui.component.Properties.P_TEMPLATE_PATH;
 
 /***********************************************************************************************************************
  *
