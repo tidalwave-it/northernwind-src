@@ -27,6 +27,7 @@
 package it.tidalwave.northernwind.core.impl.filter;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -103,7 +104,7 @@ public class NodeLinkWithContentMacroFilterTest extends NorthernWindTestSupport
           {
             {
               "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title')$\">1</a>",
-              List.of("/Blog", "/Blog/Equipment/The title", null, null)
+              Arrays.asList("/Blog", "/Blog/Equipment/The title", null, null) // List.of() doesn't allow null
             },
             {
               "<a href=\"$nodeLink(relativePath='/Blog', contentRelativePath='/Blog/Equipment/The title', language='it')$\">1</a>",
