@@ -17,15 +17,15 @@
     <name>NorthernWind</name>
     <inceptionYear>2011</inceptionYear>
     <description>
-        NorthernWind is a lightweight CMS that uses a plain filesystem as its storage. It provides versioning by means of
-        a distributed SCM such as Git or Mercurial.
+NorthernWind is a lightweight CMS that uses a plain filesystem as its storage. It provides versioning by means of
+a distributed SCM such as Git or Mercurial.
 
-        Please see the project website for more information: http://northernwind.tidalwave.it
+Please see the project website for more information: http://northernwind.tidalwave.it
 
-        A few examples of websites running on NorthernWind:
+A few examples of websites running on NorthernWind:
 
-        * http://stoppingdown.net
-        * http://tidalwave.it
+* http://stoppingdown.net
+* http://tidalwave.it
     </description>
 
     <distributionManagement>
