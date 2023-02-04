@@ -83,7 +83,7 @@ public abstract class GalleryLoaderSupport implements GalleryLoader
     @Nonnull
     public GalleryItem createItem (@Nonnull final Id mediaId)
       {
-        return new GalleryItem(mediaId, mediaMetadataProvider.getMetadataString(mediaId, "$XMP.dc.title$", properties));
+        return new GalleryItem(mediaId, mediaMetadataProvider.getMetadataString(mediaId, "$IPTC.IIM.title$", properties));
       }
 
     /*******************************************************************************************************************
