@@ -1,4 +1,4 @@
-[![Maven Central](https://img.shields.io/maven-central/v/it.tidalwave.northernwind/northernwind.svg)
+![Maven Central](https://img.shields.io/maven-central/v/it.tidalwave.northernwind/northernwind.svg)
 [![Build Status](https://img.shields.io/jenkins/s/http/services.tidalwave.it/ci/job/NorthernWind_Build_from_Scratch.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
 [![Test Status](https://img.shields.io/jenkins/t/http/services.tidalwave.it/ci/job/NorthernWind.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
 [![Coverage](https://img.shields.io/jenkins/c/http/services.tidalwave.it/ci/job/NorthernWind.svg)](http://services.tidalwave.it/ci/view/NorthernWind)
@@ -16,6 +16,9 @@ A few examples of websites running on NorthernWind:
 * http://stoppingdown.net
 * http://tidalwave.it
 
+To learn more about the things of this project, please have a look at its site - http://tidalwave.it/projects/northernwind - where more documentation, javadoc
+and build reports are provided.
+
 
 Bootstrapping
 -------------
@@ -30,23 +33,7 @@ The project can be opened and built by a recent version of the NetBeans, Eclipse
 Documentation
 -------------
 
-More information can be found on the [homepage](http://tidalwave.tidalwave.it/northernwind) of the project.
-
-
-Where can I get the latest release?
------------------------------------
-
-You can download source and binaries from the [download page](https://bitbucket.org/tidalwave/northernwind-src/src).
-
-Alternatively you can pull it from the central Maven repositories:
-
-```xml
-<dependency>
-    <groupId>it.tidalwave.northernwind<groupId>
-    <artifactId>northernwind</artifactId>
-    <version>-- version --</version>
-</dependency>
-```
+More information can be found on the [homepage](http://tidalwave.it/projects/northernwind) of the project.
 
 
 Contributing
@@ -77,5 +64,3 @@ Additional Resources
 --------------------
 
 * [Tidalwave Homepage](http://tidalwave.it)
-* [Project Issue Tracker (Jira)](http://services.tidalwave.it/jira/browse/NW)
-* [Project Continuous Integration (Jenkins)](http://services.tidalwave.it/ci/view/NorthernWind)
