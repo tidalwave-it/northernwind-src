@@ -66,7 +66,7 @@ A few examples of websites running on NorthernWind:
         <repository>
             <id>netbeans</id>
             <name>NetBeans Platform Maven Repository</name>
-            <url>http://netbeans.apidesign.org/maven2/</url>
+            <url>https://netbeans.apidesign.org/maven2/</url>
         </repository>
     </repositories>
 
