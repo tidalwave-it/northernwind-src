@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>5.0-ALPHA-15</version>
+        <version>5.0-ALPHA-16</version>
         <relativePath />
     </parent>
 
@@ -196,6 +196,31 @@ A few examples of websites running on NorthernWind:
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-banned-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <!-- They mess with hamcrest-all classes. -->
+                                <bannedDependencies>
+                                    <excludes combine.children="append">
+                                        <exclude>junit:junit</exclude>
+                                        <exclude>org.junit.jupiter:junit-jupiter</exclude>
+                                        <exclude>org.hamcrest:hamcrest-core</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>

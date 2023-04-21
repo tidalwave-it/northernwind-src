@@ -81,7 +81,7 @@ public class AvailabilityEnforcerRequestProcessorTest extends NorthernWindTestSu
         final var result = underTest.process(request);
         // then
         assertThat(result, is(Status.CONTINUE));
-//        verifyZeroInteractions(responseHolder); FIXME would require a spy(), but it breaks DI
+//        verifyNoInteractions(responseHolder); FIXME would require a spy(), but it breaks DI
       }
 
     /*******************************************************************************************************************

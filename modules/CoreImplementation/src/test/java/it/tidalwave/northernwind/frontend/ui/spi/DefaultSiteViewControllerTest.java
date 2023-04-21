@@ -165,8 +165,8 @@ public class DefaultSiteViewControllerTest
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();
         inOrder.verify(requestHolder).set(same(request));
-        verifyZeroInteractions(mockRequestProcessor4);
-        verifyZeroInteractions(mockRequestProcessor5);
+        verifyNoInteractions(mockRequestProcessor4);
+        verifyNoInteractions(mockRequestProcessor5);
 
         inOrder.verify(mockRequestProcessor1).process(same(request));
         inOrder.verify(mockRequestProcessor2).process(same(request));
@@ -264,8 +264,8 @@ public class DefaultSiteViewControllerTest
         inOrder.verify(mockRequestProcessor1).process(same(request));
         inOrder.verify(mockRequestProcessor2).process(same(request));
         inOrder.verify(mockRequestProcessor3).process(same(request));
-        verifyZeroInteractions(mockRequestProcessor4);
-        verifyZeroInteractions(mockRequestProcessor5);
+        verifyNoInteractions(mockRequestProcessor4);
+        verifyNoInteractions(mockRequestProcessor5);
 
         inOrder.verify(mockRequestResettable1).requestReset();
         inOrder.verify(mockRequestResettable2).requestReset();

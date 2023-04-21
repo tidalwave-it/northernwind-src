@@ -96,7 +96,7 @@ public class ScmFileSystemProviderTestSupport
         assertThatHasNoCurrentTag(underTest.exposedWorkingDirectory);
         assertThatHasNoCurrentTag(underTest.alternateWorkingDirectory);
         assertThat(underTest.swapCounter, is(0));
-        verifyZeroInteractions(messageBus);
+        verifyNoInteractions(messageBus);
       }
 
     /*******************************************************************************************************************
@@ -117,7 +117,7 @@ public class ScmFileSystemProviderTestSupport
         assertThat("Tag not present", currentTag.isPresent(), is(true));
         assertThat("Wrong tag: ", currentTag.get().getName(), is("published-0.8"));
         assertThat("Wrong swap counter", underTest.swapCounter, is(previousSwapCounter));
-        verifyZeroInteractions(messageBus);
+        verifyNoInteractions(messageBus);
       }
 
     /*******************************************************************************************************************
